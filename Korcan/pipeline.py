@@ -151,6 +151,11 @@ class pipeline:
         # )
         return [np.array(heatmap), np.array(heatmapTensor)]
 
+    def __make_gradcam_heatmap_fromTrainedModel(self,input):
+        pred = np.squeeze(self.trained_model.predict(input),axis=0) #56x56x24
+        print(pred.shape)
+        return None,pred
+
     def __rgb2gray(self, rgb):
         r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
         gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
@@ -204,9 +209,8 @@ class pipeline:
         self.dataset_y_labels_int = [int(item) for item in self.dataset_y_labels]
         # self.mobile_model.summary()
 
-        # self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files), data_format=None
-        # )
-        self.latentOutputBatch = self.mobile_model.predict(tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files), data_format=None))
+        self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files))
+        # self.latentOutputBatch = self.mobile_model.predict(tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files)))
 
         # x=tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files), data_format=None)
         # predicted = self.loaded_model.predict(np.array(x))
@@ -228,7 +232,7 @@ class pipeline:
         self.W = self.latentOutputBatch.shape[2]
         self.C = self.latentOutputBatch.shape[3]
 
-    def loadModel(self, model_path, mobile_model_path, cloud_model_path, splitLayer):
+    def loadModel(self, model_path, mobile_model_path, cloud_model_path,trained_model_path, splitLayer):
         self.loaded_model = tf.keras.models.load_model(os.path.join(model_path))
         # self.loaded_model.summary()
         loaded_model_config = self.loaded_model.get_config()
@@ -251,6 +255,9 @@ class pipeline:
             # Save the mobile and cloud sub-model
             self.mobile_model.save(mobile_model_path)
             self.cloud_model.save(cloud_model_path)
+        self.trained_model = tf.keras.models.load_model(
+                os.path.join(trained_model_path)
+            )
         # self.mobile_model.summary()
         # self.cloud_model.summary()
 
@@ -258,27 +265,20 @@ class pipeline:
         self.heatmapsBatch = []
         self.heatMapsChannelsBatch = []
 
-        if os.path.exists("Korcan/heatmapsBatch_"+modelName+dataSet+".npy") and os.path.exists("Korcan/heatMapsChannelsBatch_"+modelName+dataSet+".npy"):
-            with open("Korcan/heatmapsBatch_"+modelName+dataSet+".npy", 'rb') as f:
-                self.heatmapsBatch = np.load(f)
-            with open("Korcan/heatMapsChannelsBatch_"+modelName+dataSet+".npy", 'rb') as f:
-                self.heatMapsChannelsBatch = np.load(f)
-        else:
-            for i_b in range(len(self.dataset_x_files)):
-                a, b = self.__make_gradcam_heatmap(
-                    np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
-                    self.loaded_model,
-                    gradientRespectToLayer,
-                    np.array(self.dataset_y_labels_int)[i_b],
-                )
-                self.heatmapsBatch.append(a)
-                self.heatMapsChannelsBatch.append(b)
-            self.heatmapsBatch = np.array(self.heatmapsBatch)
-            self.heatMapsChannelsBatch = np.array(self.heatMapsChannelsBatch)
-            with open("Korcan/heatmapsBatch_"+modelName+dataSet+".npy", 'wb') as f:
-                np.save(f, self.heatmapsBatch)
-            with open("Korcan/heatMapsChannelsBatch_"+modelName+dataSet+".npy", 'wb') as f:
-                np.save(f, self.heatMapsChannelsBatch)
+        for i_b in range(len(self.dataset_x_files)):
+            # a, b = self.__make_gradcam_heatmap(
+            #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            #     self.loaded_model,
+            #     gradientRespectToLayer,
+            #     np.array(self.dataset_y_labels_int)[i_b],
+            # )
+            a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+                np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            )
+            self.heatmapsBatch.append(a)
+            self.heatMapsChannelsBatch.append(b)
+        self.heatmapsBatch = np.array(self.heatmapsBatch)
+        self.heatMapsChannelsBatch = np.array(self.heatMapsChannelsBatch)
 
     def __savePacketLossImages(self, lossedTensorBatchArray, case, modelName):
         mainPath = os.path.abspath("Korcan/Plots/"+modelName+"/tensorLoss/" + case)
@@ -684,15 +684,13 @@ class pipeline:
         ] = {"acc": acc/count, "loss": loss/count}
 
 if __name__ == "__main__":
-    # modelName = "efficientnetb0"
-    # splitLayer = "block2b_add"
+    modelName = "efficientnetb0"
+    splitLayer = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
-    modelName = "dense"
-    splitLayer = "pool2_conv"
+    # modelName = "dense"
+    # splitLayer = "pool2_conv"
 
-    # modelName = "eff"
-    # splitLayer = "conv2_block1_add"
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_mobile_model.h5"
@@ -700,8 +698,8 @@ if __name__ == "__main__":
     cloud_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
-    gradientRespectToLayer = splitLayer
-    dataName = "smallTest"
+    trained_model_path = "checkpoints/model.43-0.00.h5"
+    dataName = "datasets/largeTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
@@ -711,9 +709,9 @@ if __name__ == "__main__":
         os.makedirs("Korcan/Plots/"+modelName)
 
     module = pipeline()
-    module.loadModel(modelPath, mobile_model_path, cloud_model_path, splitLayer)
+    module.loadModel(modelPath, mobile_model_path, cloud_model_path,trained_model_path, splitLayer)
     module.loadData(dataName, [224, 224], False)
-    module.findHeatmaps(gradientRespectToLayer,modelName,dataName)
+    module.findHeatmaps(splitLayer,modelName,dataName)
 
     # for perc in np.linspace(0, 2, 4):
     #     module.findPercentileLossPerChannelFM(perc, quantizationBits, bot=False)
@@ -801,11 +799,3 @@ if __name__ == "__main__":
     #     saveImages=True,modelName
     # )
 
-
-
-# I had a problem with order of Accuracy curves on my random and targeted loss. I fixed couple bugs.
-# I am also comparing importance of packets not just in a channel but whole tensor. I had better results with this.
-# I have finished Reed Solomon simulation on packets.
-# I will be creating some images for the presentation next week.
-
-# More systematic way of tdeterminening latent gradcam
