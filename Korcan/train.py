@@ -78,6 +78,11 @@ def loadModel(modelName, splitLayer):
         cloud_model.save(cloud_model_path)
     return mobile_model
 
+def custom_loss(y_true, y_pred):
+    # calculate loss, using y_pred
+    loss = np.sum(np.square(np.argsort(y_true, axis=None) - np.argsort(y_pred,axis=None)))
+    return loss
+
 if __name__ == "__main__":
     modelName = "efficientnetb0"
     splitLayer = "block2b_add"
@@ -85,8 +90,8 @@ if __name__ == "__main__":
     # splitLayer = "add_1"
     # modelName = "dense"
     # splitLayer = "pool2_conv"
-    valDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_val"
-    trainDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_trainNew"
+    valDir = "/localhome/kuyanik/dataset/datasetILSVRC/ILSVRC2012_img_val"
+    trainDir = "/localhome/kuyanik/datasetdatasetILSVRC/ILSVRC2012_img_trainNew"
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
 
@@ -94,7 +99,8 @@ if __name__ == "__main__":
     mobileModel = loadModel(modelName, splitLayer)
     mobileModel.trainable = True
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),  # Very low learning rate
-              loss=tf.keras.losses.MeanSquaredError(),)
+              loss=custom_loss)
+              #loss=tf.keras.losses.MeanSquaredError(),)
 
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,patience=3, min_lr=0.001)
     esCallback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
@@ -119,5 +125,5 @@ if __name__ == "__main__":
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
-    mobileModel.fit(generate_arrays_from_file(HMtrainDIR,trainDir),steps_per_epoch = datasetCount,epochs=100, 
+    mobileModel.fit(generate_arrays_from_file(HMtrainDIR,trainDir),steps_per_epoch = datasetCount,epochs=1000, 
     validation_data=(xValidationData,yValidationData),callbacks=[tensorboard_callback,reduce_lr,esCallback,checkpoint])
