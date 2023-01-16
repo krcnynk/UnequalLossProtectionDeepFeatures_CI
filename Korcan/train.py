@@ -23,7 +23,7 @@ def generate_arrays_from_file(HMtrainDIR,trainDir):
                 im_array = tf.keras.preprocessing.image.img_to_array(I)
                 targetTensor = np.load(os.path.join(HMtrainDIR,fo,HMTrainFileNames[i]))
                 if im_array is None:
-                    print("KOKOKANAKAOAAOANAPAKANAOAJAN")
+                    print("im_array is None")
                 yield(np.expand_dims(im_array, axis=0),targetTensor)
                 # xTrainData.append(im_array)
                 # yTrainData.append(targetTensor)
@@ -85,8 +85,8 @@ if __name__ == "__main__":
     # splitLayer = "add_1"
     # modelName = "dense"
     # splitLayer = "pool2_conv"
-    valDir = "/media/sf_Downloads/ILSVRCdatabase/ILSVRC2012_img_val"
-    trainDir = "/media/sf_Downloads/ILSVRC2012_img_trainNew"
+    valDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_val"
+    trainDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_trainNew"
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
 
@@ -95,9 +95,8 @@ if __name__ == "__main__":
     mobileModel.trainable = True
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),  # Very low learning rate
               loss=tf.keras.losses.MeanSquaredError(),)
-            #   metrics=[tf.keras.metrics.MeanSquaredError()])
 
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,patience=5, min_lr=0.001)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,patience=3, min_lr=0.001)
     esCallback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     xValidationData = []

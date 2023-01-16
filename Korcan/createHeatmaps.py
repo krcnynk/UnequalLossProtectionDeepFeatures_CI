@@ -49,7 +49,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
 
-    trainDir = "/media/sf_Downloads/ILSVRC2012_img_trainNew"
+    trainDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_trainNew"
     HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMtrainDir):
         os.makedirs(HMtrainDir)
@@ -122,5 +122,3 @@ if __name__ == "__main__":
     modelName = "efficientnetb0"
     splitLayer = "block2b_add"
     findHeatmaps(splitLayer,modelName)
-
-# I am training a mini model that can create outputs that mimic gradcams heatmaps for a given model. In theory this can be used instead of gradcam to add redundant parts to tensors so that computation costs are reduced. GRADCAM labels
