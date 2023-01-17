@@ -698,7 +698,7 @@ if __name__ == "__main__":
     cloud_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
-    trained_model_path = "checkpoints/model.03-0.00.h5"
+    trained_model_path = "checkpoints/model.24-0.00.h5"
     dataName = "datasets/largeTest"
     quantizationBits = 8
 

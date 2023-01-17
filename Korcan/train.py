@@ -25,25 +25,7 @@ def generate_arrays_from_file(HMtrainDIR,trainDir):
                 if im_array is None:
                     print("im_array is None")
                 yield(np.expand_dims(im_array, axis=0),targetTensor)
-                # xTrainData.append(im_array)
-                # yTrainData.append(targetTensor)
-                # i = i + 1
-                # if(i == batchsize):
-                #     i = 0
-                #     xTrainData = []
-                #     yTrainData = []
-                #     xTrainData = np.array(xTrainData)
-                #     yTrainData = np.array(yTrainData)
-                #     yield(xTrainData,yTrainData)
 
-        # f = open(path)
-        # for line in f:
-        #     # create numpy arrays of input data
-        #     # and labels, from each line in the file
-        #     x, y = process_line(line)
-        #     img = load_images(x)
-        #     yield (img, y)
-        # f.close()
 
 def loadModel(modelName, splitLayer):
     modelPath = "deep_models_full/" + modelName + "_model.h5"
@@ -76,12 +58,8 @@ def loadModel(modelName, splitLayer):
         # Save the mobile and cloud sub-model
         mobile_model.save(mobile_model_path)
         cloud_model.save(cloud_model_path)
-    return mobile_model
+    return tf.keras.models.clone_model(mobile_model)
 
-def custom_loss(y_true, y_pred):
-    # calculate loss, using y_pred
-    loss = np.sum(np.square(np.argsort(y_true, axis=None) - np.argsort(y_pred,axis=None)))
-    return loss
 
 if __name__ == "__main__":
     modelName = "efficientnetb0"
@@ -90,19 +68,20 @@ if __name__ == "__main__":
     # splitLayer = "add_1"
     # modelName = "dense"
     # splitLayer = "pool2_conv"
-    valDir = "/localhome/kuyanik/dataset/datasetILSVRC/ILSVRC2012_img_val"
-    trainDir = "/localhome/kuyanik/datasetdatasetILSVRC/ILSVRC2012_img_trainNew"
+    valDir = "/home/foniks/scratch/datasets/ILSVRC2012_img_val"
+    trainDir = "/home/foniks/scratch/datasets/ILSVRC2012_img_trainNew"
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
 
+    gpus = tf.config.list_physical_devices('GPU')
+    tf.config.experimental.set_memory_growth(gpus[0], True)
 
     mobileModel = loadModel(modelName, splitLayer)
     mobileModel.trainable = True
-    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),  # Very low learning rate
-              loss=custom_loss)
-              #loss=tf.keras.losses.MeanSquaredError(),)
+    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
+                loss=tf.keras.losses.MeanSquaredError(),)
 
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,patience=3, min_lr=0.001)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=3, min_lr=1e-12)
     esCallback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     xValidationData = []
