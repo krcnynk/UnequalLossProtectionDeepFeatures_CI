@@ -67,7 +67,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
 
 
-    labelFile = "datasets/caffe.txt"
+    labelFile = "/home/foniks/UnequalLossProtectionDeepFeatures_CI/datasets/caffe.txt"
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
     trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
