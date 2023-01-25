@@ -67,9 +67,11 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
 
 
+    # labelFile = "/media/sf_CondaEnv/UnequalLossProtectionDeepFeatures_CI/datasets/caffe.txt"
     labelFile = "/home/foniks/UnequalLossProtectionDeepFeatures_CI/datasets/caffe.txt"
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
+    # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
     trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
     HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMtrainDir):
@@ -82,6 +84,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
         for fname in fileNames:
            parallelizedFunction(trainDir,name,fname,HMtrainDir)
 
+    # valDir = "/media/sf_Downloads/ILSVRC2012_img_val"
     valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMvalDIR):
