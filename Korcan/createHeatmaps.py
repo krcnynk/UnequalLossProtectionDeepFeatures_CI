@@ -1,6 +1,13 @@
 import numpy as np
 import tensorflow as tf
 import os
+import asyncio
+
+def background(f):
+    def wrapped(*args, **kwargs):
+        return asyncio.get_event_loop().run_in_executor(None, f, *args, **kwargs)
+
+    return wrapped
 
 def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = tf.keras.models.Model(
@@ -34,6 +41,20 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
 
 def findHeatmaps(gradientRespectToLayer,modelName):
+    @background
+    def parallelizedFunction(trainDir,name,fname,HMtrainDir):
+        I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
+        I = I.resize([224, 224])
+        im_array = tf.keras.preprocessing.image.img_to_array(I)
+        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        _ , heatmapTensor = __make_gradcam_heatmap(
+            np.expand_dims(im_array, axis=0),
+            loaded_model,
+            gradientRespectToLayer,
+            int(listOfFilenameLabel.index(name)),
+        )
+        with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
+            np.save(fil, heatmapTensor)
 
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
@@ -46,47 +67,32 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
 
 
-    labelFile = "/localhome/kuyanik/dataset/caffe.txt"
+    labelFile = "datasets/caffe.txt"
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
-
-    trainDir = "/localhome/kuyanik/dataset/ILSVRC2012_img_trainNew"
+    trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
     HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMtrainDir):
         os.makedirs(HMtrainDir)
     folderNames = [name for name in os.listdir(trainDir)]
-
     for name in folderNames:
         if not os.path.exists(os.path.join(HMtrainDir,name)):
             os.makedirs(os.path.join(HMtrainDir,name))
         fileNames = [fname for fname in os.listdir(os.path.join(trainDir, name))]
         for fname in fileNames:
-            I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
-            I = I.resize([224, 224])
-            im_array = tf.keras.preprocessing.image.img_to_array(I)
-            _ , heatmapTensor = __make_gradcam_heatmap(
-                np.expand_dims(im_array, axis=0),
-                loaded_model,
-                gradientRespectToLayer,
-                int(listOfFilenameLabel.index(name)),
-            )
-            with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
-                np.save(fil, heatmapTensor)
+           parallelizedFunction(trainDir,name,fname,HMtrainDir)
 
-    valDir = "/localhome/kuyanik/dataset/ILSVRC2012_img_val"
+    valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
-
-
     if not os.path.exists(HMvalDIR):
         os.makedirs(HMvalDIR)
-
     fileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-
     for f in fileNames:
         label = f[:-5]
         I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,f))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
+        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
         _ , heatmapTensor = __make_gradcam_heatmap(
             np.expand_dims(im_array, axis=0),
             loaded_model,
@@ -97,6 +103,8 @@ def findHeatmaps(gradientRespectToLayer,modelName):
             np.save(fil, heatmapTensor)
 
 if __name__ == "__main__":
-    modelName = "efficientnetb0"
-    splitLayer = "block2b_add"
+    # modelName = "efficientnetb0"
+    # splitLayer = "block2b_add"
+    modelName = "dense"
+    splitLayer = "pool2_conv"
     findHeatmaps(splitLayer,modelName)

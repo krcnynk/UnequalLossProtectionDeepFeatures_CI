@@ -20,6 +20,7 @@ def generate_arrays_from_file(folderFilePath,trainBaseDir,HMbaseDIR,batchSize):
             I = tf.keras.preprocessing.image.load_img(os.path.join(trainBaseDir,folderFilePath[i]))
             I = I.resize([224, 224])
             im_array = tf.keras.preprocessing.image.img_to_array(I)
+            im_array = tf.keras.applications.densenet.preprocess_input(im_array)
             targetTensor = np.load(os.path.join(HMbaseDIR,folderFilePath[i][:-4]+"npy"))
             xTrainData.append(im_array)
             yTrainData.append(targetTensor)
@@ -68,18 +69,18 @@ def loadModel(modelName, splitLayer):
 
 
 if __name__ == "__main__":
-    modelName = "efficientnetb0"
-    splitLayer = "block2b_add"
+    # modelName = "efficientnetb0"
+    # splitLayer = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
-    # modelName = "dense"
-    # splitLayer = "pool2_conv"
-    valDir = "/localhome/kuyanik/dataset/ILSVRC2012_img_val"
-    trainDir = "/localhome/kuyanik/dataset/ILSVRC2012_img_trainNew"
-    # valDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_val"
-    # trainDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_trainNew"
+
+    modelName = "dense"
+    splitLayer = "pool2_conv"
+    valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
+    trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
+
 
     gpus = tf.config.list_physical_devices('GPU')
     tf.config.experimental.set_memory_growth(gpus[0], True)
@@ -91,7 +92,6 @@ if __name__ == "__main__":
                 loss=tf.keras.losses.MeanSquaredError(),)
 
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,patience=3, min_lr=1e-7,min_delta=1e-3,verbose=1)
-    #esCallback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     xValidationData = []
     yValidationData = []
@@ -102,29 +102,12 @@ if __name__ == "__main__":
         I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
+        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
         targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
         xValidationData.append(im_array)
         yValidationData.append(targetTensor)
     xValidationData = np.array(xValidationData)
     yValidationData = np.array(yValidationData)
-
-#    xTrainData = []
-#    yTrainData = []
-#    folderNamesTrain = [name for name in os.listdir(HMtrainDIR)]
-#    for fo in folderNamesTrain:
-#        TrainFileNames = [name for name in os.listdir(os.path.join(trainDir,fo)) if os.path.isfile(os.path.join(trainDir,fo,name))]
-#        HMTrainFileNames = [name for name in os.listdir(os.path.join(HMtrainDIR,fo)) if os.path.isfile(os.path.join(HMtrainDIR,fo,name))]
-#        for i in range(len(TrainFileNames)):
-#            I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,fo,TrainFileNames[i]))
-#            I = I.resize([224, 224])
-#            im_array = tf.keras.preprocessing.image.img_to_array(I)
-#            targetTensor = np.load(os.path.join(HMtrainDIR,fo,HMTrainFileNames[i]))
-#            xTrainData.append(im_array)
-#            yTrainData.append(targetTensor)
-#            if im_array is None:
-#                print("im_array is None")
-#    xTrainData=np.array(xTrainData)
-#    yTrainData=np.array(yTrainData)
 
     folderFilePath = []
     folderNamesTrain = [name for name in os.listdir(trainDir)]
