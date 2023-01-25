@@ -30,7 +30,8 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     heatmapTensor = tf.nn.relu(heatmapTensor)
     heatmap = tf.nn.relu(heatmap)
     heatmap = tf.squeeze(heatmap)
-    return [np.array(heatmap), np.array(heatmapTensor)]
+    #print(1e10*np.array(heatmapTensor))
+    return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
 
 def findHeatmaps(gradientRespectToLayer,modelName):
 
@@ -45,11 +46,11 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
 
 
-    labelFile = "/media/sf_Downloads/ILSVRCdatabase/caffe.txt"
+    labelFile = "/localhome/kuyanik/dataset/caffe.txt"
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
 
-    trainDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_trainNew15"
+    trainDir = "/localhome/kuyanik/dataset/ILSVRC2012_img_trainNew"
     HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMtrainDir):
         os.makedirs(HMtrainDir)
@@ -72,51 +73,28 @@ def findHeatmaps(gradientRespectToLayer,modelName):
             with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
                 np.save(fil, heatmapTensor)
 
+    valDir = "/localhome/kuyanik/dataset/ILSVRC2012_img_val"
+    HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
 
 
+    if not os.path.exists(HMvalDIR):
+        os.makedirs(HMvalDIR)
 
+    fileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
 
-
-
-    # valDir = "/media/sf_Downloads/ILSVRCdatabase/ILSVRC2012_img_val"
-    # HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
-
-
-    # if not os.path.exists(HMvalDIR):
-    #     os.makedirs(HMvalDIR)
-
-    # fileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-
-    # for f in fileNames:
-    #     label = f[:-5]
-    #     I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,f))
-    #     I = I.resize([224, 224])
-    #     im_array = tf.keras.preprocessing.image.img_to_array(I)
-    #     _ , heatmapTensor = __make_gradcam_heatmap(
-    #         np.expand_dims(im_array, axis=0),
-    #         loaded_model,
-    #         gradientRespectToLayer,
-    #         int(label),
-    #     )
-    #     with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
-    #         np.save(fil, heatmapTensor)
-
-    # for fo in folderNames:
-    #     if not os.path.exists(os.path.join(HMtrainDIR,fo)):
-    #         os.makedirs(os.path.join(HMtrainDIR,fo))
-    #     fileNames = [name for name in os.listdir(os.path.join(trainDir,fo)) if os.path.isfile(os.path.join(trainDir,fo,name))]
-    #     for f in fileNames:
-    #         I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,fo,f))
-    #         I = I.resize([224, 224])
-    #         im_array = tf.keras.preprocessing.image.img_to_array(I)
-    #         _ , heatmapTensor = __make_gradcam_heatmap(
-    #             np.expand_dims(im_array, axis=0),
-    #             loaded_model,
-    #             gradientRespectToLayer,
-    #             int(fo),
-    #         )
-    #         with open(os.path.join(HMtrainDIR,fo,f[:-5])+".npy", 'wb') as fil:
-    #             np.save(fil, heatmapTensor)
+    for f in fileNames:
+        label = f[:-5]
+        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,f))
+        I = I.resize([224, 224])
+        im_array = tf.keras.preprocessing.image.img_to_array(I)
+        _ , heatmapTensor = __make_gradcam_heatmap(
+            np.expand_dims(im_array, axis=0),
+            loaded_model,
+            gradientRespectToLayer,
+            int(label),
+        )
+        with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
+            np.save(fil, heatmapTensor)
 
 if __name__ == "__main__":
     modelName = "efficientnetb0"

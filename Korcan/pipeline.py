@@ -266,15 +266,15 @@ class pipeline:
         self.heatMapsChannelsBatch = []
 
         for i_b in range(len(self.dataset_x_files)):
-            # a, b = self.__make_gradcam_heatmap(
-            #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
-            #     self.loaded_model,
-            #     gradientRespectToLayer,
-            #     np.array(self.dataset_y_labels_int)[i_b],
-            # )
-            a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+            a, b = self.__make_gradcam_heatmap(
                 np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+                self.loaded_model,
+                gradientRespectToLayer,
+                np.array(self.dataset_y_labels_int)[i_b],
             )
+            # a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+            #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            # )
             self.heatmapsBatch.append(a)
             self.heatMapsChannelsBatch.append(b)
         self.heatmapsBatch = np.array(self.heatmapsBatch)
@@ -317,8 +317,7 @@ class pipeline:
         # perc,type -> acc,loss
 
         marker = itertools.cycle(("1", "+", ".", "h", "*"))
-        # linestyle = itertools.cycle(('', '--', '-', '-.', ':'))
-        linestyle = "solid"
+        cases = ["TopN","b","1","BotN","g","+","Random","r",".","Random_RSCorrected","c","h","RandomN_RSCorrected_FECRemovesBOT","m","*"]
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
@@ -327,18 +326,27 @@ class pipeline:
             seriesX[index].append(float(key[0]))
             seriesY[index].append(float(value["acc"]))
         plt.title("Top1 Accuracy")
-        plt.xlabel("Percent Lossed")
+        plt.xlabel("Percent Lost")
         plt.ylabel("Accuracy")
         for s in range(len(seriesX)):
-            plt.scatter(seriesX[s], seriesY[s], label=types[s], marker=next(marker))
-            plt.plot(seriesX[s], seriesY[s], linewidth=0.5)
+            mapping = cases.index(types[s])
+            plt.scatter(seriesX[s], seriesY[s], label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
+            plt.plot(seriesX[s], seriesY[s], linewidth=0.5, color=cases[mapping+1])
 
+        # plt.legend(
+        #     bbox_to_anchor=(1.04, 1),
+        #     loc="upper left",
+        #     ncol=2,
+        #     fancybox=True,
+        #     shadow=True,
+        # )
         plt.legend(
-            bbox_to_anchor=(1.04, 1),
-            loc="upper left",
-            ncol=2,
+            loc="upper right",
+            fontsize="xx-small",
+            markerscale=0.7,
+            # ncol=2,
             fancybox=True,
-            shadow=True,
+            # shadow=True,
         )
         plt.savefig(
             pathAcc,
@@ -355,7 +363,7 @@ class pipeline:
             seriesX[index].append(float(key[0]))
             seriesY[index].append(float(value["loss"]))
         plt.title("Top1 Loss")
-        plt.xlabel("Percent Lossed")
+        plt.xlabel("Percent Lost")
         plt.ylabel("Loss")
         for s in range(len(seriesX)):
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
@@ -484,7 +492,7 @@ class pipeline:
         modelName = None,
     ):
         iteration = 1
-        if(case == "RandomN" or case == "RandomN_RSCorrected" or case == "RandomN_RSCorrected_FEC_RemovesBotUnprotected"):
+        if(case == "Random" or case == "Random_RSCorrected" or case == "RandomN_RSCorrected_FECRemovesBOT"):
             iteration = 2
         scores = []
 
@@ -544,19 +552,19 @@ class pipeline:
                 totalNumPackets = len(packetizedheatMap)
 
                 if (
-                    case == "RandomN_RSCorrected"
-                    or case == "RandomN_RSCorrected_FEC_RemovesBotUnprotected"
+                    case == "Random_RSCorrected"
+                    or case == "RandomN_RSCorrected_FECRemovesBOT"
                 ):
                     FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                     protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
                     unprotectedPacketCount = totalNumPackets - protectedPacketCount
-                    if case == "RandomN_RSCorrected":
+                    if case == "Random_RSCorrected":
                         packetsSent = packetsSent + FECPacketCount + totalNumPackets
                         numOfPacketsToLose = math.floor(
                             (FECPacketCount + totalNumPackets) * percOfPacketLoss / 100
                         )
                         packetsLost = packetsLost + numOfPacketsToLose
-                    elif case == "RandomN_RSCorrected_FEC_RemovesBotUnprotected":
+                    elif case == "RandomN_RSCorrected_FECRemovesBOT":
                         lowestImportanceIndex = OrderedImportanceOfPacketsIndex[
                             -FECPacketCount:
                         ]
@@ -607,7 +615,7 @@ class pipeline:
                             unprotectedPackets[:lostUnprotectedPackets]
                             + protectedPackets[:lostProtectedPackets]
                         )
-                elif case == "RandomN":
+                elif case == "Random":
                     packetsSent = packetsSent + totalNumPackets
                     indexOfLossedPackets = list(range(0, totalNumPackets))
                     rng.shuffle(indexOfLossedPackets)
@@ -627,7 +635,7 @@ class pipeline:
                     ]
                     packetsLost = packetsLost + len(indexOfLossedPackets)
                 else:
-                    raise Exception("Case can only be RandomN,TopN or RandomN_RSCorrected.")
+                    raise Exception("Case can only be Random,TopN or Random_RSCorrected.")
 
                 for j in indexOfLossedPackets:
                     packetizedfmL[j][...] = 0
@@ -698,8 +706,8 @@ if __name__ == "__main__":
     cloud_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
-    trained_model_path = "checkpoints/model.24-0.00.h5"
-    dataName = "datasets/largeTest"
+    trained_model_path = "checkpoints/model.23-0.00.h5"
+    dataName = "/media/sf_CondaEnv/UnequalLossProtectionDeepFeatures_CI/datasets/smallTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
@@ -739,23 +747,23 @@ if __name__ == "__main__":
             for percLoss in np.concatenate((np.linspace(0, 4, 4),np.linspace(4, 15, 3)),axis=None):
                 module.packetLossSim(packetCount, 8, percLoss, "TopN",modelName=modelName)
                 module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
-                module.packetLossSim(packetCount, 8, percLoss,"RandomN",modelName=modelName)
+                module.packetLossSim(packetCount, 8, percLoss,"Random",modelName=modelName)
                 module.packetLossSim(
-                    packetCount, 8, percLoss, "RandomN_RSCorrected", f, p,modelName=modelName
+                    packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
                 )
                 module.packetLossSim(
-                    packetCount, 8, percLoss, "RandomN_RSCorrected_FEC_RemovesBotUnprotected", f, p,modelName=modelName
+                    packetCount, 8, percLoss, "RandomN_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
                 )
             for percLoss in np.linspace(15, 50, 4):
                 module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
                 module.packetLossSim(
-                    packetCount, 8, percLoss, "RandomN_RSCorrected", f, p,modelName=modelName
+                    packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
                 )
                 module.packetLossSim(
-                    packetCount, 8, percLoss, "RandomN_RSCorrected_FEC_RemovesBotUnprotected", f, p,modelName=modelName
+                    packetCount, 8, percLoss, "RandomN_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
                 )
             # for percLoss in np.linspace(50, 100, 2):
-            #     module.packetLossSim(packetCount, 8, percLoss, "RandomN_RSCorrected", fecPercent, protectPercent)
+            #     module.packetLossSim(packetCount, 8, percLoss, "Random_RSCorrected", fecPercent, protectPercent)
             module.makePlot(
                 "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized_" + fecProtectInfo,
                 "Korcan/Plots/"+modelName+"/LossPlotPacketized_" + fecProtectInfo,
@@ -787,13 +795,13 @@ if __name__ == "__main__":
     #     packetCount, quantizationBits, saveImageLossPercent, "BotN", saveImages=True,modelName
     # )
     # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "RandomN", saveImages=True,modelName
+    #     packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
     # )
     # module.packetLossSim(
     #     packetCount,
     #     quantizationBits,
     #     saveImageLossPercent,
-    #     "RandomN_RSCorrected",
+    #     "Random_RSCorrected",
     #     50,
     #     50,
     #     saveImages=True,modelName
