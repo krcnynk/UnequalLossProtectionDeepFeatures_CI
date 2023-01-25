@@ -68,7 +68,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
 
 
     # labelFile = "/media/sf_CondaEnv/UnequalLossProtectionDeepFeatures_CI/datasets/caffe.txt"
-    labelFile = "/home/foniks/UnequalLossProtectionDeepFeatures_CI/datasets/caffe.txt"
+    labelFile = "/home/foniks/scratch/caffe.txt"
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
     # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
