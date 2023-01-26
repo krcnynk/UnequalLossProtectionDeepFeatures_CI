@@ -317,7 +317,7 @@ class pipeline:
         # perc,type -> acc,loss
 
         marker = itertools.cycle(("1", "+", ".", "h", "*"))
-        cases = ["TopN","b","1","BotN","g","+","Random","r",".","Random_RSCorrected","c","h","RandomN_RSCorrected_FECRemovesBOT","m","*"]
+        cases = ["TopN","b","1","BotN","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
@@ -492,7 +492,7 @@ class pipeline:
         modelName = None,
     ):
         iteration = 1
-        if(case == "Random" or case == "Random_RSCorrected" or case == "RandomN_RSCorrected_FECRemovesBOT"):
+        if(case == "Random" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
             iteration = 2
         scores = []
 
@@ -553,7 +553,7 @@ class pipeline:
 
                 if (
                     case == "Random_RSCorrected"
-                    or case == "RandomN_RSCorrected_FECRemovesBOT"
+                    or case == "Random_RSCorrected_FECRemovesBOT"
                 ):
                     FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                     protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
@@ -564,7 +564,7 @@ class pipeline:
                             (FECPacketCount + totalNumPackets) * percOfPacketLoss / 100
                         )
                         packetsLost = packetsLost + numOfPacketsToLose
-                    elif case == "RandomN_RSCorrected_FECRemovesBOT":
+                    elif case == "Random_RSCorrected_FECRemovesBOT":
                         lowestImportanceIndex = OrderedImportanceOfPacketsIndex[
                             -FECPacketCount:
                         ]
@@ -692,12 +692,12 @@ class pipeline:
         ] = {"acc": acc/count, "loss": loss/count}
 
 if __name__ == "__main__":
-    modelName = "efficientnetb0"
-    splitLayer = "block2b_add"
+    # modelName = "efficientnetb0"
+    # splitLayer = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
-    # modelName = "dense"
-    # splitLayer = "pool2_conv"
+    modelName = "dense"
+    splitLayer = "pool2_conv"
 
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
@@ -752,7 +752,7 @@ if __name__ == "__main__":
                     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
                 )
                 module.packetLossSim(
-                    packetCount, 8, percLoss, "RandomN_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
+                    packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
                 )
             for percLoss in np.linspace(15, 50, 4):
                 module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
@@ -760,7 +760,7 @@ if __name__ == "__main__":
                     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
                 )
                 module.packetLossSim(
-                    packetCount, 8, percLoss, "RandomN_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
+                    packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
                 )
             # for percLoss in np.linspace(50, 100, 2):
             #     module.packetLossSim(packetCount, 8, percLoss, "Random_RSCorrected", fecPercent, protectPercent)

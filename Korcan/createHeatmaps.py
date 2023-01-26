@@ -68,11 +68,11 @@ def findHeatmaps(gradientRespectToLayer,modelName):
 
 
     # labelFile = "/media/sf_CondaEnv/UnequalLossProtectionDeepFeatures_CI/datasets/caffe.txt"
-    labelFile = "/home/foniks/scratch/caffe.txt"
+    labelFile = "/localhome/kuyanik/dataset/caffe.txt"
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
     # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
-    trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset/"
     HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMtrainDir):
         os.makedirs(HMtrainDir)
@@ -85,7 +85,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
            parallelizedFunction(trainDir,name,fname,HMtrainDir)
 
     # valDir = "/media/sf_Downloads/ILSVRC2012_img_val"
-    valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
+    valDir = "/local-scratch2/korcan/ILSVRC2012_img_val/"
     HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMvalDIR):
         os.makedirs(HMvalDIR)
