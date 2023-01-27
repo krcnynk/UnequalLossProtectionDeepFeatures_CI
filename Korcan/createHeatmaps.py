@@ -51,6 +51,12 @@ def parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,mode
             np.save(fil, heatmapTensor)
 
 def findHeatmaps(gradientRespectToLayer,modelName):
+
+    #Changeable values
+    labelFile = "/home/foniks/scratch/caffe.txt"
+    valDir = "/home/foniks/scratch/ILSVRC2012_img_val/"
+    trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
+
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_mobile_model.h5"
@@ -59,16 +65,13 @@ def findHeatmaps(gradientRespectToLayer,modelName):
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    # loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
+    loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
 
+    #Processing training dataset
     argumentPool = []
-    procs = []
-    # labelFile = "/media/sf_CondaEnv/UnequalLossProtectionDeepFeatures_CI/datasets/caffe.txt"
-    labelFile = "/localhome/kuyanik/dataset/caffe.txt"
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
     # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
-    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset"
     HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMtrainDir):
         os.makedirs(HMtrainDir)
@@ -79,29 +82,10 @@ def findHeatmaps(gradientRespectToLayer,modelName):
         fileNames = [fname for fname in os.listdir(os.path.join(trainDir, name))]
         for fname in fileNames:
             argumentPool.append((trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
-            # proc = Process(target=parallelizedFunction, args=(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,loaded_model,gradientRespectToLayer,))
-            # procs.append(proc)
-            # proc.start()
-            # parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,loaded_model,gradientRespectToLayer)
-            # I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
-            # I = I.resize([224, 224])
-            # im_array = tf.keras.preprocessing.image.img_to_array(I)
-            # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-            # _ , heatmapTensor = __make_gradcam_heatmap(
-            #     np.expand_dims(im_array, axis=0),
-            #     loaded_model,
-            #     gradientRespectToLayer,
-            #     int(listOfFilenameLabel.index(name)),
-            # )
-            # with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
-            #     np.save(fil, heatmapTensor)
-    # for proc in procs:
-    #     proc.join()
     p = Pool(cpu_count())
     p.starmap(parallelizedFunction, argumentPool)
 
-    # valDir = "/media/sf_Downloads/ILSVRC2012_img_val"
-    valDir = "/local-scratch2/korcan/ILSVRC2012_img_val/"
+    #Procesing validation dataset
     HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMvalDIR):
         os.makedirs(HMvalDIR)
