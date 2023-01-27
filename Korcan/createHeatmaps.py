@@ -98,7 +98,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     # for proc in procs:
     #     proc.join()
     p = Pool(cpu_count())
-    p.map(parallelizedFunction, argumentPool)
+    p.starmap(parallelizedFunction, argumentPool)
 
     # valDir = "/media/sf_Downloads/ILSVRC2012_img_val"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val/"
