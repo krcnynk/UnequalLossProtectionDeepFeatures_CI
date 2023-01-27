@@ -64,7 +64,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
     # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
-    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset/"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset"
     HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMtrainDir):
         os.makedirs(HMtrainDir)
