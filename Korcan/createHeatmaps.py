@@ -1,13 +1,6 @@
 import numpy as np
 import tensorflow as tf
 import os
-import asyncio
-
-def background(f):
-    def wrapped(*args, **kwargs):
-        return asyncio.get_event_loop().run_in_executor(None, f, *args, **kwargs)
-
-    return wrapped
 
 def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = tf.keras.models.Model(
@@ -15,9 +8,9 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     )
     with tf.GradientTape() as tape:
         last_conv_layer_output, preds = grad_model(img_array)
+        print(tf.argmax(preds[0]),pred_index)
         if pred_index is None:
             pred_index = tf.argmax(preds[0])
-        print(tf.argmax(preds[0]),pred_index)
         class_channel = preds[:, pred_index]
 
     grads = tape.gradient(class_channel, last_conv_layer_output)
@@ -41,8 +34,7 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
 
 def findHeatmaps(gradientRespectToLayer,modelName):
-    @background
-    def parallelizedFunction(trainDir,name,fname,HMtrainDir):
+    def parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel):
         I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
@@ -82,7 +74,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
             os.makedirs(os.path.join(HMtrainDir,name))
         fileNames = [fname for fname in os.listdir(os.path.join(trainDir, name))]
         for fname in fileNames:
-           parallelizedFunction(trainDir,name,fname,HMtrainDir)
+           parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel)
 
     # valDir = "/media/sf_Downloads/ILSVRC2012_img_val"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val/"
