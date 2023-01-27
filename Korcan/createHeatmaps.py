@@ -78,7 +78,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
             os.makedirs(os.path.join(HMtrainDir,name))
         fileNames = [fname for fname in os.listdir(os.path.join(trainDir, name))]
         for fname in fileNames:
-            argumentPool.append([trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer])
+            argumentPool.append((trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
             # proc = Process(target=parallelizedFunction, args=(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,loaded_model,gradientRespectToLayer,))
             # procs.append(proc)
             # proc.start()
