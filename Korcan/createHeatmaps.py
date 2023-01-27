@@ -35,7 +35,8 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
 
 
-def parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,loaded_model,gradientRespectToLayer):
+def parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
+        loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
         I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
@@ -58,7 +59,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
+    # loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
 
     argumentPool = []
     procs = []
@@ -77,7 +78,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
             os.makedirs(os.path.join(HMtrainDir,name))
         fileNames = [fname for fname in os.listdir(os.path.join(trainDir, name))]
         for fname in fileNames:
-            argumentPool.append([trainDir,name,fname,HMtrainDir,listOfFilenameLabel,loaded_model,gradientRespectToLayer])
+            argumentPool.append([trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer])
             # proc = Process(target=parallelizedFunction, args=(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,loaded_model,gradientRespectToLayer,))
             # procs.append(proc)
             # proc.start()
