@@ -32,7 +32,7 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     heatmap = tf.nn.relu(heatmap)
     heatmap = tf.squeeze(heatmap)
     #print(1e10*np.array(heatmapTensor))
-    return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))+1]
+    return [np.array(heatmap), np.log(1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))+1)]
 
 
 def parallelizedFunction(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
@@ -59,7 +59,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     #Changeable values
     labelFile = "/local-scratch2/korcan/caffe.txt"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
-    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50_1to2scale"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50"
     # labelFile = "/home/foniks/scratch/caffe.txt"
     # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
@@ -78,7 +78,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     with open(labelFile) as file:
         listOfFilenameLabel = [line.split(" ")[0] for line in file]
     # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
-    HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
+    HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer+"_1to2Scale"
     if not os.path.exists(HMtrainDir):
         os.makedirs(HMtrainDir)
     folderNames = [name for name in os.listdir(trainDir)]
