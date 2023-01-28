@@ -266,15 +266,15 @@ class pipeline:
         self.heatMapsChannelsBatch = []
 
         for i_b in range(len(self.dataset_x_files)):
-            a, b = self.__make_gradcam_heatmap(
-                np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
-                self.loaded_model,
-                gradientRespectToLayer,
-                np.array(self.dataset_y_labels_int)[i_b],
-            )
-            # a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+            # a, b = self.__make_gradcam_heatmap(
             #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            #     self.loaded_model,
+            #     gradientRespectToLayer,
+            #     np.array(self.dataset_y_labels_int)[i_b],
             # )
+            a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+                np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            )
             self.heatmapsBatch.append(a)
             self.heatMapsChannelsBatch.append(b)
         self.heatmapsBatch = np.array(self.heatmapsBatch)
@@ -706,8 +706,8 @@ if __name__ == "__main__":
     cloud_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
-    trained_model_path = "checkpoints/model.23-0.00.h5"
-    dataName = "/media/sf_CondaEnv/UnequalLossProtectionDeepFeatures_CI/datasets/smallTest"
+    trained_model_path = "/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.01-0.00.h5"
+    dataName = "/localhome/kuyanik/dataset/largeTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
