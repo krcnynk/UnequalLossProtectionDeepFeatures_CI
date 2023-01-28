@@ -153,7 +153,6 @@ class pipeline:
 
     def __make_gradcam_heatmap_fromTrainedModel(self,input):
         pred = np.squeeze(self.trained_model.predict(input),axis=0) #56x56x24
-        print(pred.shape)
         return None,pred
 
     def __rgb2gray(self, rgb):
