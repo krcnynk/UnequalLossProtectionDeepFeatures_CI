@@ -68,7 +68,6 @@ def findHeatmaps(gradientRespectToLayer,modelName):
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
 
     #Processing training dataset
     argumentPool = []
@@ -91,6 +90,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     p.join()
     print("Starmap after")
     #Procesing validation dataset
+    loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
     HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMvalDIR):
         os.makedirs(HMvalDIR)
