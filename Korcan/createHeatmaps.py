@@ -37,19 +37,20 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
 
 def parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
 
-        loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
-        I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
-        I = I.resize([224, 224])
-        im_array = tf.keras.preprocessing.image.img_to_array(I)
-        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-        _ , heatmapTensor = __make_gradcam_heatmap(
-            np.expand_dims(im_array, axis=0),
-            loaded_model,
-            gradientRespectToLayer,
-            int(listOfFilenameLabel.index(name)),
-        )
-        with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
-            np.save(fil, heatmapTensor)
+    loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
+    I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
+    I = I.resize([224, 224])
+    im_array = tf.keras.preprocessing.image.img_to_array(I)
+    im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+    _ , heatmapTensor = __make_gradcam_heatmap(
+        np.expand_dims(im_array, axis=0),
+        loaded_model,
+        gradientRespectToLayer,
+        int(listOfFilenameLabel.index(name)),
+    )
+    with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
+        np.save(fil, heatmapTensor)
+    return
 
 def findHeatmaps(gradientRespectToLayer,modelName):
 
