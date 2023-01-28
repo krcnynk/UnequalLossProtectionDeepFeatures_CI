@@ -53,9 +53,9 @@ def parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,mode
 def findHeatmaps(gradientRespectToLayer,modelName):
 
     #Changeable values
-    labelFile = "/home/foniks/scratch/caffe.txt"
-    valDir = "/home/foniks/scratch/ILSVRC2012_img_val/"
-    trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
+    labelFile = "/local-scratch2/korcan/caffe.txt"
+    valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50"
 
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
@@ -82,6 +82,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
         fileNames = [fname for fname in os.listdir(os.path.join(trainDir, name))]
         for fname in fileNames:
             argumentPool.append((trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
+    print("CPU COUNT:",cpu_count())
     p = Pool(cpu_count())
     p.starmap(parallelizedFunction, argumentPool)
 
