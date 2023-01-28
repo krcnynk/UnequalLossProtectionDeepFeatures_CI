@@ -698,7 +698,7 @@ if __name__ == "__main__":
     # splitLayer = "add_1"
     modelName = "dense"
     splitLayer = "pool2_conv"
-
+    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_mobile_model.h5"
