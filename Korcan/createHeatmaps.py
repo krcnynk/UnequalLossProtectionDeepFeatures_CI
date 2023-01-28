@@ -48,8 +48,8 @@ def parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,mode
         gradientRespectToLayer,
         int(listOfFilenameLabel.index(name)),
     )
-    with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
-        np.save(fil, heatmapTensor)
+    # with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
+    #     np.save(fil, heatmapTensor)
     return
 
 def findHeatmaps(gradientRespectToLayer,modelName):
