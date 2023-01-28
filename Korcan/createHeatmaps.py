@@ -87,7 +87,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     print("CPU COUNT:",cpu_count())
     p = Pool(processes=cpu_count())
     p.starmap_async(parallelizedFunction, argumentPool)
-    p.join()
+    
     print("Starmap after")
     #Procesing validation dataset
     loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
