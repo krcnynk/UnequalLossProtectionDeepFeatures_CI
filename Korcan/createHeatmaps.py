@@ -9,7 +9,7 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     )
     with tf.GradientTape() as tape:
         last_conv_layer_output, preds = grad_model(img_array)
-        print(tf.argmax(preds[0]),pred_index)
+        # print(tf.argmax(preds[0]),pred_index)
         if pred_index is None:
             pred_index = tf.argmax(preds[0])
         class_channel = preds[:, pred_index]
