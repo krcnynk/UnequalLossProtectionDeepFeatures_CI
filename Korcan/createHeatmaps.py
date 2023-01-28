@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 import os
 from multiprocessing import Pool, cpu_count
-
+tf.config.set_visible_devices([], 'GPU')
 def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = tf.keras.models.Model(
         [model.inputs], [model.get_layer(last_conv_layer_name).output, model.output]
@@ -36,6 +36,7 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
 
 
 def parallelizedFunction(trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
+
         loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
         I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
         I = I.resize([224, 224])
