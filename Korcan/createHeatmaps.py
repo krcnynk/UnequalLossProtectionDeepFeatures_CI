@@ -85,7 +85,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
             argumentPool.append((trainDir,name,fname,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
     print("CPU COUNT:",cpu_count())
     p = Pool(cpu_count())
-    p.starmap(parallelizedFunction, argumentPool)
+    p.starmap_async(parallelizedFunction, argumentPool)
 
     #Procesing validation dataset
     HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
