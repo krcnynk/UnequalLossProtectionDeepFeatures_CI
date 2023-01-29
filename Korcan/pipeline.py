@@ -743,7 +743,7 @@ if __name__ == "__main__":
         for p in protectPercent:
             fecProtectInfo = "fec" + str(f) + "protect" + str(p)
 
-            for percLoss in np.concatenate((np.linspace(0, 4, 4),np.linspace(4, 15, 3)),axis=None):
+            for percLoss in np.concatenate((np.linspace(0, 4, 2),np.linspace(4, 15, 2)),axis=None):
                 module.packetLossSim(packetCount, 8, percLoss, "TopN",modelName=modelName)
                 module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
                 module.packetLossSim(packetCount, 8, percLoss,"Random",modelName=modelName)
@@ -753,7 +753,7 @@ if __name__ == "__main__":
                 module.packetLossSim(
                     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
                 )
-            for percLoss in np.linspace(15, 50, 4):
+            for percLoss in np.linspace(15, 50, 2):
                 module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
                 module.packetLossSim(
                     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName

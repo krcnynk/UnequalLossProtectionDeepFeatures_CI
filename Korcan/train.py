@@ -86,8 +86,8 @@ def loadModel(modelName, splitLayer):
         # Save the mobile and cloud sub-model
         mobile_model.save(mobile_model_path)
         cloud_model.save(cloud_model_path)
-    #return mobile_model
-    return tf.keras.models.clone_model(mobile_model)
+    return mobile_model
+    # return tf.keras.models.clone_model(mobile_model)
 
 
 if __name__ == "__main__":
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50"
 
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
-    HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer+"_1to2Scale"
+    HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
 
 
     gpus = tf.config.list_physical_devices('GPU')
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     mobileModel = loadModel(modelName, splitLayer)
     #mobileModel = tf.keras.models.load_model("checkpoints1/model.44-0.00.h5")
     mobileModel.trainable = True
-    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1),
+    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
                 loss=tf.keras.losses.MeanSquaredError(),)
 
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=1e-7,min_delta=1e-4,verbose=1)

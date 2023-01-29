@@ -31,8 +31,8 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     heatmapTensor = tf.nn.relu(heatmapTensor)
     heatmap = tf.nn.relu(heatmap)
     heatmap = tf.squeeze(heatmap)
-    print(np.amax(heatmapTensor),np.amin(heatmapTensor))
-    return [np.array(heatmap), 1000*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
+    #print(1e10*np.array(heatmapTensor))
+    return [np.array(heatmap), np.log(1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))+1)]
 
 
 def parallelizedFunction(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
