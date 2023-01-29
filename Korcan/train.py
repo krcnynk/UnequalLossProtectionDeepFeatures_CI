@@ -20,7 +20,7 @@ def generate_arrays_from_file(folderFilePath,trainBaseDir,HMbaseDIR,batchSize):
             I = tf.keras.preprocessing.image.load_img(os.path.join(trainBaseDir,folderFilePath[i]))
             I = I.resize([224, 224])
             im_array = tf.keras.preprocessing.image.img_to_array(I)
-            # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+            im_array = tf.keras.applications.densenet.preprocess_input(im_array)
             targetTensor = np.load(os.path.join(HMbaseDIR,folderFilePath[i][:-4]+"npy"))
             xTrainData.append(im_array)
             yTrainData.append(targetTensor)
@@ -91,13 +91,13 @@ def loadModel(modelName, splitLayer):
 
 
 if __name__ == "__main__":
-    modelName = "efficientnetb0"
-    splitLayer = "block2b_add"
+    # modelName = "efficientnetb0"
+    # splitLayer = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
 
-    # modelName = "dense"
-    # splitLayer = "pool2_conv"
+    modelName = "dense"
+    splitLayer = "pool2_conv"
     # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
@@ -138,7 +138,7 @@ if __name__ == "__main__":
         I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
-        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
         targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
         xValidationData.append(im_array)
         yValidationData.append(targetTensor)
@@ -148,6 +148,6 @@ if __name__ == "__main__":
     batchSize = 1
     mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/batchSize,validation_steps=1000,epochs=1000,
     # validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    validation_data=(np.array(xValidationData),np.array(yValidationData)),
+    validation_data=(np.array(xValidationData),np.array(yValidationData),
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
     #,max_queue_size=100,workers=4,use_multiprocessing=True)
