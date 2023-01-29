@@ -31,7 +31,7 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     heatmapTensor = tf.nn.relu(heatmapTensor)
     heatmap = tf.nn.relu(heatmap)
     heatmap = tf.squeeze(heatmap)
-    #print(1e10*np.array(heatmapTensor))
+    print(np.amax(heatmapTensor),np.amin(heatmapTensor))
     return [np.array(heatmap), 1000*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
 
 

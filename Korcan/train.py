@@ -104,7 +104,7 @@ if __name__ == "__main__":
     trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50"
 
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
-    HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
+    HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer+"_1to2Scale"
 
 
     gpus = tf.config.list_physical_devices('GPU')
