@@ -113,7 +113,7 @@ if __name__ == "__main__":
     mobileModel = loadModel(modelName, splitLayer)
     #mobileModel = tf.keras.models.load_model("checkpoints1/model.44-0.00.h5")
     mobileModel.trainable = True
-    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(10),
+    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(100),
                 loss=tf.keras.losses.MeanAbsoluteError(),)
 
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    batchSize = 32
+    batchSize = 1
     print("MAX MIN",np.amax(np.array(yValidationData)),np.amin(np.array(yValidationData)))
     # mobileModel.evaluate(np.array(xValidationData),np.array(yValidationData))
 
