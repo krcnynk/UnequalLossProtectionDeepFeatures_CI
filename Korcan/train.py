@@ -101,7 +101,7 @@ if __name__ == "__main__":
     # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
-    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset2"
 
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
@@ -116,7 +116,7 @@ if __name__ == "__main__":
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
                 loss=tf.keras.losses.MeanAbsolutePercentageError(),)
 
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5,patience=3, min_lr=1e-7,min_delta=1e-4,verbose=1)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.9,patience=2, min_lr=1e-7,min_delta=1e-4,verbose=1)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     
 
