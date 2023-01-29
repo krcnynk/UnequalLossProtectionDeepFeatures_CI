@@ -89,6 +89,14 @@ def loadModel(modelName, splitLayer):
     # return mobile_model
     return tf.keras.models.clone_model(mobile_model)
 
+def scheduler(epoch, lr):
+    if epoch < 30:
+        lr = 0.1
+    elif epoch >=30:
+        lr = 0.01
+    else:
+        lr = 0.001
+    return lr
 
 if __name__ == "__main__":
     # modelName = "efficientnetb0"
@@ -116,9 +124,9 @@ if __name__ == "__main__":
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(100),
                 loss=tf.keras.losses.MeanAbsolutePercentageError(),)
 
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
+    # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
-    
+    reduce_lr = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
     folderFilePath = []
     folderNamesTrain = [name for name in os.listdir(trainDir)]
