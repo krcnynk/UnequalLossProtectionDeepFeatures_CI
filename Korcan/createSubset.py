@@ -16,7 +16,7 @@ for name in folderNames:
     os.mkdir(os.path.join(trainDir2, name))
     count = 0
     for fname in fileNames:
-        if(count < 5):
+        if(count < 100):
             shutil.copyfile(os.path.join(trainDir, name,fname), os.path.join(trainDir2, name,fname))
             count = count + 1
         # print(os.path.join(trainDir, name,fname))

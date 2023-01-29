@@ -90,11 +90,11 @@ def loadModel(modelName, splitLayer):
     return tf.keras.models.clone_model(mobile_model)
 
 def scheduler(epoch, lr):
-    if epoch < 30:
+    if epoch < 3:
         lr = 0.1
-    elif epoch >=30:
+    elif epoch >=3 and epoch < 6:
         lr = 0.01
-    else:
+    elif epoch >=6:
         lr = 0.001
     return lr
 
