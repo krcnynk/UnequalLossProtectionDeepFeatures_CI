@@ -121,8 +121,8 @@ if __name__ == "__main__":
     mobileModel = loadModel(modelName, splitLayer)
     #mobileModel = tf.keras.models.load_model("checkpoints1/model.44-0.00.h5")
     mobileModel.trainable = True
-    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(100),
-                loss=tf.keras.losses.MeanAbsoluteError(),)
+    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(0.1),
+                loss=tf.keras.losses.MeanSquaredError(),)
 
     # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
