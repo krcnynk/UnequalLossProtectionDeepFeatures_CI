@@ -86,8 +86,8 @@ def loadModel(modelName, splitLayer):
         # Save the mobile and cloud sub-model
         mobile_model.save(mobile_model_path)
         cloud_model.save(cloud_model_path)
-    return mobile_model
-    # return tf.keras.models.clone_model(mobile_model)
+    # return mobile_model
+    return tf.keras.models.clone_model(mobile_model)
 
 
 if __name__ == "__main__":
@@ -116,7 +116,7 @@ if __name__ == "__main__":
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
                 loss=tf.keras.losses.MeanAbsolutePercentageError(),)
 
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.9,patience=2, min_lr=1e-7,min_delta=1e-4,verbose=1)
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     
 
