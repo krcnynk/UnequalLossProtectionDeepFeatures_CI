@@ -33,7 +33,7 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     heatmap = tf.squeeze(heatmap)
     # print(np.array(heatmapTensor))
     # return [np.array(heatmap), np.array(heatmapTensor)]
-    return [np.array(heatmap), 10*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
+    return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
 
 
 def parallelizedFunction(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
@@ -74,22 +74,22 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     )
 
 
-    # #Processing training dataset
-    # argumentPool = []
-    # with open(labelFile) as file:
-    #     listOfFilenameLabel = [line.split(" ")[0] for line in file]
-    # # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
-    # HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
-    # if not os.path.exists(HMtrainDir):
-    #     os.makedirs(HMtrainDir)
-    # folderNames = [name for name in os.listdir(trainDir)]
-    # for name in folderNames:
-    #     if not os.path.exists(os.path.join(HMtrainDir,name)):
-    #         os.makedirs(os.path.join(HMtrainDir,name))
-    #     argumentPool.append((trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
-    # print("CPU COUNT:",cpu_count())
-    # p = Pool(processes=cpu_count())
-    # p.starmap(parallelizedFunction, argumentPool)
+    #Processing training dataset
+    argumentPool = []
+    with open(labelFile) as file:
+        listOfFilenameLabel = [line.split(" ")[0] for line in file]
+    # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
+    HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
+    if not os.path.exists(HMtrainDir):
+        os.makedirs(HMtrainDir)
+    folderNames = [name for name in os.listdir(trainDir)]
+    for name in folderNames:
+        if not os.path.exists(os.path.join(HMtrainDir,name)):
+            os.makedirs(os.path.join(HMtrainDir,name))
+        argumentPool.append((trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
+    print("CPU COUNT:",cpu_count())
+    p = Pool(processes=cpu_count())
+    p.starmap(parallelizedFunction, argumentPool)
 
     #Procesing validation dataset
     loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
