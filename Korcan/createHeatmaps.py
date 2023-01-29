@@ -31,8 +31,9 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     heatmapTensor = tf.nn.relu(heatmapTensor)
     heatmap = tf.nn.relu(heatmap)
     heatmap = tf.squeeze(heatmap)
-    #print(1e10*np.array(heatmapTensor))
-    return [np.array(heatmap), np.log(1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))+1)]
+    # print(np.array(heatmapTensor))
+    return [np.array(heatmap), np.array(heatmapTensor)]
+    # return [np.array(heatmap), np.log(1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))+1)]
 
 
 def parallelizedFunction(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
@@ -59,7 +60,7 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     #Changeable values
     labelFile = "/local-scratch2/korcan/caffe.txt"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
-    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset2"
     # labelFile = "/home/foniks/scratch/caffe.txt"
     # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
@@ -86,14 +87,12 @@ def findHeatmaps(gradientRespectToLayer,modelName):
         if not os.path.exists(os.path.join(HMtrainDir,name)):
             os.makedirs(os.path.join(HMtrainDir,name))
         argumentPool.append((trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
-    print(len(argumentPool))
     print("CPU COUNT:",cpu_count())
     p = Pool(processes=cpu_count())
     p.starmap(parallelizedFunction, argumentPool)
-
-    print("Starmap after")
     #Procesing validation dataset
     loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
+    loaded_model.summary()
     HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
     if not os.path.exists(HMvalDIR):
         os.makedirs(HMvalDIR)
