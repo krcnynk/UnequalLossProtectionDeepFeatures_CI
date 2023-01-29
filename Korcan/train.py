@@ -101,7 +101,7 @@ if __name__ == "__main__":
     # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
-    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset5"
 
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
