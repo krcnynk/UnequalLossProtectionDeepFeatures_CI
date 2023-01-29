@@ -132,8 +132,8 @@ if __name__ == "__main__":
 
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-
-    mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,32),steps_per_epoch=datasetCount/32,validation_steps=1000,epochs=1000,
+    batchSize = 64
+    mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/batchSize,validation_steps=1000,epochs=1000,
     #mobileModel.fit(x=xTrainData,y=yTrainData,steps_per_epoch = datasetCount,epochs=1000,
-    validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,32),callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
+    validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
     #,max_queue_size=100,workers=4,use_multiprocessing=True)
