@@ -746,21 +746,21 @@ if __name__ == "__main__":
             for percLoss in np.concatenate((np.linspace(0, 4, 2),np.linspace(4, 15, 2)),axis=None):
                 module.packetLossSim(packetCount, 8, percLoss, "TopN",modelName=modelName)
                 module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
-                module.packetLossSim(packetCount, 8, percLoss,"Random",modelName=modelName)
-                module.packetLossSim(
-                    packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
-                )
-                module.packetLossSim(
-                    packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
+                # module.packetLossSim(packetCount, 8, percLoss,"Random",modelName=modelName)
+                # module.packetLossSim(
+                #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
+                # )
+                # module.packetLossSim(
+                #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
                 )
             for percLoss in np.linspace(15, 50, 2):
-                module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
-                module.packetLossSim(
-                    packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
-                )
-                module.packetLossSim(
-                    packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
-                )
+                # module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
+                # module.packetLossSim(
+                #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
+                # )
+                # module.packetLossSim(
+                #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
+                # )
             # for percLoss in np.linspace(50, 100, 2):
             #     module.packetLossSim(packetCount, 8, percLoss, "Random_RSCorrected", fecPercent, protectPercent)
             module.makePlot(
