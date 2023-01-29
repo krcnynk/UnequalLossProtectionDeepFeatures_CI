@@ -6,7 +6,7 @@ import shutil
 import random
 
 trainDir = "/local-scratch2/korcan/ILSVRC2012_img_train"
-trainDir2 = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset5"
+trainDir2 = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset50"
 os.mkdir(os.path.join(trainDir2))
 folderNames = [name for name in os.listdir(trainDir)]
 # print(folderNames)
