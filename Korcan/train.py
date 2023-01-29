@@ -145,10 +145,10 @@ if __name__ == "__main__":
 
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    batchSize = 1
+    batchSize = 32
     print("MAX MIN",np.amax(np.array(yValidationData)),np.amin(np.array(yValidationData)))
     # mobileModel.evaluate(np.array(xValidationData),np.array(yValidationData))
-    
+
     mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/batchSize,validation_steps=1000,epochs=1000,
     # validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
     validation_data=(np.array(xValidationData),np.array(yValidationData)),
