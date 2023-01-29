@@ -764,8 +764,8 @@ if __name__ == "__main__":
             # for percLoss in np.linspace(50, 100, 2):
             #     module.packetLossSim(packetCount, 8, percLoss, "Random_RSCorrected", fecPercent, protectPercent)
             module.makePlot(
-                "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized_" + fecProtectInfo,
-                "Korcan/Plots/"+modelName+"/LossPlotPacketized_" + fecProtectInfo,
+                "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized2_" + fecProtectInfo,
+                "Korcan/Plots/"+modelName+"/LossPlotPacketized2_" + fecProtectInfo,
             )
             module.cleanPlot()
 
