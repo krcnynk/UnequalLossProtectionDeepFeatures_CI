@@ -86,8 +86,8 @@ def loadModel(modelName, splitLayer):
         # Save the mobile and cloud sub-model
         mobile_model.save(mobile_model_path)
         cloud_model.save(cloud_model_path)
-    return mobile_model
-    # return tf.keras.models.clone_model(mobile_model)
+    # return mobile_model
+    return tf.keras.models.clone_model(mobile_model)
 
 
 if __name__ == "__main__":
