@@ -86,8 +86,8 @@ def loadModel(modelName, splitLayer):
         # Save the mobile and cloud sub-model
         mobile_model.save(mobile_model_path)
         cloud_model.save(cloud_model_path)
-    # return mobile_model
-    return tf.keras.models.clone_model(mobile_model)
+    return mobile_model
+    # return tf.keras.models.clone_model(mobile_model)
 
 
 if __name__ == "__main__":
@@ -146,6 +146,7 @@ if __name__ == "__main__":
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     batchSize = 1
+    print("MAX MIN",np.amax(np.array(yValidationData),np.amin(np.array(yValidationData))))
     mobileModel.evaluate(np.array(xValidationData),np.array(yValidationData))
     # mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/batchSize,validation_steps=1000,epochs=1000,
     # # validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
