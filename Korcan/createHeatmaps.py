@@ -94,7 +94,7 @@ def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
         # print("CPU COUNT:",cpu_count())
         # p = Pool(processes=cpu_count())
         # p.starmap(parallelizedFunction, argumentPool)
-    if typeProcess == 2:
+    # if typeProcess == 2:
         #Procesing validation dataset
         # loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
         # HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
