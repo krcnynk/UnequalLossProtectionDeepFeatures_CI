@@ -254,10 +254,10 @@ class pipeline:
             # Save the mobile and cloud sub-model
             self.mobile_model.save(mobile_model_path)
             self.cloud_model.save(cloud_model_path)
-        self.trained_model = tf.keras.models.load_model(
-                os.path.join(trained_model_path)
-            )
-        # self.mobile_model.summary()
+        # self.trained_model = tf.keras.models.load_model(
+        #         os.path.join(trained_model_path)
+        #     )
+        self.mobile_model.summary()
         # self.cloud_model.summary()
 
     def findHeatmaps(self, gradientRespectToLayer,modelName,dataSet):
@@ -705,7 +705,7 @@ if __name__ == "__main__":
     cloud_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
-    trained_model_path = "/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.01-2887.05.h5"
+    # trained_model_path = "/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.01-2887.05.h5"
     dataName = "/localhome/kuyanik/dataset/largeTest"
     quantizationBits = 8
 
