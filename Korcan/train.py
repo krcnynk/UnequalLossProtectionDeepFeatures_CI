@@ -33,27 +33,27 @@ def generate_arrays_from_file(folderFilePath,trainBaseDir,HMbaseDIR,batchSize):
                 yTrainData = []
                 #yield(np.expand_dims(im_array, axis=0),targetTensor)
 
-# def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
-#     while 1:
-#         xValidationData = []
-#         yValidationData = []
-#         count = 0
-#         validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-#         HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
-#         for i in range(len(validationFileNames)):
-#             count = count +1
-#             I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
-#             I = I.resize([224, 224])
-#             im_array = tf.keras.preprocessing.image.img_to_array(I)
-#             im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-#             targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
-#             xValidationData.append(im_array)
-#             yValidationData.append(targetTensor)
-#             if(count == batchSize):
-#                 count = 0
-#                 yield(np.array(xValidationData),np.array(yValidationData))
-#                 xValidationData = []
-#                 yValidationData = []
+def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
+    while 1:
+        xValidationData = []
+        yValidationData = []
+        count = 0
+        validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
+        HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
+        for i in range(len(validationFileNames)):
+            count = count +1
+            I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
+            I = I.resize([224, 224])
+            im_array = tf.keras.preprocessing.image.img_to_array(I)
+            im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+            targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
+            xValidationData.append(im_array)
+            yValidationData.append(targetTensor)
+            if(count == batchSize):
+                count = 0
+                yield(np.array(xValidationData),np.array(yValidationData))
+                xValidationData = []
+                yValidationData = []
 
 def loadModel(modelName, splitLayer):
     modelPath = "deep_models_full/" + modelName + "_model.h5"
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
-    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset5"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset100"
 
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
@@ -138,18 +138,18 @@ if __name__ == "__main__":
 
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
 
-    xValidationData = []
-    yValidationData = []
-    validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-    HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
-    for i in range(len(validationFileNames)):
-        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
-        I = I.resize([224, 224])
-        im_array = tf.keras.preprocessing.image.img_to_array(I)
-        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-        targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
-        xValidationData.append(im_array)
-        yValidationData.append(targetTensor)
+    # xValidationData = []
+    # yValidationData = []
+    # validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
+    # HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
+    # for i in range(len(validationFileNames)):
+    #     I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
+    #     I = I.resize([224, 224])
+    #     im_array = tf.keras.preprocessing.image.img_to_array(I)
+    #     im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+    #     targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
+    #     xValidationData.append(im_array)
+    #     yValidationData.append(targetTensor)
 
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
@@ -158,7 +158,7 @@ if __name__ == "__main__":
     # mobileModel.evaluate(np.array(xValidationData),np.array(yValidationData))
 
     mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/batchSize,validation_steps=1000,epochs=1000,
-    # validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    validation_data=(np.array(xValidationData),np.array(yValidationData)),
+    validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
+    # validation_data=(np.array(xValidationData),np.array(yValidationData)),
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
     #,max_queue_size=100,workers=4,use_multiprocessing=True)
