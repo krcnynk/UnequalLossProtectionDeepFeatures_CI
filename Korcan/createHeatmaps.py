@@ -61,12 +61,12 @@ def parallelizedFunction(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,
 def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
 
     #Changeable values
-    # labelFile = "/local-scratch2/korcan/caffe.txt"
-    # valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
-    # trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset100"
-    labelFile = "/home/foniks/scratch/caffe.txt"
-    valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
-    trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
+    labelFile = "/local-scratch2/korcan/caffe.txt"
+    valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset100"
+    # labelFile = "/home/foniks/scratch/caffe.txt"
+    # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
+    # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
 
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
