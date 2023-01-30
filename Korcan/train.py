@@ -115,8 +115,8 @@ if __name__ == "__main__":
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
 
 
-    gpus = tf.config.list_physical_devices('GPU')
-    tf.config.experimental.set_memory_growth(gpus[0], True)
+    # gpus = tf.config.list_physical_devices('GPU')
+    # tf.config.experimental.set_memory_growth(gpus[0], True)
 
     mobileModel = loadModel(modelName, splitLayer)
     #mobileModel = tf.keras.models.load_model("checkpoints1/model.44-0.00.h5")

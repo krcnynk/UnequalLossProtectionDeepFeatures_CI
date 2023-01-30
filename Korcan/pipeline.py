@@ -752,7 +752,7 @@ if __name__ == "__main__":
                 # )
                 # module.packetLossSim(
                 #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
-                )
+                # )
             for percLoss in np.linspace(15, 50, 2):
                 # module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
                 # module.packetLossSim(
