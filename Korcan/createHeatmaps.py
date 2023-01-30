@@ -2,7 +2,10 @@ import numpy as np
 import tensorflow as tf
 import os
 from multiprocessing import Pool, cpu_count
+import sys
+
 tf.config.set_visible_devices([], 'GPU')
+
 def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = tf.keras.models.Model(
         [model.inputs], [model.get_layer(last_conv_layer_name).output, model.output]
@@ -32,8 +35,8 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     heatmap = tf.nn.relu(heatmap)
     heatmap = tf.squeeze(heatmap)
     # print(np.array(heatmapTensor))
-    # return [np.array(heatmap), np.array(heatmapTensor)]
-    return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
+    return [np.array(heatmap), np.array(heatmapTensor)]
+    # return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
 
 
 def parallelizedFunction(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
@@ -55,7 +58,7 @@ def parallelizedFunction(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,
             np.save(fil, heatmapTensor)
     return
 
-def findHeatmaps(gradientRespectToLayer,modelName):
+def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
 
     #Changeable values
     # labelFile = "/local-scratch2/korcan/caffe.txt"
@@ -74,47 +77,50 @@ def findHeatmaps(gradientRespectToLayer,modelName):
     )
 
 
-    #Processing training dataset
-    argumentPool = []
-    with open(labelFile) as file:
-        listOfFilenameLabel = [line.split(" ")[0] for line in file]
-    # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
-    HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
-    if not os.path.exists(HMtrainDir):
-        os.makedirs(HMtrainDir)
-    folderNames = [name for name in os.listdir(trainDir)]
-    for name in folderNames:
-        if not os.path.exists(os.path.join(HMtrainDir,name)):
-            os.makedirs(os.path.join(HMtrainDir,name))
-        argumentPool.append((trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
-    print("CPU COUNT:",cpu_count())
-    p = Pool(processes=cpu_count())
-    p.starmap(parallelizedFunction, argumentPool)
-
-    #Procesing validation dataset
-    loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
-    HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
-    if not os.path.exists(HMvalDIR):
-        os.makedirs(HMvalDIR)
-    fileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-    for f in fileNames:
-        label = f[:-5]
-        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,f))
-        I = I.resize([224, 224])
-        im_array = tf.keras.preprocessing.image.img_to_array(I)
-        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-        _ , heatmapTensor = __make_gradcam_heatmap(
-            np.expand_dims(im_array, axis=0),
-            loaded_model,
-            gradientRespectToLayer,
-            int(label),
-        )
-        with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
-            np.save(fil, heatmapTensor)
+    if typeProcess == 1:
+        #Processing training dataset
+        with open(labelFile) as file:
+            listOfFilenameLabel = [line.split(" ")[0] for line in file]
+        # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
+        HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
+        if not os.path.exists(HMtrainDir):
+            os.makedirs(HMtrainDir)
+        # folderNames = [name for name in os.listdir(trainDir)]
+        # for name in folderNames:
+        if not os.path.exists(os.path.join(HMtrainDir,directoryName)):
+            os.makedirs(os.path.join(HMtrainDir,directoryName))
+            parallelizedFunction(trainDir,directoryName,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer)
+            # argumentPool.append((trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
+        # print("CPU COUNT:",cpu_count())
+        # p = Pool(processes=cpu_count())
+        # p.starmap(parallelizedFunction, argumentPool)
+    if typeProcess == 2:
+        #Procesing validation dataset
+        # loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
+        # HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
+        # if not os.path.exists(HMvalDIR):
+        #     os.makedirs(HMvalDIR)
+        # fileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
+        # for f in fileNames:
+        #     label = f[:-5]
+        #     I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,f))
+        #     I = I.resize([224, 224])
+        #     im_array = tf.keras.preprocessing.image.img_to_array(I)
+        #     im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        #     _ , heatmapTensor = __make_gradcam_heatmap(
+        #         np.expand_dims(im_array, axis=0),
+        #         loaded_model,
+        #         gradientRespectToLayer,
+        #         int(label),
+        #     )
+        #     with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
+        #         np.save(fil, heatmapTensor)
 
 if __name__ == "__main__":
     # modelName = "efficientnetb0"
     # splitLayer = "block2b_add"
     modelName = "dense"
     splitLayer = "pool2_conv"
-    findHeatmaps(splitLayer,modelName)
+    directoryName = sys.argv[1]
+    typeProcess = sys.argv[2]
+    findHeatmaps(splitLayer,modelName,directoryName,directoryName,typeProcess)
