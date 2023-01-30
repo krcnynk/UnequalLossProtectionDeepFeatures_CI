@@ -123,4 +123,4 @@ if __name__ == "__main__":
     splitLayer = "pool2_conv"
     directoryName = sys.argv[1]
     typeProcess = sys.argv[2]
-    findHeatmaps(splitLayer,modelName,directoryName,directoryName,typeProcess)
+    findHeatmaps(splitLayer,modelName,directoryName,typeProcess)
