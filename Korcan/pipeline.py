@@ -491,7 +491,7 @@ class pipeline:
     ):
         iteration = 1
         if(case == "Random" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
-            iteration = 2
+            iteration = 1
         scores = []
 
         for i in range(iteration):          

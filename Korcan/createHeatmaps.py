@@ -47,7 +47,8 @@ def processDirectory(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,grad
         I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
-        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
         _ , heatmapTensor = __make_gradcam_heatmap(
             np.expand_dims(im_array, axis=0),
             loaded_model,
@@ -81,19 +82,13 @@ def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
         #Processing training dataset
         with open(labelFile) as file:
             listOfFilenameLabel = [line.split(" ")[0] for line in file]
-        # trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
         HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
         if not os.path.exists(HMtrainDir):
             os.makedirs(HMtrainDir)
-        # folderNames = [name for name in os.listdir(trainDir)]
-        # for name in folderNames:
         if not os.path.exists(os.path.join(HMtrainDir,directoryName)):
             os.makedirs(os.path.join(HMtrainDir,directoryName))
         processDirectory(trainDir,directoryName,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer)
-            # argumentPool.append((trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer))
-        # print("CPU COUNT:",cpu_count())
-        # p = Pool(processes=cpu_count())
-        # p.starmap(processDirectory, argumentPool)
+        
     if typeProcess == 2:
         # Procesing validation dataset
         loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
@@ -106,7 +101,8 @@ def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
             I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,f))
             I = I.resize([224, 224])
             im_array = tf.keras.preprocessing.image.img_to_array(I)
-            im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+            # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+            im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
             _ , heatmapTensor = __make_gradcam_heatmap(
                 np.expand_dims(im_array, axis=0),
                 loaded_model,
@@ -117,10 +113,10 @@ def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
                 np.save(fil, heatmapTensor)
 
 if __name__ == "__main__":
-    # modelName = "efficientnetb0"
-    # splitLayer = "block2b_add"
-    modelName = "dense"
-    splitLayer = "pool2_conv"
+    modelName = "efficientnetb0"
+    splitLayer = "block2b_add"
+    # modelName = "dense"
+    # splitLayer = "pool2_conv"
     directoryName = sys.argv[1]
     typeProcess = sys.argv[2]
     findHeatmaps(splitLayer,modelName,directoryName,int(typeProcess))
