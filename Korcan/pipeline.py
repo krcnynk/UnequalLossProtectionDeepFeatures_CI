@@ -763,11 +763,11 @@ if __name__ == "__main__":
             dirNames.append("Random")
             for d in dirNames:
                 listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
-                for f in listFiles:
-                    if f[:3] == "key":
-                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+f, 'rb') as f:
+                for fname in listFiles:
+                    if fname[:3] == "key":
+                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+fname, 'rb') as f:
                             key = pickle.load(f)
-                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+"val"+f[3:], 'rb') as f:
+                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+"val"+fname[3:], 'rb') as f:
                             val = pickle.load(f)
                         module.pdict[key] = val
 
