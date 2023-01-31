@@ -272,7 +272,7 @@ class pipeline:
             )
             # a, b = self.__make_gradcam_heatmap_fromTrainedModel(
             #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
-            )
+            # )
             self.heatmapsBatch.append(a)
             self.heatMapsChannelsBatch.append(b)
         self.heatmapsBatch = np.array(self.heatmapsBatch)
