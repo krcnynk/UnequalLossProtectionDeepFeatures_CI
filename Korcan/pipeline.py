@@ -315,7 +315,7 @@ class pipeline:
         # perc,type -> acc,loss
 
         marker = itertools.cycle(("1", "+", ".", "h", "*"))
-        cases = ["TopN","b","1","BotN","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
+        cases = ["Top","b","1","Bot","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
@@ -619,13 +619,13 @@ class pipeline:
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
-            elif case == "TopN":
+            elif case == "Top":
                 packetsSent = packetsSent + totalNumPackets
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
                     0:numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
-            elif case == "BotN":
+            elif case == "Bot":
                 packetsSent = packetsSent + totalNumPackets
                 OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
@@ -633,7 +633,7 @@ class pipeline:
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
             else:
-                raise Exception("Case can only be Random,TopN or Random_RSCorrected.")
+                raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
             for j in indexOfLossedPackets:
                 packetizedfmL[j][...] = 0
@@ -684,7 +684,7 @@ class pipeline:
     #     count = count + 1
     #     acc = acc + s["acc"]
     #     loss = loss + s["loss"]
-        if case == "TopN" or case == "BotN" or case == "Random":
+        if case == "Top" or case == "Bot" or case == "Random":
             if not os.path.exists("Korcan/Plots/"+modelName+"/"+case):
                 os.makedirs("Korcan/Plots/"+modelName+"/"+case)
             
@@ -747,7 +747,7 @@ if __name__ == "__main__":
     fecPercent = int(sys.argv[3])
     protectPercent = int(sys.argv[4])
 
-    if case == "TopN" or case == "BotN" or case == "Random":
+    if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
     elif case == "makeplot":
         module.makePlot(
@@ -765,8 +765,8 @@ if __name__ == "__main__":
     #         fecProtectInfo = "fec" + str(f) + "protect" + str(p)
 
     #         for percLoss in np.concatenate((np.linspace(0, 4, 2),np.linspace(4, 15, 2)),axis=None):
-    #             module.packetLossSim(packetCount, 8, percLoss, "TopN",modelName=modelName)
-    #             module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
+    #             module.packetLossSim(packetCount, 8, percLoss, "Top",modelName=modelName)
+    #             module.packetLossSim(packetCount, 8, percLoss, "Bot",modelName=modelName)
     #             # module.packetLossSim(packetCount, 8, percLoss,"Random",modelName=modelName)
     #             # module.packetLossSim(
     #             #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
@@ -775,7 +775,7 @@ if __name__ == "__main__":
     #             #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
     #             # )
     #         for percLoss in np.linspace(15, 50, 2):
-    #             # module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
+    #             # module.packetLossSim(packetCount, 8, percLoss, "Bot",modelName=modelName)
     #             # module.packetLossSim(
     #             #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
     #             # )
@@ -809,10 +809,10 @@ if __name__ == "__main__":
     # )
 
     # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "TopN", saveImages=True,modelName
+    #     packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName
     # )
     # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "BotN", saveImages=True,modelName
+    #     packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName
     # )
     # module.packetLossSim(
     #     packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
