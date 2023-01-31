@@ -744,8 +744,6 @@ if __name__ == "__main__":
     packetCount = 8
     percLoss = int(sys.argv[1])
     case = sys.argv[2]
-    fecPercent = int(sys.argv[3])
-    protectPercent = int(sys.argv[4])
 
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
@@ -755,6 +753,8 @@ if __name__ == "__main__":
                 "Korcan/Plots/"+modelName+"/LossPlotPacketized",
             )
     else:
+        fecPercent = int(sys.argv[3])
+        protectPercent = int(sys.argv[4])
         module.packetLossSim(packetCount, 8, percLoss, case, fecPercent, protectPercent,modelName=modelName)
    
 
