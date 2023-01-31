@@ -748,10 +748,34 @@ if __name__ == "__main__":
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
     elif case == "makeplot":
-        module.makePlot(
-                "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized",
-                "Korcan/Plots/"+modelName+"/LossPlotPacketized",
-            )
+        dirs = [name for name in os.listdir("Korcan/Plots/"+modelName) if os.path.isdir("Korcan/Plots/"+modelName)]
+        fpPairs = []
+        for d in dirs:
+            splitted = d.split("_")
+            if splitted[0] == "Random" and splitted[1] == "RSCorrected" and splitted[2] == "FECRemovesBOT":  
+                fpPairs.append(splitted[:-2]) #Random_RSCorrected_FECRemovesBOT_10_50
+        dirNames = []
+        for fp in fpPairs:
+            dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
+            dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
+            dirNames.append("Top")
+            dirNames.append("Bot")
+            dirNames.append("Random")
+            for d in dirNames:
+                listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
+                for f in listFiles:
+                    if f[:3] == "key":
+                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+f, 'rb') as f:
+                            key = pickle.load(pdictKey, f)
+                    elif f[:3] == "val":
+                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+f, 'rb') as f:
+                            val = pickle.load(pdictKey, f)
+                    self.pdict[key] = val
+
+            module.makePlot(
+                    "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized"+str(fp[0])+"_"+str(fp[1]),
+                    "Korcan/Plots/"+modelName+"/LossPlotPacketized"+str(fp[0])+"_"+str(fp[1]),
+                )
     else:
         fecPercent = int(sys.argv[3])
         protectPercent = int(sys.argv[4])
