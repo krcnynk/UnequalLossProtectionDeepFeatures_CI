@@ -752,7 +752,7 @@ if __name__ == "__main__":
         fpPairs = []
         for d in dirs:
             splitted = d.split("_")
-            if splitted[0] == "Random" and splitted[1] == "RSCorrected" and splitted[2] == "FECRemovesBOT":  
+            if len(splitted) == 5:  
                 fpPairs.append(splitted[:-2]) #Random_RSCorrected_FECRemovesBOT_10_50
         dirNames = []
         for fp in fpPairs:
