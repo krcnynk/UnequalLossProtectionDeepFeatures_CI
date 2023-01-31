@@ -691,9 +691,9 @@ class pipeline:
         pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
         rand = int(random.random()*1e9)
-        with open("Korcan/Plots/"+modelName+"/"+case+"_key_"+rand+".pkl", 'wb') as f:
+        with open("Korcan/Plots/"+modelName+"/"+case+"_key_"+str(rand)+".pkl", 'wb') as f:
             pickle.dump(pdictKey, f)
-        with open("Korcan/Plots/"+modelName+"/"+case+"_val_"+rand+".pkl", 'wb') as f:
+        with open("Korcan/Plots/"+modelName+"/"+case+"_val_"+str(rand)+".pkl", 'wb') as f:
             pickle.dump(pdictVal, f)
         # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
