@@ -24,7 +24,6 @@ class pipeline:
     heatmapsBatch = []
     heatMapsChannelsBatch = []
 
-
     def __normalizeToUnit(self, arr):
         if (np.ptp(arr)) == 0:
             return arr
@@ -720,21 +719,6 @@ if __name__ == "__main__":
     module.loadData(dataName, [224, 224], False)
     module.findHeatmaps(splitLayer,modelName,dataName)
 
-    # for perc in np.linspace(0, 2, 4):
-    #     module.findPercentileLossPerChannelFM(perc, quantizationBits, bot=False)
-    #     module.findPercentileLossPerChannelFM(perc, quantizationBits, bot=True)
-    #     module.findPercentileRandomLossPerChannelFM(perc, quantizationBits)
-    # for perc in np.linspace(2, 5, 4):
-    #     module.findPercentileLossPerChannelFM(perc, quantizationBits, bot=False)
-    #     module.findPercentileLossPerChannelFM(perc, quantizationBits, bot=True)
-    #     module.findPercentileRandomLossPerChannelFM(perc, quantizationBits)
-    # for perc in np.linspace(5, 12, 3):
-    #     module.findPercentileLossPerChannelFM(perc, quantizationBits, bot=False)
-    #     module.findPercentileLossPerChannelFM(perc, quantizationBits, bot=True)
-    #     module.findPercentileRandomLossPerChannelFM(perc, quantizationBits)
-    # module.makePlot("Korcan/Plots/"+modelName+"/AccuracyPlot", "Korcan/Plots/"+modelName+"/LossPlot")
-    # module.cleanPlot()
-
     fecPercent = [10]
     protectPercent = [20, 50, 80]
     packetCount = 14
@@ -776,33 +760,34 @@ if __name__ == "__main__":
 
     # module.saveSuperImposedChannels()
 
-    # saveImageLossPercent = 0
-    # module.findPercentileLossPerChannelFM(
-    #     saveImageLossPercent, quantizationBits, saveImages=True
-    # )
-    # module.findPercentileLossPerChannelFM(
-    #     saveImageLossPercent, quantizationBits, saveImages=True,bot=True
-    # )
-    # module.findPercentileRandomLossPerChannelFM(
-    #     saveImageLossPercent, quantizationBits, saveImages=True
-    # )
+    saveImageLossPercent = 0
+    module.findPercentileLossPerChannelFM(
+        saveImageLossPercent, quantizationBits, saveImages=True
+    )
+    module.findPercentileLossPerChannelFM(
+        saveImageLossPercent, quantizationBits, saveImages=True,bot=True
+    )
+    module.findPercentileRandomLossPerChannelFM(
+        saveImageLossPercent, quantizationBits, saveImages=True
+    )
 
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "TopN", saveImages=True,modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "BotN", saveImages=True,modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount,
-    #     quantizationBits,
-    #     saveImageLossPercent,
-    #     "Random_RSCorrected",
-    #     50,
-    #     50,
-    #     saveImages=True,modelName
-    # )
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "TopN", saveImages=True,modelName
+    )
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "BotN", saveImages=True,modelName
+    )
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
+    )
+
+    module.packetLossSim(
+        packetCount,
+        quantizationBits,
+        saveImageLossPercent,
+        "Random_RSCorrected",
+        50,
+        50,
+        saveImages=True,modelName
+    )
 

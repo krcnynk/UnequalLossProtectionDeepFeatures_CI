@@ -41,7 +41,7 @@ def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
         validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
         HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
         for i in range(len(validationFileNames)):
-            count = count +1
+            count = count + 1
             I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
             I = I.resize([224, 224])
             im_array = tf.keras.preprocessing.image.img_to_array(I)
@@ -114,15 +114,14 @@ if __name__ == "__main__":
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
 
+    strategy = tf.distribute.MirroredStrategy()
+    print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
-    # gpus = tf.config.list_physical_devices('GPU')
-    # tf.config.experimental.set_memory_growth(gpus[0], True)
-
-    mobileModel = loadModel(modelName, splitLayer)
-    #mobileModel = tf.keras.models.load_model("checkpoints1/model.44-0.00.h5")
-    mobileModel.trainable = True
-    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(0.1),
-                loss=tf.keras.losses.MeanSquaredError(),)
+    with strategy.scope():
+        mobileModel = loadModel(modelName, splitLayer)
+        mobileModel.trainable = True
+        mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
+                    loss=tf.keras.losses.MeanSquaredError(),)
 
     # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
@@ -137,28 +136,35 @@ if __name__ == "__main__":
     random.shuffle(folderFilePath)
 
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
-
-    # xValidationData = []
-    # yValidationData = []
-    # validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-    # HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
-    # for i in range(len(validationFileNames)):
-    #     I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
-    #     I = I.resize([224, 224])
-    #     im_array = tf.keras.preprocessing.image.img_to_array(I)
-    #     im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-    #     targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
-    #     xValidationData.append(im_array)
-    #     yValidationData.append(targetTensor)
-
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    batchSize = 100
-    # print("MAX MIN",np.amax(np.array(yValidationData)),np.amin(np.array(yValidationData)))
-    # mobileModel.evaluate(np.array(xValidationData),np.array(yValidationData))
+    batchSize = 32
+
 
     mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/batchSize,validation_steps=1000/batchSize,epochs=1000,
     validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    # validation_data=(np.array(xValidationData),np.array(yValidationData)),
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
+    # validation_data=(np.array(xValidationData),np.array(yValidationData)),
     #,max_queue_size=100,workers=4,use_multiprocessing=True)
+
+
+#Unnecessary Junk
+# gpus = tf.config.list_physical_devices('GPU')
+# tf.config.experimental.set_memory_growth(gpus[0], True)
+# print("MAX MIN",np.amax(np.array(yValidationData)),np.amin(np.array(yValidationData)))
+# mobileModel.evaluate(np.array(xValidationData),np.array(yValidationData))
+
+# xValidationData = []
+# yValidationData = []
+# validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
+# HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
+# for i in range(len(validationFileNames)):
+#     I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
+#     I = I.resize([224, 224])
+#     im_array = tf.keras.preprocessing.image.img_to_array(I)
+#     im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+#     targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
+#     xValidationData.append(im_array)
+#     yValidationData.append(targetTensor)
+
+# mobileModel = tf.keras.models.load_model("checkpoints1/model.44-0.00.h5")
