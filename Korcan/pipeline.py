@@ -770,7 +770,7 @@ if __name__ == "__main__":
                     if f[:3] == "val":
                         with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+f, 'rb') as f:
                             val = pickle.load(f)
-                    self.pdict[key] = val
+                    module.pdict[key] = val
 
             module.makePlot(
                     "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized"+str(fp[0])+"_"+str(fp[1]),
