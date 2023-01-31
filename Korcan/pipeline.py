@@ -364,9 +364,10 @@ class pipeline:
         plt.xlabel("Percent Lost")
         plt.ylabel("Loss")
         for s in range(len(seriesX)):
+            mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            plt.scatter(seriesX[s], seriesY[s], label=types[s], marker=next(marker))
-            plt.plot(seriesX[s], seriesY[s], linewidth=0.5)
+            plt.scatter(seriesX[s], seriesY[s], label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
+            plt.plot(seriesX[s], seriesY[s], linewidth=0.5,color=cases[mapping+1])
         plt.legend(
             bbox_to_anchor=(1.04, 1),
             loc="upper left",
