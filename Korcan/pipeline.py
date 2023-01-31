@@ -728,14 +728,14 @@ if __name__ == "__main__":
     module.findHeatmaps(splitLayer,modelName,dataName)
 
     packetCount = 8
-    percLoss = sys.argv[1]
+    percLoss = int(sys.argv[1])
     case = sys.argv[2]
 
     if len(sys.argv) < 4:
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
     else:
-        fecPercent = sys.argv[3]
-        protectPercent = sys.argv[4]
+        fecPercent = (sys.argv[3])
+        protectPercent = (sys.argv[4])
         module.packetLossSim(packetCount, 8, percLoss, case, fecPercent, protectPercent,modelName=modelName)
         
     # fecPercent = [10]
