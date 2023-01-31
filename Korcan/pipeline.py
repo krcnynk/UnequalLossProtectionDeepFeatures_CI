@@ -314,7 +314,6 @@ class pipeline:
         # self.pdict
         # perc,type -> acc,loss
 
-        marker = itertools.cycle(("1", "+", ".", "h", "*"))
         cases = ["Top","b","1","Bot","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
@@ -327,6 +326,7 @@ class pipeline:
         plt.xlabel("Percent Lost")
         plt.ylabel("Accuracy")
         for s in range(len(seriesX)):
+            seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             mapping = cases.index(types[s])
             plt.scatter(seriesX[s], seriesY[s], label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
             plt.plot(seriesX[s], seriesY[s], linewidth=0.5, color=cases[mapping+1])
