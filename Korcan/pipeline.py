@@ -690,7 +690,7 @@ class pipeline:
         pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent),case)
         pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
-        rand = int(random.seed()*1e9)
+        rand = int(random.randint(1, sys.maxsize))
         with open("Korcan/Plots/"+modelName+"/"+case+"/key_"+str(rand)+".pkl", 'wb') as f:
             pickle.dump(pdictKey, f)
         with open("Korcan/Plots/"+modelName+"/"+case+"/val_"+str(rand)+".pkl", 'wb') as f:
@@ -733,11 +733,12 @@ if __name__ == "__main__":
 
     if len(sys.argv) < 4:
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
-    else:
+    elif:
         fecPercent = (sys.argv[3])
         protectPercent = (sys.argv[4])
         module.packetLossSim(packetCount, 8, percLoss, case, fecPercent, protectPercent,modelName=modelName)
-        
+    else:
+
     # fecPercent = [10]
     # protectPercent = [20, 50, 80]
     # for f in fecPercent:
