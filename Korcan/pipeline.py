@@ -310,7 +310,7 @@ class pipeline:
             )
             plt.close()
 
-    def makePlot(self, pathAcc, pathLoss,f,p):
+    def makePlot(self, pathAcc, pathLoss):
         # self.pdict
         # perc,type -> acc,loss
 
