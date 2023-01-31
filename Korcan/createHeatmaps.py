@@ -62,12 +62,12 @@ def processDirectory(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,grad
 def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
 
     #Changeable values
-    # labelFile = "/local-scratch2/korcan/caffe.txt"
-    # valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
-    # trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset100"
-    labelFile = "/home/foniks/scratch/caffe.txt"
-    valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
-    trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
+    labelFile = "/local-scratch2/korcan/caffe.txt"
+    valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset100"
+    # labelFile = "/home/foniks/scratch/caffe.txt"
+    # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
+    # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
 
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
@@ -88,7 +88,7 @@ def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
         if not os.path.exists(os.path.join(HMtrainDir,directoryName)):
             os.makedirs(os.path.join(HMtrainDir,directoryName))
         processDirectory(trainDir,directoryName,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer)
-        
+
     if typeProcess == 2:
         # Procesing validation dataset
         loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
