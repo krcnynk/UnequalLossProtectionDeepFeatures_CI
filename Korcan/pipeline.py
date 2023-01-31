@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib
 import matplotlib as mpl
-
+import pickle 
 mpl.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -489,205 +489,213 @@ class pipeline:
         saveImages=False,
         modelName = None,
     ):
-        iteration = 1
-        if(case == "Random" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
-            iteration = 1
-        scores = []
+    # iteration = 1
+    # if(case == "Random" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
+    #     iteration = 1
+    # scores = []
 
-        for i in range(iteration):          
-            packetHeight = math.ceil(self.H / packetNum)  # 55/12, 4.66->5
-            remainder = self.H % packetHeight  # 1
-            if remainder != 0:
-                pad = packetHeight - remainder
-            else:
-                pad = 0
-            fmLPacketizedLoss = []
-            importancePacketsTensor = []
-            rng = np.random.default_rng()
-            packetsLost = 0
-            packetsSent = 0
+    # for i in range(iteration):          
+        packetHeight = math.ceil(self.H / packetNum)  # 55/12, 4.66->5
+        remainder = self.H % packetHeight  # 1
+        if remainder != 0:
+            pad = packetHeight - remainder
+        else:
+            pad = 0
+        fmLPacketizedLoss = []
+        importancePacketsTensor = []
+        rng = np.random.default_rng()
+        packetsLost = 0
+        packetsSent = 0
 
-            for i_b in range(self.batchSize):
-                quantizedData, minVal, maxVal = self.__quantize(
-                    self.latentOutputBatch[i_b], qBits
+        for i_b in range(self.batchSize):
+            quantizedData, minVal, maxVal = self.__quantize(
+                self.latentOutputBatch[i_b], qBits
+            )
+            # quantizedData = self.latentOutputBatch[i_b]
+            fmL = np.copy(quantizedData)
+            heatMap = np.copy(self.heatMapsChannelsBatch[i_b, ...])
+            fmLChannelArray = np.dsplit(fmL, self.C)
+            heatMapChannelArray = np.dsplit(heatMap, self.C)
+
+            packetizedfmL = []
+            packetizedheatMap = []
+            for i_c in range(self.C):
+                packetizedfmL = packetizedfmL + np.vsplit(
+                    np.pad(
+                        fmLChannelArray[i_c].squeeze(),
+                        [(0, pad), (0, 0)],
+                        mode="constant",
+                        constant_values=0,
+                    ),
+                    packetNum,
                 )
-                # quantizedData = self.latentOutputBatch[i_b]
-                fmL = np.copy(quantizedData)
-                heatMap = np.copy(self.heatMapsChannelsBatch[i_b, ...])
-                fmLChannelArray = np.dsplit(fmL, self.C)
-                heatMapChannelArray = np.dsplit(heatMap, self.C)
+                packetizedheatMap = packetizedheatMap + np.vsplit(
+                    np.pad(
+                        heatMapChannelArray[i_c].squeeze(),
+                        [(0, pad), (0, 0)],
+                        mode="constant",
+                        constant_values=0,
+                    ),
+                    packetNum,
+                )
+            importanceOfPackets = [
+                np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
+            ]
+            OrderedImportanceOfPacketsIndex = self.__getOrderedImportantPacketIndex(
+                importanceOfPackets
+            )
+            numOfPacketsToLose = math.floor(
+                len(packetizedheatMap) * percOfPacketLoss / 100
+            )
+            totalNumPackets = len(packetizedheatMap)
 
-                packetizedfmL = []
-                packetizedheatMap = []
-                for i_c in range(self.C):
-                    packetizedfmL = packetizedfmL + np.vsplit(
-                        np.pad(
-                            fmLChannelArray[i_c].squeeze(),
-                            [(0, pad), (0, 0)],
-                            mode="constant",
-                            constant_values=0,
-                        ),
-                        packetNum,
+            if (
+                case == "Random_RSCorrected"
+                or case == "Random_RSCorrected_FECRemovesBOT"
+            ):
+                FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
+                protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
+                unprotectedPacketCount = totalNumPackets - protectedPacketCount
+                if case == "Random_RSCorrected":
+                    packetsSent = packetsSent + FECPacketCount + totalNumPackets
+                    numOfPacketsToLose = math.floor(
+                        (FECPacketCount + totalNumPackets) * percOfPacketLoss / 100
                     )
-                    packetizedheatMap = packetizedheatMap + np.vsplit(
-                        np.pad(
-                            heatMapChannelArray[i_c].squeeze(),
-                            [(0, pad), (0, 0)],
-                            mode="constant",
-                            constant_values=0,
-                        ),
-                        packetNum,
+                    packetsLost = packetsLost + numOfPacketsToLose
+                elif case == "Random_RSCorrected_FECRemovesBOT":
+                    lowestImportanceIndex = OrderedImportanceOfPacketsIndex[
+                        -FECPacketCount:
+                    ]
+                    OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[
+                        :-FECPacketCount
+                    ]
+                    for j in lowestImportanceIndex:
+                        packetizedfmL[j][...] = 0
+                    unprotectedPacketCount = unprotectedPacketCount - len(
+                        lowestImportanceIndex
                     )
-                importanceOfPackets = [
-                    np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
-                ]
-                OrderedImportanceOfPacketsIndex = self.__getOrderedImportantPacketIndex(
-                    importanceOfPackets
-                )
-                numOfPacketsToLose = math.floor(
-                    len(packetizedheatMap) * percOfPacketLoss / 100
-                )
-                totalNumPackets = len(packetizedheatMap)
+                    if(unprotectedPacketCount < 0):
+                        print("Cannot delete more!\n")
+                        return
+                    packetsSent = packetsSent + totalNumPackets
+                    packetsLost = packetsLost + numOfPacketsToLose
 
+                newPacketizedFECChannel = []
+                for i_p in range(unprotectedPacketCount):
+                    newPacketizedFECChannel.append(0)  # Unprotected Packets
+                for i_p in range(protectedPacketCount):
+                    newPacketizedFECChannel.append(1)  # Protected Top Packets k
+                for i_p in range(FECPacketCount):
+                    newPacketizedFECChannel.append(2)  # Redundant packets n-k
+                rng.shuffle(newPacketizedFECChannel)
+                lostPackets = newPacketizedFECChannel[0:numOfPacketsToLose]
+                lostUnprotectedPackets = lostPackets.count(0)
+                lostProtectedPackets = lostPackets.count(1)
+                lostRedundantPackets = lostPackets.count(2)
                 if (
-                    case == "Random_RSCorrected"
-                    or case == "Random_RSCorrected_FECRemovesBOT"
-                ):
-                    FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
-                    protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
-                    unprotectedPacketCount = totalNumPackets - protectedPacketCount
-                    if case == "Random_RSCorrected":
-                        packetsSent = packetsSent + FECPacketCount + totalNumPackets
-                        numOfPacketsToLose = math.floor(
-                            (FECPacketCount + totalNumPackets) * percOfPacketLoss / 100
-                        )
-                        packetsLost = packetsLost + numOfPacketsToLose
-                    elif case == "Random_RSCorrected_FECRemovesBOT":
-                        lowestImportanceIndex = OrderedImportanceOfPacketsIndex[
-                            -FECPacketCount:
-                        ]
-                        OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[
-                            :-FECPacketCount
-                        ]
-                        for j in lowestImportanceIndex:
-                            packetizedfmL[j][...] = 0
-                        unprotectedPacketCount = unprotectedPacketCount - len(
-                            lowestImportanceIndex
-                        )
-                        if(unprotectedPacketCount < 0):
-                            print("Cannot delete more!\n")
-                            return
-                        packetsSent = packetsSent + totalNumPackets
-                        packetsLost = packetsLost + numOfPacketsToLose
-
-                    newPacketizedFECChannel = []
-                    for i_p in range(unprotectedPacketCount):
-                        newPacketizedFECChannel.append(0)  # Unprotected Packets
-                    for i_p in range(protectedPacketCount):
-                        newPacketizedFECChannel.append(1)  # Protected Top Packets k
-                    for i_p in range(FECPacketCount):
-                        newPacketizedFECChannel.append(2)  # Redundant packets n-k
-                    rng.shuffle(newPacketizedFECChannel)
-                    lostPackets = newPacketizedFECChannel[0:numOfPacketsToLose]
-                    lostUnprotectedPackets = lostPackets.count(0)
-                    lostProtectedPackets = lostPackets.count(1)
-                    lostRedundantPackets = lostPackets.count(2)
-                    if (
-                        lostProtectedPackets + lostRedundantPackets <= FECPacketCount
-                    ):  # RECOVERABLE no protected part will be lost only unprotected
-                        unprotectedPackets = OrderedImportanceOfPacketsIndex[
-                            protectedPacketCount:
-                        ]
-                        rng.shuffle(unprotectedPackets)
-                        indexOfLossedPackets = unprotectedPackets[0:lostUnprotectedPackets]
-                    else:  # CANNOT RECOVER,lostProtectedPackets valid
-                        unprotectedPackets = OrderedImportanceOfPacketsIndex[
-                            protectedPacketCount:
-                        ]
-                        protectedPackets = OrderedImportanceOfPacketsIndex[
-                            0:protectedPacketCount
-                        ]
-                        rng.shuffle(unprotectedPackets)
-                        rng.shuffle(protectedPackets)
-                        indexOfLossedPackets = (
-                            unprotectedPackets[:lostUnprotectedPackets]
-                            + protectedPackets[:lostProtectedPackets]
-                        )
-                elif case == "Random":
-                    packetsSent = packetsSent + totalNumPackets
-                    indexOfLossedPackets = list(range(0, totalNumPackets))
-                    rng.shuffle(indexOfLossedPackets)
-                    indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
-                    packetsLost = packetsLost + len(indexOfLossedPackets)
-                elif case == "TopN":
-                    packetsSent = packetsSent + totalNumPackets
-                    indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
-                        0:numOfPacketsToLose
+                    lostProtectedPackets + lostRedundantPackets <= FECPacketCount
+                ):  # RECOVERABLE no protected part will be lost only unprotected
+                    unprotectedPackets = OrderedImportanceOfPacketsIndex[
+                        protectedPacketCount:
                     ]
-                    packetsLost = packetsLost + len(indexOfLossedPackets)
-                elif case == "BotN":
-                    packetsSent = packetsSent + totalNumPackets
-                    OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
-                    indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
-                        0:numOfPacketsToLose
+                    rng.shuffle(unprotectedPackets)
+                    indexOfLossedPackets = unprotectedPackets[0:lostUnprotectedPackets]
+                else:  # CANNOT RECOVER,lostProtectedPackets valid
+                    unprotectedPackets = OrderedImportanceOfPacketsIndex[
+                        protectedPacketCount:
                     ]
-                    packetsLost = packetsLost + len(indexOfLossedPackets)
-                else:
-                    raise Exception("Case can only be Random,TopN or Random_RSCorrected.")
+                    protectedPackets = OrderedImportanceOfPacketsIndex[
+                        0:protectedPacketCount
+                    ]
+                    rng.shuffle(unprotectedPackets)
+                    rng.shuffle(protectedPackets)
+                    indexOfLossedPackets = (
+                        unprotectedPackets[:lostUnprotectedPackets]
+                        + protectedPackets[:lostProtectedPackets]
+                    )
+            elif case == "Random":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = list(range(0, totalNumPackets))
+                rng.shuffle(indexOfLossedPackets)
+                indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+            elif case == "TopN":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
+                    0:numOfPacketsToLose
+                ]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+            elif case == "BotN":
+                packetsSent = packetsSent + totalNumPackets
+                OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
+                    0:numOfPacketsToLose
+                ]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+            else:
+                raise Exception("Case can only be Random,TopN or Random_RSCorrected.")
 
-                for j in indexOfLossedPackets:
-                    packetizedfmL[j][...] = 0
+            for j in indexOfLossedPackets:
+                packetizedfmL[j][...] = 0
 
+            channelReconstructed = [
+                np.vstack(packetizedfmL[i : i + packetNum])
+                for i in range(0, len(packetizedfmL), packetNum)
+            ]
+            if pad != 0:
                 channelReconstructed = [
-                    np.vstack(packetizedfmL[i : i + packetNum])
-                    for i in range(0, len(packetizedfmL), packetNum)
+                    channelReconstructed[i][0:-pad, ...]
+                    for i in range(0, len(channelReconstructed))
                 ]
-                if pad != 0:
-                    channelReconstructed = [
-                        channelReconstructed[i][0:-pad, ...]
-                        for i in range(0, len(channelReconstructed))
-                    ]
-                packetizedImportanceMap = [
-                    np.ones_like(packetizedheatMap[i_p]) * np.sum(packetizedheatMap[i_p])
-                    for i_p in range(len(packetizedheatMap))
-                ]
+            packetizedImportanceMap = [
+                np.ones_like(packetizedheatMap[i_p]) * np.sum(packetizedheatMap[i_p])
+                for i_p in range(len(packetizedheatMap))
+            ]
+            channelReconstructedImportance = [
+                np.vstack(packetizedImportanceMap[i : i + packetNum])
+                for i in range(0, len(packetizedImportanceMap), packetNum)
+            ]
+            if pad != 0:
                 channelReconstructedImportance = [
-                    np.vstack(packetizedImportanceMap[i : i + packetNum])
-                    for i in range(0, len(packetizedImportanceMap), packetNum)
+                    channelReconstructedImportance[i][0:-pad, ...]
+                    for i in range(0, len(channelReconstructedImportance))
                 ]
-                if pad != 0:
-                    channelReconstructedImportance = [
-                        channelReconstructedImportance[i][0:-pad, ...]
-                        for i in range(0, len(channelReconstructedImportance))
-                    ]
-                tensorImportanceCompleted = np.dstack(channelReconstructedImportance)
-                tensorCompleted = np.dstack(channelReconstructed)
-                fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
-                fmLPacketizedLoss.append(fmL)
-                importancePacketsTensor.append(tensorImportanceCompleted)
+            tensorImportanceCompleted = np.dstack(channelReconstructedImportance)
+            tensorCompleted = np.dstack(channelReconstructed)
+            fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
+            fmLPacketizedLoss.append(fmL)
+            importancePacketsTensor.append(tensorImportanceCompleted)
 
-            if saveImages:
-                self.__savePacketLossImages(fmLPacketizedLoss, case, modelName)
-                self.__savePacketLossImages(importancePacketsTensor, "packetImportance",modelName)
-                return
+        if saveImages:
+            self.__savePacketLossImages(fmLPacketizedLoss, case, modelName)
+            self.__savePacketLossImages(importancePacketsTensor, "packetImportance",modelName)
+            return
 
-            scores.append(self.getMetrics(fmLPacketizedLoss))
+        # scores.append(self.getMetrics(fmLPacketizedLoss))
+        metrics = self.getMetrics(fmLPacketizedLoss)
 
-        with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(packetNum)+"_"+str(percOfPacketLoss)+".npy", 'wb') as f:
-                np.save(f, np.array(scores))
+    # with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(packetNum)+"_"+str(percOfPacketLoss)+".npy", 'wb') as f:
+    #         np.save(f, np.array(scores))
 
-        acc = 0
-        loss = 0
-        count = 0
-        for s in scores:
-            count = count + 1
-            acc = acc + s["acc"]
-            loss = loss + s["loss"]
+    # acc = 0
+    # loss = 0
+    # count = 0
+    # for s in scores:
+    #     count = count + 1
+    #     acc = acc + s["acc"]
+    #     loss = loss + s["loss"]
+        if not os.path.exists("Korcan/Plots/"+modelName+"/"+case):
+            os.makedirs("Korcan/Plots/"+modelName+"/"+case)
+        
+        pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent),case)
+        pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
-        self.pdict[
-            "{:.3f}".format(100 * packetsLost / packetsSent),
-            case,
-        ] = {"acc": acc/count, "loss": loss/count}
+        rand = int(random.random()*1e10000000000000)
+        with open("Korcan/Plots/"+modelName+"/"+case+"_key_"+rand+".pkl", 'wb') as f:
+            pickle.dump(pdictKey, f)
+        with open("Korcan/Plots/"+modelName+"/"+case+"_val_"+rand+".pkl", 'wb') as f:
+            pickle.dump(pdictVal, f)
+        # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
 if __name__ == "__main__":
     # modelName = "efficientnetb0"
@@ -719,39 +727,49 @@ if __name__ == "__main__":
     module.loadData(dataName, [224, 224], False)
     module.findHeatmaps(splitLayer,modelName,dataName)
 
-    fecPercent = [10]
-    protectPercent = [20, 50, 80]
-    packetCount = 14
+    packetCount = 8
+    fecPercent = sys.argv[1]
+    percLoss = sys.argv[2]
+    case = sys.argv[3]
 
-    for f in fecPercent:
-        for p in protectPercent:
-            fecProtectInfo = "fec" + str(f) + "protect" + str(p)
+    if len(sys.argv) < 5:
+        module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
+    else:
+        fecPercent = sys.argv[4]
+        protectPercent = sys.argv[5]
+        module.packetLossSim(packetCount, 8, percLoss, "Random_RSCorrected", fecPercent, protectPercent,modelName=modelName)
+        
+    # fecPercent = [10]
+    # protectPercent = [20, 50, 80]
+    # for f in fecPercent:
+    #     for p in protectPercent:
+    #         fecProtectInfo = "fec" + str(f) + "protect" + str(p)
 
-            for percLoss in np.concatenate((np.linspace(0, 4, 2),np.linspace(4, 15, 2)),axis=None):
-                module.packetLossSim(packetCount, 8, percLoss, "TopN",modelName=modelName)
-                module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
-                # module.packetLossSim(packetCount, 8, percLoss,"Random",modelName=modelName)
-                # module.packetLossSim(
-                #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
-                # )
-                # module.packetLossSim(
-                #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
-                # )
-            for percLoss in np.linspace(15, 50, 2):
-                # module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
-                # module.packetLossSim(
-                #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
-                # )
-                # module.packetLossSim(
-                #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
-                # )
-            # for percLoss in np.linspace(50, 100, 2):
-            #     module.packetLossSim(packetCount, 8, percLoss, "Random_RSCorrected", fecPercent, protectPercent)
-            module.makePlot(
-                "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized2_" + fecProtectInfo,
-                "Korcan/Plots/"+modelName+"/LossPlotPacketized2_" + fecProtectInfo,
-            )
-            module.cleanPlot()
+    #         for percLoss in np.concatenate((np.linspace(0, 4, 2),np.linspace(4, 15, 2)),axis=None):
+    #             module.packetLossSim(packetCount, 8, percLoss, "TopN",modelName=modelName)
+    #             module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
+    #             # module.packetLossSim(packetCount, 8, percLoss,"Random",modelName=modelName)
+    #             # module.packetLossSim(
+    #             #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
+    #             # )
+    #             # module.packetLossSim(
+    #             #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
+    #             # )
+    #         for percLoss in np.linspace(15, 50, 2):
+    #             # module.packetLossSim(packetCount, 8, percLoss, "BotN",modelName=modelName)
+    #             # module.packetLossSim(
+    #             #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
+    #             # )
+    #             # module.packetLossSim(
+    #             #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
+    #             # )
+    #         # for percLoss in np.linspace(50, 100, 2):
+    #         #     module.packetLossSim(packetCount, 8, percLoss, "Random_RSCorrected", fecPercent, protectPercent)
+    #         module.makePlot(
+    #             "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized2_" + fecProtectInfo,
+    #             "Korcan/Plots/"+modelName+"/LossPlotPacketized2_" + fecProtectInfo,
+    #         )
+    #         module.cleanPlot()
 
 
 
@@ -760,34 +778,34 @@ if __name__ == "__main__":
 
     # module.saveSuperImposedChannels()
 
-    saveImageLossPercent = 0
-    module.findPercentileLossPerChannelFM(
-        saveImageLossPercent, quantizationBits, saveImages=True
-    )
-    module.findPercentileLossPerChannelFM(
-        saveImageLossPercent, quantizationBits, saveImages=True,bot=True
-    )
-    module.findPercentileRandomLossPerChannelFM(
-        saveImageLossPercent, quantizationBits, saveImages=True
-    )
+    # saveImageLossPercent = 0
+    # module.findPercentileLossPerChannelFM(
+    #     saveImageLossPercent, quantizationBits, saveImages=True
+    # )
+    # module.findPercentileLossPerChannelFM(
+    #     saveImageLossPercent, quantizationBits, saveImages=True,bot=True
+    # )
+    # module.findPercentileRandomLossPerChannelFM(
+    #     saveImageLossPercent, quantizationBits, saveImages=True
+    # )
 
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "TopN", saveImages=True,modelName
-    )
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "BotN", saveImages=True,modelName
-    )
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
-    )
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "TopN", saveImages=True,modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "BotN", saveImages=True,modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
+    # )
 
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Random_RSCorrected",
-        50,
-        50,
-        saveImages=True,modelName
-    )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Random_RSCorrected",
+    #     50,
+    #     50,
+    #     saveImages=True,modelName
+    # )
 
