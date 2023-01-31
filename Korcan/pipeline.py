@@ -731,14 +731,14 @@ if __name__ == "__main__":
     percLoss = int(sys.argv[1])
     case = sys.argv[2]
 
-    if len(sys.argv) < 4:
+    if len(sys.argv) == 3:
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
-    elif:
+    elif len(sys.argv) == 5:
         fecPercent = (sys.argv[3])
         protectPercent = (sys.argv[4])
         module.packetLossSim(packetCount, 8, percLoss, case, fecPercent, protectPercent,modelName=modelName)
     else:
-
+        print("HA")
     # fecPercent = [10]
     # protectPercent = [20, 50, 80]
     # for f in fecPercent:
