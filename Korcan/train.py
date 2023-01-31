@@ -99,13 +99,13 @@ def scheduler(epoch, lr):
     return lr
 
 if __name__ == "__main__":
-    # modelName = "efficientnetb0"
-    # splitLayer = "block2b_add"
+    modelName = "efficientnetb0"
+    splitLayer = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
 
-    modelName = "dense"
-    splitLayer = "pool2_conv"
+    # modelName = "dense"
+    # splitLayer = "pool2_conv"
     # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
     # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
     valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
