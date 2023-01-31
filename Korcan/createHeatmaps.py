@@ -59,7 +59,7 @@ def processDirectory(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,grad
             np.save(fil, heatmapTensor)
     return
 
-def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
+def findHeatmaps(gradientRespectToLayer,modelName,argumentName,typeProcess):
 
     #Changeable values
     labelFile = "/local-scratch2/korcan/caffe.txt"
@@ -85,9 +85,9 @@ def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
         HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
         if not os.path.exists(HMtrainDir):
             os.makedirs(HMtrainDir)
-        if not os.path.exists(os.path.join(HMtrainDir,directoryName)):
-            os.makedirs(os.path.join(HMtrainDir,directoryName))
-        processDirectory(trainDir,directoryName,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer)
+        if not os.path.exists(os.path.join(HMtrainDir,argumentName)):
+            os.makedirs(os.path.join(HMtrainDir,argumentName))
+        processDirectory(trainDir,argumentName,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer)
 
     if typeProcess == 2:
         # Procesing validation dataset
@@ -95,28 +95,26 @@ def findHeatmaps(gradientRespectToLayer,modelName,directoryName,typeProcess):
         HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
         if not os.path.exists(HMvalDIR):
             os.makedirs(HMvalDIR)
-        fileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-        for f in fileNames:
-            label = f[:-5]
-            I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,f))
-            I = I.resize([224, 224])
-            im_array = tf.keras.preprocessing.image.img_to_array(I)
-            # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-            im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
-            _ , heatmapTensor = __make_gradcam_heatmap(
-                np.expand_dims(im_array, axis=0),
-                loaded_model,
-                gradientRespectToLayer,
-                int(label),
-            )
-            with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
-                np.save(fil, heatmapTensor)
+        label = argumentName + ".JPEG"
+        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,argumentName))
+        I = I.resize([224, 224])
+        im_array = tf.keras.preprocessing.image.img_to_array(I)
+        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
+        _ , heatmapTensor = __make_gradcam_heatmap(
+            np.expand_dims(im_array, axis=0),
+            loaded_model,
+            gradientRespectToLayer,
+            int(label),
+        )
+        with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
+            np.save(fil, heatmapTensor)
 
 if __name__ == "__main__":
     modelName = "efficientnetb0"
     splitLayer = "block2b_add"
     # modelName = "dense"
     # splitLayer = "pool2_conv"
-    directoryName = sys.argv[1]
+    argumentName = sys.argv[1]
     typeProcess = sys.argv[2]
-    findHeatmaps(splitLayer,modelName,directoryName,int(typeProcess))
+    findHeatmaps(splitLayer,modelName,str(argumentName),int(typeProcess))
