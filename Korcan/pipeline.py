@@ -326,8 +326,8 @@ class pipeline:
         plt.xlabel("Percent Lost")
         plt.ylabel("Accuracy")
         for s in range(len(seriesX)):
-            seriesX[s], seriesY[s],types[s] = sorted(zip(seriesX[s], seriesY[s],types[s]), key=lambda x: x[0])
             mapping = cases.index(types[s])
+            seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             plt.scatter(seriesX[s], seriesY[s], label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
             plt.plot(seriesX[s], seriesY[s], linewidth=0.5, color=cases[mapping+1])
 
