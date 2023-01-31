@@ -207,8 +207,8 @@ class pipeline:
         self.dataset_y_labels_int = [int(item) for item in self.dataset_y_labels]
         # self.mobile_model.summary()
 
-        # self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files))
-        self.latentOutputBatch = self.mobile_model.predict(tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files)))
+        self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files))
+        # self.latentOutputBatch = self.mobile_model.predict(tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files)))
 
         # x=tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files), data_format=None)
         # predicted = self.loaded_model.predict(np.array(x))
