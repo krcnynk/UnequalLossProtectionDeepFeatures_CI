@@ -765,9 +765,9 @@ if __name__ == "__main__":
                 listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
                 for f in listFiles:
                     if f[:3] == "key":
-                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+f, 'rb') as f:
+                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+f+".pkl", 'rb') as f:
                             key = pickle.load(f)
-                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+"val"+f[3:], 'rb') as f:
+                        with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+"val"+f[3:]+".pkl", 'rb') as f:
                             val = pickle.load(f)
                         module.pdict[key] = val
 
