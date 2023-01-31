@@ -767,7 +767,7 @@ if __name__ == "__main__":
                     if f[:3] == "key":
                         with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+f, 'rb') as f:
                             key = pickle.load(f)
-                    elif f[:3] == "val":
+                    if f[:3] == "val":
                         with open("Korcan/Plots/"+modelName+"/"+dirs[0]+"/"+f, 'rb') as f:
                             val = pickle.load(f)
                     self.pdict[key] = val
