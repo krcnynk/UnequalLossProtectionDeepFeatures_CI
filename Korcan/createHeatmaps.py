@@ -96,7 +96,7 @@ def findHeatmaps(gradientRespectToLayer,modelName,argumentName,typeProcess):
         if not os.path.exists(HMvalDIR):
             os.makedirs(HMvalDIR)
         label = argumentName
-        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,argumentName))
+        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,argumentName+ ".JPEG"))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
         # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
@@ -107,7 +107,7 @@ def findHeatmaps(gradientRespectToLayer,modelName,argumentName,typeProcess):
             gradientRespectToLayer,
             int(label),
         )
-        with open(os.path.join(HMvalDIR,label+ ".JPEG")+".npy", 'wb') as fil:
+        with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
             np.save(fil, heatmapTensor)
 
 if __name__ == "__main__":
