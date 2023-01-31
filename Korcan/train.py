@@ -90,11 +90,11 @@ def loadModel(modelName, splitLayer):
     return tf.keras.models.clone_model(mobile_model)
 
 def scheduler(epoch, lr):
-    if epoch < 3:
+    if epoch < 5:
         lr = 0.1
-    elif epoch >=3 and epoch < 6:
+    elif epoch >=5 and epoch < 10:
         lr = 0.01
-    elif epoch >=6:
+    elif epoch >=10:
         lr = 0.001
     return lr
 
@@ -114,14 +114,14 @@ if __name__ == "__main__":
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
 
-    strategy = tf.distribute.MirroredStrategy()
-    print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
+    # strategy = tf.distribute.MirroredStrategy()
+    # print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
-    with strategy.scope():
-        mobileModel = loadModel(modelName, splitLayer)
-        mobileModel.trainable = True
-        mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
-                    loss=tf.keras.losses.MeanSquaredError(),)
+    # with strategy.scope():
+    mobileModel = loadModel(modelName, splitLayer)
+    mobileModel.trainable = True
+    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
+                loss=tf.keras.losses.MeanSquaredError(),)
 
     # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     batchSize = 32
 
 
-    mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/batchSize,validation_steps=1000/batchSize,epochs=1000,
+    mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/batchSize,validation_steps=1000/batchSize,epochs=15,
     validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
     # validation_data=(np.array(xValidationData),np.array(yValidationData)),
