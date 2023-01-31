@@ -697,16 +697,16 @@ class pipeline:
             with open("Korcan/Plots/"+modelName+"/"+case+"/val_"+str(rand)+".pkl", 'wb') as f:
                 pickle.dump(pdictVal, f)
         else:
-            if not os.path.exists("Korcan/Plots/"+modelName+"/"+case+"_"+fecPerc+"_"+protectedPerc):
-                os.makedirs("Korcan/Plots/"+modelName+"/"+case+"_"+fecPerc+"_"+protectedPerc)
+            if not os.path.exists("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)):
+                os.makedirs("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc))
 
             pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent),case)
             pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
             rand = int(random.randint(1, sys.maxsize))
-            with open("Korcan/Plots/"+modelName+"/"+case+"_"+fecPerc+"_"+protectedPerc+"/key_"+str(rand)+".pkl", 'wb') as f:
+            with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)+"/key_"+str(rand)+".pkl", 'wb') as f:
                 pickle.dump(pdictKey, f)
-            with open("Korcan/Plots/"+modelName+"/"+case+"_"+fecPerc+"_"+protectedPerc+"/val_"+str(rand)+".pkl", 'wb') as f:
+            with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)+"/val_"+str(rand)+".pkl", 'wb') as f:
                 pickle.dump(pdictVal, f)
 
         # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
