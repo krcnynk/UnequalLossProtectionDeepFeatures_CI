@@ -184,7 +184,7 @@ if __name__ == "__main__":
     # mobileModel.fit(train_dataset,epochs=15,validation_data=val_dataset,
     # callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
-    mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize*10),validation_steps=1000/(batchSize*10),epochs=15,
+    mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize*10),validation_steps=1000/batchSize,epochs=15,
     validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
