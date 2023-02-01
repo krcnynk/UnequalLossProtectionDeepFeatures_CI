@@ -89,8 +89,8 @@ def get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMv
     data2 = tf.data.Dataset.from_tensor_slices((xValidationData,yValidationData))
 
     return (
-        tf.data.Dataset.from_tensor_slices(data1).batch(batch_size),
-        tf.data.Dataset.from_tensor_slices(data2).batch(batch_size)
+        tf.data.Dataset.from_tensor_slices(data1).batch(batchSize),
+        tf.data.Dataset.from_tensor_slices(data2).batch(batchSize)
     )
 
 def loadModel(modelName, splitLayer):
