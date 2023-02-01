@@ -6,6 +6,7 @@ import random
 from functools import partial
 from itertools import repeat
 from multiprocessing import Pool, freeze_support,cpu_count
+import pickle
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from models.BrokenModel import BrokenModel
@@ -199,8 +200,19 @@ if __name__ == "__main__":
             folderFilePath.append(os.path.join(fo,TrainFileNames[i]))
     random.shuffle(folderFilePath)
 
-    tset = readT(folderFilePath,trainDir,HMtrainDIR)
-    vset = readV(valDir,HMvalDIR)
+    if os.path.isfile("/local-scratch2/korcan/"+'tset.pickle') and os.path.isfile("/local-scratch2/korcan/"+'vset.pickle') :
+        with open("/local-scratch2/korcan/"+'tset.pickle', 'rb') as handle:
+            tset = pickle.load(handle)
+        with open("/local-scratch2/korcan/"+'vset.pickle', 'rb') as handle:
+            vset = pickle.load(handle)
+    else :
+        tset = readT(folderFilePath,trainDir,HMtrainDIR)
+        vset = readV(valDir,HMvalDIR)
+
+        with open("/local-scratch2/korcan/"+'tset.pickle', 'wb') as handle:
+            pickle.dump(tset, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        with open("/local-scratch2/korcan/"+'vset.pickle', 'wb') as handle:
+            pickle.dump(vset, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
