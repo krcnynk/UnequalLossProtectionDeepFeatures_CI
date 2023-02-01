@@ -191,6 +191,23 @@ if __name__ == "__main__":
     HMvalDIR = valDir+"_HM_"+modelName+"_"+splitLayer
     HMtrainDIR = trainDir+"_HM_"+modelName+"_"+splitLayer
 
+    folderFilePath = []
+    folderNamesTrain = [name for name in os.listdir(trainDir)]
+    for fo in folderNamesTrain:
+        TrainFileNames = [name for name in os.listdir(os.path.join(trainDir,fo)) if os.path.isfile(os.path.join(trainDir,fo,name))]
+        for i in range(len(TrainFileNames)):
+            folderFilePath.append(os.path.join(fo,TrainFileNames[i]))
+    random.shuffle(folderFilePath)
+
+    tset = readT(folderFilePath,trainDir,HMtrainDIR)
+    vset = readV(valDir,HMvalDIR)
+
+    datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
+    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+    # batchSize = 100
+
+
     # strategy = tf.distribute.MirroredStrategy()
     # print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
@@ -203,23 +220,7 @@ if __name__ == "__main__":
     # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     reduce_lr = tf.keras.callbacks.LearningRateScheduler(scheduler)
-
-    folderFilePath = []
-    folderNamesTrain = [name for name in os.listdir(trainDir)]
-    for fo in folderNamesTrain:
-        TrainFileNames = [name for name in os.listdir(os.path.join(trainDir,fo)) if os.path.isfile(os.path.join(trainDir,fo,name))]
-        for i in range(len(TrainFileNames)):
-            folderFilePath.append(os.path.join(fo,TrainFileNames[i]))
-    random.shuffle(folderFilePath)
-
-    datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
-    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    # batchSize = 100
-
-    tset = readT(folderFilePath,trainDir,HMtrainDIR)
-    vset = readV(valDir,HMvalDIR)
-
+    
     mobileModel.fit(tset,epochs=15,validation_data=vset,
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
