@@ -201,18 +201,15 @@ if __name__ == "__main__":
     random.shuffle(folderFilePath)
 
 
-with open('test.npy', 'wb') as f:
 
-    np.save(f, np.array([1, 2]))
-
-    if os.path.isfile("/local-scratch2/korcan/"+'tset.pickle') and os.path.isfile("/local-scratch2/korcan/"+'vset.pickle') :
-        with open("/local-scratch2/korcan/"+'tset.pickle', 'rb') as f:
+    if os.path.isfile("/local-scratch2/korcan/"+'tset.npy') and os.path.isfile("/local-scratch2/korcan/"+'vset.npy') :
+        with open("/local-scratch2/korcan/"+'tset.npy', 'rb') as f:
             tset = np.load(f)
-        with open("/local-scratch2/korcan/"+'vset.pickle', 'rb') as f:
+        with open("/local-scratch2/korcan/"+'vset.npy', 'rb') as f:
             vset = np.load(f)
     else :
-        tset = readT(folderFilePath,trainDir,HMtrainDIR)
-        vset = readV(valDir,HMvalDIR)
+        tset = np.array(readT(folderFilePath,trainDir,HMtrainDIR))
+        vset = np.array(readV(valDir,HMvalDIR))
         with open("/local-scratch2/korcan/"+'tset.npy', 'wb') as f:
             np.save(f,tset)
         with open("/local-scratch2/korcan/"+'vset.npy', 'wb') as f:
