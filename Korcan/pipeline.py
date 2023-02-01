@@ -253,9 +253,9 @@ class pipeline:
             # Save the mobile and cloud sub-model
             self.mobile_model.save(mobile_model_path)
             self.cloud_model.save(cloud_model_path)
-        self.trained_model = tf.keras.models.load_model(
-                os.path.join(trained_model_path)
-            )
+        # self.trained_model = tf.keras.models.load_model(
+        #         os.path.join(trained_model_path)
+        #     )
         self.mobile_model.summary()
         # self.cloud_model.summary()
 
