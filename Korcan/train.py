@@ -5,7 +5,7 @@ import datetime
 import random
 from functools import partial
 from itertools import repeat
-from multiprocessing import Pool, freeze_support
+from multiprocessing import Pool, freeze_support,cpu_count
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from models.BrokenModel import BrokenModel
@@ -83,8 +83,9 @@ def readV(valDir,HMvalDIR):
 
     validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
     HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
-    with Pool() as pool:
-        results = pool.starmap(ps,zip(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames))
+    cpu_count = cpu_count()
+    pool = Pool(cpu_count)
+    results = pool.starmap(ps,zip(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames))
     return results
 
 # def get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMvalDIR):
