@@ -59,35 +59,37 @@ def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
                 xValidationData = []
                 yValidationData = []
 
-def readT(folderFilePath,trainBaseDir,HMbaseDIR):
-    def ps(a,b,c):
+def ps1(a,b,c):
         I = tf.keras.preprocessing.image.load_img(os.path.join(b,a))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
         # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
         targetTensor = np.load(os.path.join(c,a[:-4]+"npy"))
         return (im_array,targetTensor)
+
+def readT(folderFilePath,trainBaseDir,HMbaseDIR):
     cpus = cpu_count()
     print("CPU COUNT is:",cpus)
     pool = Pool(cpus)
-    results = pool.starmap(ps,zip(folderFilePath,repeat(trainBaseDir),repeat(HMbaseDIR)))
+    results = pool.starmap(ps1,zip(folderFilePath,repeat(trainBaseDir),repeat(HMbaseDIR)))
     return results
 
+def ps2(a,b,c,d):
+    I = tf.keras.preprocessing.image.load_img(os.path.join(b,a))
+    I = I.resize([224, 224])
+    im_array = tf.keras.preprocessing.image.img_to_array(I)
+    # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+    targetTensor = np.load(os.path.join(c,d))
+    return (im_array,targetTensor)
+    
 def readV(valDir,HMvalDIR):
-    def ps(a,b,c,d):
-        I = tf.keras.preprocessing.image.load_img(os.path.join(b,a))
-        I = I.resize([224, 224])
-        im_array = tf.keras.preprocessing.image.img_to_array(I)
-        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-        targetTensor = np.load(os.path.join(c,d))
-        return (im_array,targetTensor)
 
     validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
     HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
     cpus = cpu_count()
     print("CPU COUNT is:",cpus)
     pool = Pool(cpus)
-    results = pool.starmap(ps,[(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames)])
+    results = pool.starmap(ps2,[(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames)])
     return results
 
 # def get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMvalDIR):
