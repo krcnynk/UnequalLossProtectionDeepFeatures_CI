@@ -72,7 +72,6 @@ def readT(folderFilePath,trainBaseDir,HMbaseDIR):
         results = pool.starmap(ps,zip(folderFilePath,repeat(trainBaseDir),repeat(HMbaseDIR)))
     return results
 
-
 def readV(valDir,HMvalDIR):
     def ps(a,b,c,d):
         I = tf.keras.preprocessing.image.load_img(os.path.join(b,a))
@@ -86,8 +85,7 @@ def readV(valDir,HMvalDIR):
     HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
     with Pool() as pool:
         results = pool.starmap(ps,zip(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames))
-    return np.array(results)
-
+    return results
 
 # def get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMvalDIR):
 #     xTrainData = []
