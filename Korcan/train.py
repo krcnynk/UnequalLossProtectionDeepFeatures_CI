@@ -84,6 +84,7 @@ def readV(valDir,HMvalDIR):
     validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
     HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
     cpu_count = cpu_count()
+    print(cpu_count)
     pool = Pool(cpu_count)
     results = pool.starmap(ps,zip(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames))
     return results
