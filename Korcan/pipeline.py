@@ -253,9 +253,9 @@ class pipeline:
             # Save the mobile and cloud sub-model
             self.mobile_model.save(mobile_model_path)
             self.cloud_model.save(cloud_model_path)
-        self.trained_model = tf.keras.models.load_model(
-                os.path.join(trained_model_path)
-            )
+        # self.trained_model = tf.keras.models.load_model(
+        #         os.path.join(trained_model_path)
+        #     )
         self.mobile_model.summary()
         # self.cloud_model.summary()
 
@@ -264,15 +264,15 @@ class pipeline:
         self.heatMapsChannelsBatch = []
 
         for i_b in range(len(self.dataset_x_files)):
-            # a, b = self.__make_gradcam_heatmap(
-            #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
-            #     self.loaded_model,
-            #     gradientRespectToLayer,
-            #     np.array(self.dataset_y_labels_int)[i_b],
-            # )
-            a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+            a, b = self.__make_gradcam_heatmap(
                 np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+                self.loaded_model,
+                gradientRespectToLayer,
+                np.array(self.dataset_y_labels_int)[i_b],
             )
+            # a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+            #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            # )
             self.heatmapsBatch.append(a)
             self.heatMapsChannelsBatch.append(b)
         self.heatmapsBatch = np.array(self.heatmapsBatch)
