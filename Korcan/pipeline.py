@@ -799,7 +799,9 @@ if __name__ == "__main__":
                             acc = acc + s["acc"]
                             loss = loss + s["loss"]
                         print(key)
+                        print("____")
                         print(val[0])
+                        print("____")
                         print({"acc": acc/count, "loss": loss/count})
                         module.pdict[key] = {"acc": acc/count, "loss": loss/count}
             ##WILL BE HANDLED DIFFERENTELY COMING UP!
