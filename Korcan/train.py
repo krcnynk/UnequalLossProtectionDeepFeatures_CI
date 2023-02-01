@@ -178,7 +178,7 @@ if __name__ == "__main__":
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     batchSize = 32
 
-    train_dataset, val_dataset, test_dataset = get_multi_dataset()
+    train_dataset, val_dataset, test_dataset = get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMvalDIR)
     mobileModel.fit(train_dataset,epochs=15,validation_data=val_dataset,
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
