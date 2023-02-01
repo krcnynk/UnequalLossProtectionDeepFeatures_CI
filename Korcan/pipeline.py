@@ -801,7 +801,7 @@ if __name__ == "__main__":
                         print(count)
                         print(key)
                         print("a____")
-                        print(val[0])
+                        print(val)
                         print("b____")
                         print({"acc": acc/count, "loss": loss/count})
                         module.pdict[key] = {"acc": acc/count, "loss": loss/count}
