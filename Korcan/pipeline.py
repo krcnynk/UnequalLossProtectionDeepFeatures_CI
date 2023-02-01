@@ -787,9 +787,9 @@ if __name__ == "__main__":
                         blacklist.extend(allRunsWithSamePercentage)
                         val = []
                         for fname in allRunsWithSamePercentage:
-                            with open("Korcan/Plots/"+modelName+"/"+d+"/"+fname.split("/")[:-1], 'rb') as f:
+                            with open("Korcan/Plots/"+modelName+"/"+d+"/"+fname.split("/")[-1:][0], 'rb') as f:
                                 key = pickle.load(f)
-                            with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname.split("/")[:-1][3:], 'rb') as f:
+                            with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname.split("/")[-1:][0][3:], 'rb') as f:
                                 val.append(pickle.load(f))
                         acc = 0
                         loss = 0
