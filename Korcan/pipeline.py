@@ -798,6 +798,9 @@ if __name__ == "__main__":
                             count = count + 1
                             acc = acc + s["acc"]
                             loss = loss + s["loss"]
+                        print(key)
+                        print(val[0])
+                        print({"acc": acc/count, "loss": loss/count})
                         module.pdict[key] = {"acc": acc/count, "loss": loss/count}
             ##WILL BE HANDLED DIFFERENTELY COMING UP!
             module.makePlot(
