@@ -89,7 +89,7 @@ def readV(valDir,HMvalDIR):
     cpus = cpu_count()
     print("CPU COUNT is:",cpus)
     pool = Pool(cpus)
-    results = pool.starmap(ps2,[(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames)])
+    results = pool.starmap(ps2,zip(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames))
     return results
 
 # def get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMvalDIR):
@@ -167,11 +167,11 @@ def loadModel(modelName, splitLayer):
     return tf.keras.models.clone_model(mobile_model)
 
 def scheduler(epoch, lr):
-    if epoch < 30:
+    if epoch < 0:
         lr = 0.1
-    elif epoch >=30 and epoch < 60:
+    elif epoch >=5 and epoch < 10:
         lr = 0.01
-    elif epoch >=60:
+    elif epoch >=10:
         lr = 0.001
     return lr
 
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     reduce_lr = tf.keras.callbacks.LearningRateScheduler(scheduler)
-    
+
     mobileModel.fit(tset,epochs=15,validation_data=vset,
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
