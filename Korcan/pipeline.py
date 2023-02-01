@@ -693,9 +693,9 @@ class pipeline:
             pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
             rand = int(random.randint(1, sys.maxsize))
-            with open("Korcan/Plots/"+modelName+"/"+case+"/key_"+str(rand)+".pkl", 'wb') as f:
+            with open("Korcan/Plots/"+modelName+"/"+case+"/key_"+"{:.3f}".format(100 * packetsLost / packetsSent)+"_"+str(rand)+"_.pkl", 'wb') as f:
                 pickle.dump(pdictKey, f)
-            with open("Korcan/Plots/"+modelName+"/"+case+"/val_"+str(rand)+".pkl", 'wb') as f:
+            with open("Korcan/Plots/"+modelName+"/"+case+"/val_"+"{:.3f}".format(100 * packetsLost / packetsSent)+"_"+str(rand)+"_.pkl", 'wb') as f:
                 pickle.dump(pdictVal, f)
         else:
             if not os.path.exists("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)):
@@ -705,9 +705,9 @@ class pipeline:
             pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
             rand = int(random.randint(1, sys.maxsize))
-            with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)+"/key_"+str(rand)+".pkl", 'wb') as f:
+            with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)+"/key_"+"{:.3f}".format(100 * packetsLost / packetsSent)+"_"+str(rand)+"_.pkl", 'wb') as f:
                 pickle.dump(pdictKey, f)
-            with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)+"/val_"+str(rand)+".pkl", 'wb') as f:
+            with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)+"/val_"+"{:.3f}".format(100 * packetsLost / packetsSent)+"_"+str(rand)+"_.pkl", 'wb') as f:
                 pickle.dump(pdictVal, f)
 
         # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
@@ -728,7 +728,7 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
     trained_model_path = "/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
-    dataName = "/localhome/kuyanik/dataset/largeTest"
+    dataName = "/localhome/kuyanik/dataset/smallTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
@@ -757,11 +757,8 @@ if __name__ == "__main__":
                 fpPairs.append(splitted[3:]) #Random_RSCorrected_FECRemovesBOT_10_50
         dirNames = []
         for fp in fpPairs:
-            dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
-            dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
             dirNames.append("Top")
             dirNames.append("Bot")
-            dirNames.append("Random")
             for d in dirNames:
                 listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
                 for fname in listFiles:
@@ -771,7 +768,10 @@ if __name__ == "__main__":
                         with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname[3:], 'rb') as f:
                             val = pickle.load(f)
                         module.pdict[key] = val
-
+            # dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
+            # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
+            # dirNames.append("Random")
+            ##WILL BE HANDLED DIFFERENTELY COMING UP!
             module.makePlot(
                     "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized"+str(fp[0])+"_"+str(fp[1]),
                     "Korcan/Plots/"+modelName+"/LossPlotPacketized"+str(fp[0])+"_"+str(fp[1]),
