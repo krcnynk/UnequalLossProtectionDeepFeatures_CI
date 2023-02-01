@@ -178,7 +178,7 @@ if __name__ == "__main__":
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    batchSize = 128
+    batchSize = 16
 
     # train_dataset, val_dataset, test_dataset = get_multi_dataset(folderFilePath,trainDir,HMtrainDIR,batchSize,valDir,HMvalDIR)
     # mobileModel.fit(train_dataset,epochs=15,validation_data=val_dataset,
