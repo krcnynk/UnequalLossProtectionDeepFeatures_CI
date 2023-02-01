@@ -55,6 +55,40 @@ def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
                 xValidationData = []
                 yValidationData = []
 
+def readT(folderFilePath,trainBaseDir,HMbaseDIR):
+    xTrainData = []
+    yTrainData = []
+    for i in range(len(folderFilePath)):
+        I = tf.keras.preprocessing.image.load_img(os.path.join(trainBaseDir,folderFilePath[i]))
+        I = I.resize([224, 224])
+        im_array = tf.keras.preprocessing.image.img_to_array(I)
+        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        targetTensor = np.load(os.path.join(HMbaseDIR,folderFilePath[i][:-4]+"npy"))
+        xTrainData.append(im_array)
+        yTrainData.append(targetTensor)
+        if im_array is None:
+            print("im_array is None")
+    xTrainData = np.array(xTrainData)
+    yTrainData = np.array(yTrainData)
+    return (xTrainData,yTrainData)
+
+def readV(valDir,HMvalDIR):
+    xValidationData = []
+    yValidationData = []
+    validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
+    HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
+    for i in range(len(validationFileNames)):
+        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
+        I = I.resize([224, 224])
+        im_array = tf.keras.preprocessing.image.img_to_array(I)
+        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
+        xValidationData.append(im_array)
+        yValidationData.append(targetTensor)
+    xValidationData = np.array(xValidationData)
+    yValidationData = np.array(yValidationData)
+    return(xValidationData,yValidationData)
+
 # def get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMvalDIR):
 #     xTrainData = []
 #     yTrainData = []
@@ -180,13 +214,20 @@ if __name__ == "__main__":
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     batchSize = 100
 
+    tset = readT(folderFilePath,trainDir,HMtrainDIR)
+    vset = readV(valDir,HMvalDIR)
+
+    mobileModel.fit(tset,epochs=15,validation_data=vset,
+    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
+
+
     # train_dataset, val_dataset, test_dataset = get_multi_dataset(folderFilePath,trainDir,HMtrainDIR,batchSize,valDir,HMvalDIR)
     # mobileModel.fit(train_dataset,epochs=15,validation_data=val_dataset,
     # callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
-    mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize*10),validation_steps=1000/batchSize,epochs=15,
-    validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
+    # mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize*10),validation_steps=1000/batchSize,epochs=15,
+    # validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
+    # callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
 
 #Unnecessary Junk
