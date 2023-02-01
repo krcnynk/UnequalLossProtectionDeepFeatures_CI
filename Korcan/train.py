@@ -221,7 +221,7 @@ if __name__ == "__main__":
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     reduce_lr = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
-    mobileModel.fit(tset,epochs=15,validation_data=vset,
+    mobileModel.fit(tset,epochs=15,validation_data=vset,batch_size=128,
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
 
