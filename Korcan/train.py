@@ -202,23 +202,23 @@ if __name__ == "__main__":
 
 
 
-    if os.path.isfile("/local-scratch2/korcan/"+'tset.npy') and os.path.isfile("/local-scratch2/korcan/"+'vset.npy') :
-        with open("/local-scratch2/korcan/"+'tset.npy', 'rb') as f:
-            tset = np.load(f)
-        with open("/local-scratch2/korcan/"+'vset.npy', 'rb') as f:
-            vset = np.load(f)
-    else :
-        tset = np.array(readT(folderFilePath,trainDir,HMtrainDIR))
-        vset = np.array(readV(valDir,HMvalDIR))
-        with open("/local-scratch2/korcan/"+'tset.npy', 'wb') as f:
-            np.save(f,tset)
-        with open("/local-scratch2/korcan/"+'vset.npy', 'wb') as f:
-            np.save(f,vset)
+    # if os.path.isfile("/local-scratch2/korcan/"+'tset.npy') and os.path.isfile("/local-scratch2/korcan/"+'vset.npy') :
+    #     with open("/local-scratch2/korcan/"+'tset.npy', 'rb') as f:
+    #         tset = np.load(f)
+    #     with open("/local-scratch2/korcan/"+'vset.npy', 'rb') as f:
+    #         vset = np.load(f)
+    # else :
+    #     tset = np.array(readT(folderFilePath,trainDir,HMtrainDIR))
+    #     vset = np.array(readV(valDir,HMvalDIR))
+    #     with open("/local-scratch2/korcan/"+'tset.npy', 'wb') as f:
+    #         np.save(f,tset)
+    #     with open("/local-scratch2/korcan/"+'vset.npy', 'wb') as f:
+    #         np.save(f,vset)
 
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    # batchSize = 100
+    batchSize = 100
 
 
     # strategy = tf.distribute.MirroredStrategy()
@@ -234,17 +234,17 @@ if __name__ == "__main__":
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     reduce_lr = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
-    mobileModel.fit(tset,epochs=15,validation_data=vset,batch_size=100,
-    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
+    # mobileModel.fit(tset,epochs=15,validation_data=vset,batch_size=100,
+    # callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
 
     # train_dataset, val_dataset, test_dataset = get_multi_dataset(folderFilePath,trainDir,HMtrainDIR,batchSize,valDir,HMvalDIR)
     # mobileModel.fit(train_dataset,epochs=15,validation_data=val_dataset,
     # callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
-    # mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize*10),validation_steps=1000/batchSize,epochs=15,
-    # validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    # callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
+    mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize),validation_steps=1000/batchSize,epochs=15,
+    validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
+    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1,workers=12,use_multiprocessing=True)
 
 
 #Unnecessary Junk
