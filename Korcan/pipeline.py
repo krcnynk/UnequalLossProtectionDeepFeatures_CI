@@ -6,7 +6,7 @@ import pickle
 mpl.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import cv2 as cv
+# import cv2 as cv
 import sys, os
 import math
 import random
@@ -172,27 +172,27 @@ class pipeline:
     def __inverseQuantize(self, tensor, nBits, minV, maxV):
         return np.array(((tensor * (maxV - minV) / (2**nBits - 1)) + minV))
 
-        # def __resizeAndFindEdgeFromBatch(self):
-        self.resizedImages = []
-        for i_b in range(len(self.dataset_x_files)):
-            self.resizedImages.append(
-                cv.resize(
-                    self.dataset_x_files[i_b],
-                    dsize=(56, 56),
-                    interpolation=cv.INTER_CUBIC,
-                )
-            )
-        self.resizedImages = np.array(self.resizedImages)
-        edge = []
-        for i_b in range(self.resizedImages.shape[0]):
-            grayscale = self.__rgb2gray(self.resizedImages[i_b, ...])
-            grayscale = cv.GaussianBlur(grayscale, [5, 5], 0)
-            cannyOutput = cv.Canny(np.uint8(grayscale), 100, 200)
-            kernel = np.ones((3, 3), np.uint8)
-            # cannyOutput = cv.dilate(cannyOutput, kernel, iterations=1)
-            edge.append(cannyOutput)
-            # edge.append(np.zeros((56, 56)))
-        return np.array(edge).astype(bool)
+        # # def __resizeAndFindEdgeFromBatch(self):
+        # self.resizedImages = []
+        # for i_b in range(len(self.dataset_x_files)):
+        #     self.resizedImages.append(
+        #         cv.resize(
+        #             self.dataset_x_files[i_b],
+        #             dsize=(56, 56),
+        #             interpolation=cv.INTER_CUBIC,
+        #         )
+        #     )
+        # self.resizedImages = np.array(self.resizedImages)
+        # edge = []
+        # for i_b in range(self.resizedImages.shape[0]):
+        #     grayscale = self.__rgb2gray(self.resizedImages[i_b, ...])
+        #     grayscale = cv.GaussianBlur(grayscale, [5, 5], 0)
+        #     cannyOutput = cv.Canny(np.uint8(grayscale), 100, 200)
+        #     kernel = np.ones((3, 3), np.uint8)
+        #     # cannyOutput = cv.dilate(cannyOutput, kernel, iterations=1)
+        #     edge.append(cannyOutput)
+        #     # edge.append(np.zeros((56, 56)))
+        # return np.array(edge).astype(bool)
 
     def __getOrderedImportantPacketIndex(self, importanceOfPackets):
         indexOfLossedPackets = np.argsort(importanceOfPackets)[::-1]
