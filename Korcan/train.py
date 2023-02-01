@@ -67,9 +67,9 @@ def readT(folderFilePath,trainBaseDir,HMbaseDIR):
         # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
         targetTensor = np.load(os.path.join(c,a[:-4]+"npy"))
         return (im_array,targetTensor)
-    cpu_count = cpu_count()
-    print("CPU COUNT is:",cpu_count)
-    pool = Pool(cpu_count)
+    cpus = cpu_count()
+    print("CPU COUNT is:",cpus)
+    pool = Pool(cpus)
     results = pool.starmap(ps,zip(folderFilePath,repeat(trainBaseDir),repeat(HMbaseDIR)))
     return results
 
@@ -84,9 +84,9 @@ def readV(valDir,HMvalDIR):
 
     validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
     HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
-    cpu_count = cpu_count()
-    print("CPU COUNT is:",cpu_count)
-    pool = Pool(cpu_count)
+    cpus = cpu_count()
+    print("CPU COUNT is:",cpus)
+    pool = Pool(cpus)
     results = pool.starmap(ps,[(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames)])
     return results
 
