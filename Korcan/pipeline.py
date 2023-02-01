@@ -759,6 +759,9 @@ if __name__ == "__main__":
         for fp in fpPairs:
             dirNames.append("Top")
             dirNames.append("Bot")
+            dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
+            dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
+            dirNames.append("Random")
             for d in dirNames:
                 listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
                 for fname in listFiles:
