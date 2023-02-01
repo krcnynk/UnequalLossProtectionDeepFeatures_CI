@@ -200,19 +200,23 @@ if __name__ == "__main__":
             folderFilePath.append(os.path.join(fo,TrainFileNames[i]))
     random.shuffle(folderFilePath)
 
+
+with open('test.npy', 'wb') as f:
+
+    np.save(f, np.array([1, 2]))
+
     if os.path.isfile("/local-scratch2/korcan/"+'tset.pickle') and os.path.isfile("/local-scratch2/korcan/"+'vset.pickle') :
-        with open("/local-scratch2/korcan/"+'tset.pickle', 'rb') as handle:
-            tset = pickle.load(handle)
-        with open("/local-scratch2/korcan/"+'vset.pickle', 'rb') as handle:
-            vset = pickle.load(handle)
+        with open("/local-scratch2/korcan/"+'tset.pickle', 'rb') as f:
+            tset = np.load(f)
+        with open("/local-scratch2/korcan/"+'vset.pickle', 'rb') as f:
+            vset = np.load(f)
     else :
         tset = readT(folderFilePath,trainDir,HMtrainDIR)
         vset = readV(valDir,HMvalDIR)
-
-        with open("/local-scratch2/korcan/"+'tset.pickle', 'wb') as handle:
-            pickle.dump(tset, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        with open("/local-scratch2/korcan/"+'vset.pickle', 'wb') as handle:
-            pickle.dump(vset, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        with open("/local-scratch2/korcan/"+'tset.npy', 'wb') as f:
+            np.save(f,tset)
+        with open("/local-scratch2/korcan/"+'vset.npy', 'wb') as f:
+            np.save(f,vset)
 
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -233,7 +237,7 @@ if __name__ == "__main__":
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     reduce_lr = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
-    mobileModel.fit(tset,epochs=15,validation_data=vset,batch_size=128,
+    mobileModel.fit(tset,epochs=15,validation_data=vset,batch_size=100,
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
 
