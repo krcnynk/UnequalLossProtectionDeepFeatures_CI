@@ -86,7 +86,7 @@ def readV(valDir,HMvalDIR):
     cpu_count = cpu_count()
     print(cpu_count)
     pool = Pool(cpu_count)
-    results = pool.starmap(ps,zip(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames))
+    results = pool.starmap(ps,[zip(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames)])
     return results
 
 # def get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMvalDIR):
