@@ -10,7 +10,7 @@ import cv2 as cv
 import sys, os
 import math
 import random
-import itertools
+import glob
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from models.BrokenModel import BrokenModel
@@ -781,8 +781,8 @@ if __name__ == "__main__":
 
                 blacklist = []
                 for i in range(len(keyIndexes)):
+                    lossPercInfo = listFiles[i].split("_")[1]
                     if lossPercInfo not in blacklist:
-                        lossPercInfo = listFiles[i].split("_")[1]
                         allRunsWithSamePercentage = glob.glob("Korcan/Plots/"+modelName+'/'+d+'/*'+lossPercInfo+'*')
                         blacklist.extend(allRunsWithSamePercentage)
                         val = []
