@@ -3,6 +3,10 @@ import numpy as np
 import sys, os
 import datetime
 import random
+from functools import partial
+from itertools import repeat
+from multiprocessing import Pool, freeze_support
+
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from models.BrokenModel import BrokenModel
 from runExpt.simmods import *
@@ -56,38 +60,34 @@ def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
                 yValidationData = []
 
 def readT(folderFilePath,trainBaseDir,HMbaseDIR):
-    xTrainData = []
-    yTrainData = []
-    for i in range(len(folderFilePath)):
-        I = tf.keras.preprocessing.image.load_img(os.path.join(trainBaseDir,folderFilePath[i]))
+    def ps(a,b,c):
+        I = tf.keras.preprocessing.image.load_img(os.path.join(b,a))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
         # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-        targetTensor = np.load(os.path.join(HMbaseDIR,folderFilePath[i][:-4]+"npy"))
-        xTrainData.append(im_array)
-        yTrainData.append(targetTensor)
-        if im_array is None:
-            print("im_array is None")
-    xTrainData = np.array(xTrainData)
-    yTrainData = np.array(yTrainData)
-    return (xTrainData,yTrainData)
+        targetTensor = np.load(os.path.join(c,a[:-4]+"npy"))
+        return (im_array,targetTensor)
+
+    with Pool() as pool:
+        results = pool.starmap(ps,zip(folderFilePath,repeat(trainBaseDir),repeat(HMbaseDIR)))
+    return results
+
 
 def readV(valDir,HMvalDIR):
-    xValidationData = []
-    yValidationData = []
-    validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-    HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
-    for i in range(len(validationFileNames)):
-        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
+    def ps(a,b,c,d):
+        I = tf.keras.preprocessing.image.load_img(os.path.join(b,a))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
         # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-        targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
-        xValidationData.append(im_array)
-        yValidationData.append(targetTensor)
-    xValidationData = np.array(xValidationData)
-    yValidationData = np.array(yValidationData)
-    return(xValidationData,yValidationData)
+        targetTensor = np.load(os.path.join(c,d))
+        return (im_array,targetTensor)
+
+    validationFileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
+    HMvalidationFilenames = [name for name in os.listdir(HMvalDIR) if os.path.isfile(os.path.join(HMvalDIR,name))]
+    with Pool() as pool:
+        results = pool.starmap(ps,zip(validationFileNames,repeat(valDir),repeat(HMvalDIR),HMvalidationFilenames))
+    return np.array(results)
+
 
 # def get_multi_dataset(folderFilePath,trainBaseDir,HMbaseDIR,batchSize,valDir,HMvalDIR):
 #     xTrainData = []
@@ -164,11 +164,11 @@ def loadModel(modelName, splitLayer):
     return tf.keras.models.clone_model(mobile_model)
 
 def scheduler(epoch, lr):
-    if epoch < 5:
+    if epoch < 30:
         lr = 0.1
-    elif epoch >=5 and epoch < 10:
+    elif epoch >=30 and epoch < 60:
         lr = 0.01
-    elif epoch >=10:
+    elif epoch >=60:
         lr = 0.001
     return lr
 
@@ -212,7 +212,7 @@ if __name__ == "__main__":
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    batchSize = 100
+    # batchSize = 100
 
     tset = readT(folderFilePath,trainDir,HMtrainDIR)
     vset = readV(valDir,HMvalDIR)
