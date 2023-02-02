@@ -256,7 +256,7 @@ class pipeline:
         # self.trained_model = tf.keras.models.load_model(
         #         os.path.join(trained_model_path)
         #     )
-        self.mobile_model.summary()
+        # self.mobile_model.summary()
         # self.cloud_model.summary()
 
     def findHeatmaps(self, gradientRespectToLayer,modelName,dataSet):
