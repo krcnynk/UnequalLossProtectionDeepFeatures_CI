@@ -733,7 +733,7 @@ if __name__ == "__main__":
     )
     trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
     # trained_model_path = "/home/foniks/projects/def-ibajic/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/largeTest"
+    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
     # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/smallTest"
     quantizationBits = 8
 
