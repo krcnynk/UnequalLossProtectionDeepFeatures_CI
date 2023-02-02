@@ -177,8 +177,8 @@ def scheduler(epoch, lr):
     return lr
 
 if __name__ == "__main__":
-    modelNameT = "efficientnetb0"
-    splitLayerT = "block2b_add"
+    # modelName = "efficientnetb0"
+    # splitLayer = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
     modelName = "dense"
@@ -224,7 +224,7 @@ if __name__ == "__main__":
     # print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
     # with strategy.scope():
-    mobileModel = loadModel(modelNameT, splitLayerT)
+    mobileModel = loadModel(modelName, splitLayer)
     mobileModel.trainable = True
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
                 loss=tf.keras.losses.MeanSquaredError(),)
