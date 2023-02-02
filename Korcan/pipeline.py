@@ -232,7 +232,7 @@ class pipeline:
 
     def loadModel(self, model_path, mobile_model_path, cloud_model_path,trained_model_path, splitLayer):
         self.loaded_model = tf.keras.models.load_model(os.path.join(model_path))
-        # self.loaded_model.summary()
+        self.loaded_model.summary()
         loaded_model_config = self.loaded_model.get_config()
         loaded_model_name = loaded_model_config["name"]
         if os.path.isfile(mobile_model_path) and os.path.isfile(cloud_model_path):
