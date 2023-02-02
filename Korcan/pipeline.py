@@ -713,14 +713,14 @@ class pipeline:
         # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
 if __name__ == "__main__":
-    # modelName = "efficientnetb0"
-    # splitLayer = "block2b_add"
+    modelName = "efficientnetb4"
+    splitLayer = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
     # modelName = "dense"
     # splitLayer = "pool2_conv"
-    modelName = "resnet"
-    splitLayer = "add_1"
+    # modelName = "resnet"
+    # splitLayer = "add_1"
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
