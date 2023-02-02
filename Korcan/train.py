@@ -218,7 +218,7 @@ if __name__ == "__main__":
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    batchSize = 100
+    batchSize = 64
 
 
     # strategy = tf.distribute.MirroredStrategy()
@@ -244,7 +244,7 @@ if __name__ == "__main__":
 
     mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize),validation_steps=1000/batchSize,epochs=15,
     validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    callbacks=[tensorboard_callback,reduce_lr,checkpoint],max_queue_size=100,verbose=1,workers=12,use_multiprocessing=True)
+    callbacks=[tensorboard_callback,reduce_lr,checkpoint],max_queue_size=256,verbose=1,workers=12,use_multiprocessing=True)
 
 
 #Unnecessary Junk
