@@ -745,7 +745,8 @@ if __name__ == "__main__":
 
     packetCount = 8
     percLoss = int(sys.argv[1])
-    print(percLoss)
+    print("KORCAN LOG1:",sys.argv[1])
+    print("KORCAN LOG",percLoss)
     case = sys.argv[2]
 
     if case == "Top" or case == "Bot" or case == "Random":
