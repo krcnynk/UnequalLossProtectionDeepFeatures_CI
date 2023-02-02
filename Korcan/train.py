@@ -244,7 +244,7 @@ if __name__ == "__main__":
 
     mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize),validation_steps=1000/batchSize,epochs=15,
     validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1,workers=12,use_multiprocessing=True)
+    callbacks=[tensorboard_callback,reduce_lr,checkpoint],max_queue_size=1000,verbose=1,workers=12,use_multiprocessing=True)
 
 
 #Unnecessary Junk
