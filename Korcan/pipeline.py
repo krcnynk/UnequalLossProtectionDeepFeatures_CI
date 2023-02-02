@@ -728,8 +728,8 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
     trained_model_path = "/home/foniks/projects/def-ibajic/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
-    # dataName = "/local-scratch/localhome/kuyanik/dataset/largeTest"
-    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/smallTest"
+    dataName = "/local-scratch/localhome/kuyanik/dataset/largeTest"
+    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/smallTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
