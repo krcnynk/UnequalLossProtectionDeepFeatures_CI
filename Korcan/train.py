@@ -177,11 +177,10 @@ def scheduler(epoch, lr):
     return lr
 
 if __name__ == "__main__":
-    # modelName = "efficientnetb0"
-    # splitLayer = "block2b_add"
+    modelNameT = "efficientnetb0"
+    splitLayerT = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
-
     modelName = "dense"
     splitLayer = "pool2_conv"
     # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
@@ -225,7 +224,7 @@ if __name__ == "__main__":
     # print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
     # with strategy.scope():
-    mobileModel = loadModel(modelName, splitLayer)
+    mobileModel = loadModel(modelNameT, splitLayerT)
     mobileModel.trainable = True
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
                 loss=tf.keras.losses.MeanSquaredError(),)
