@@ -769,43 +769,43 @@ if __name__ == "__main__":
                         with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname[3:], 'rb') as f:
                             val = pickle.load(f)
                         module.pdict[key] = val
-            dirNames = []
-            dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
-            dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
-            dirNames.append("Random")
-            for d in dirNames:
-                listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
-                keyIndexes = []
-                for i in range(len(listFiles)):
-                    if listFiles[i][:3] == "key":
-                        keyIndexes.append(i)
+            # dirNames = []
+            # dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
+            # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
+            # dirNames.append("Random")
+            # for d in dirNames:
+            #     listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d) 
+            #     keyIndexes = []
+            #     for i in range(len(listFiles)):
+            #         if listFiles[i][:3] == "key":
+            #             keyIndexes.append(i)
 
-                blacklist = []
-                for i in range(len(keyIndexes)):
-                    lossPercInfo = listFiles[i].split("_")[1]
-                    if lossPercInfo not in blacklist:
-                        allRunsWithSamePercentage = glob.glob("Korcan/Plots/"+modelName+'/'+d+'/key_'+lossPercInfo+'*')
-                        blacklist.extend(allRunsWithSamePercentage)
-                        val = []
-                        for fname in allRunsWithSamePercentage:
-                            with open("Korcan/Plots/"+modelName+"/"+d+"/"+fname.split("/")[-1:][0], 'rb') as f:
-                                key = pickle.load(f)
-                            with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname.split("/")[-1:][0][3:], 'rb') as f:
-                                val.append(pickle.load(f))
-                        acc = 0
-                        loss = 0
-                        count = 0
-                        for s in val:
-                            count = count + 1
-                            acc = acc + s["acc"]
-                            loss = loss + s["loss"]
-                        print(count)
-                        # print(key)
-                        # print("a____")
-                        # print(val)
-                        # print("b____")
-                        # print({"acc": acc/count, "loss": loss/count})
-                        module.pdict[key] = {"acc": acc/count, "loss": loss/count}
+            #     blacklist = []
+            #     for i in range(len(keyIndexes)):
+            #         lossPercInfo = listFiles[i].split("_")[1]
+            #         if lossPercInfo not in blacklist:
+            #             allRunsWithSamePercentage = glob.glob("Korcan/Plots/"+modelName+'/'+d+'/key_'+lossPercInfo+'*')
+            #             blacklist.extend(allRunsWithSamePercentage)
+            #             val = []
+            #             for fname in allRunsWithSamePercentage:
+            #                 with open("Korcan/Plots/"+modelName+"/"+d+"/"+fname.split("/")[-1:][0], 'rb') as f:
+            #                     key = pickle.load(f)
+            #                 with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname.split("/")[-1:][0][3:], 'rb') as f:
+            #                     val.append(pickle.load(f))
+            #             acc = 0
+            #             loss = 0
+            #             count = 0
+            #             for s in val:
+            #                 count = count + 1
+            #                 acc = acc + s["acc"]
+            #                 loss = loss + s["loss"]
+            #             print(count)
+            #             # print(key)
+            #             # print("a____")
+            #             # print(val)
+            #             # print("b____")
+            #             # print({"acc": acc/count, "loss": loss/count})
+            #             module.pdict[key] = {"acc": acc/count, "loss": loss/count}
             ##WILL BE HANDLED DIFFERENTELY COMING UP!
             module.makePlot(
                     "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized"+str(fp[0])+"_"+str(fp[1]),
