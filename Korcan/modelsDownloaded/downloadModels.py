@@ -2,7 +2,7 @@ import tensorflow as tf
 import os
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-model = tf.keras.applications.EfficientNetB4(weights='imagenet')
+model = tf.keras.applications.EfficientNetB4(weights='imagenet',input_shape=(224,224,3))
 tf.keras.models.save_model(model,'../../deep_models_full/efficientnetb4_model.h5',save_format='h5')
 
 # model = tf.keras.applications.DenseNet121(weights='imagenet')
