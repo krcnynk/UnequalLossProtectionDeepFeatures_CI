@@ -33,7 +33,8 @@ def generate_arrays_from_file(folderFilePath,trainBaseDir,HMbaseDIR,batchSize):
                 print("im_array is None")
             if(count == batchSize):
                 count = 0
-                yield(np.array(xTrainData),np.array(yTrainData))
+                dataset = tf.data.Dataset.from_tensor_slices((np.array(xTrainData), np.array(yTrainData)))
+                yield(dataset)
                 xTrainData = []
                 yTrainData = []
                 #yield(np.expand_dims(im_array, axis=0),targetTensor)
@@ -56,7 +57,8 @@ def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
             yValidationData.append(targetTensor)
             if(count == batchSize):
                 count = 0
-                yield(np.array(xValidationData),np.array(yValidationData))
+                dataset = tf.data.Dataset.from_tensor_slices((np.array(xValidationData), np.array(yValidationData)))
+                yield(dataset)
                 xValidationData = []
                 yValidationData = []
 
