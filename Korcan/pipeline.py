@@ -713,7 +713,7 @@ class pipeline:
         # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
 if __name__ == "__main__":
-    modelName = "efficientnetb4"
+    modelName = "efficientnetb0"
     splitLayer = "block2b_add"
     # modelName = "resnet18"
     # splitLayer = "add_1"
