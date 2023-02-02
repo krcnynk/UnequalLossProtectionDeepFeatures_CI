@@ -728,7 +728,7 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
     trained_model_path = "/home/foniks/projects/def-ibajic/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
-    # dataName = "/localhome/kuyanik/dataset/smallTest"
+    # dataName = "/localhome/kuyanik/dataset/largeTest"
     dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
@@ -745,6 +745,7 @@ if __name__ == "__main__":
 
     packetCount = 8
     percLoss = int(sys.argv[1])
+    print(percLoss)
     case = sys.argv[2]
 
     if case == "Top" or case == "Bot" or case == "Random":
