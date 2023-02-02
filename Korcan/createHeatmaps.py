@@ -47,8 +47,9 @@ def processDirectory(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,grad
         I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
-        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-        im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
+        im_array = tf.keras.applications.resnet50.preprocess_input(im_array)
+        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        # im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
         _ , heatmapTensor = __make_gradcam_heatmap(
             np.expand_dims(im_array, axis=0),
             loaded_model,
@@ -99,8 +100,9 @@ def findHeatmaps(gradientRespectToLayer,modelName,argumentName,typeProcess):
         I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,argumentName+ ".JPEG"))
         I = I.resize([224, 224])
         im_array = tf.keras.preprocessing.image.img_to_array(I)
-        im_array = tf.keras.applications.densenet.preprocess_input(im_array)
-        im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
+        im_array = tf.keras.applications.resnet50.preprocess_input(im_array)
+        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        # im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
         _ , heatmapTensor = __make_gradcam_heatmap(
             np.expand_dims(im_array, axis=0),
             loaded_model,
@@ -113,8 +115,10 @@ def findHeatmaps(gradientRespectToLayer,modelName,argumentName,typeProcess):
 if __name__ == "__main__":
     # modelName = "efficientnetb0"
     # splitLayer = "block2b_add"
-    modelName = "dense"
-    splitLayer = "pool2_conv"
+    # modelName = "dense"
+    # splitLayer = "pool2_conv"
+    modelName = "resnet"
+    splitLayer = "conv2_block2_add"
     argumentName = sys.argv[1]
     typeProcess = sys.argv[2]
     findHeatmaps(splitLayer,modelName,str(argumentName),int(typeProcess))
