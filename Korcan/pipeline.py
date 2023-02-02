@@ -207,7 +207,8 @@ class pipeline:
         self.dataset_y_labels_int = [int(item) for item in self.dataset_y_labels]
         # self.mobile_model.summary()
 
-        self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files))
+        # self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files))
+        self.latentOutputBatch = self.mobile_model.predict(tf.keras.applications.resnet50.preprocess_input(np.array(self.dataset_x_files)))
         # self.latentOutputBatch = self.mobile_model.predict(tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files)))
 
         # x=tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files), data_format=None)
@@ -719,6 +720,7 @@ if __name__ == "__main__":
     # splitLayer = "add_1"
     # modelName = "dense"
     # splitLayer = "pool2_conv"
+
     modelName = "resnet"
     splitLayer = "conv2_block2_add"
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
@@ -731,7 +733,7 @@ if __name__ == "__main__":
     )
     trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
     # trained_model_path = "/home/foniks/projects/def-ibajic/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    dataName = "/local-scratch/localhome/kuyanik/dataset/largeTest"
     # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/smallTest"
     quantizationBits = 8
 
