@@ -225,7 +225,7 @@ if __name__ == "__main__":
     datasetCount = np.ceil(sum([len(files) for r, d, files in os.walk(trainDir)]))
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    batchSize = 64
+    batchSize = 128
 
 
     # strategy = tf.distribute.MirroredStrategy()
