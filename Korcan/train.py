@@ -51,7 +51,7 @@ def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
             I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,validationFileNames[i]))
             I = I.resize([224, 224])
             im_array = tf.keras.preprocessing.image.img_to_array(I)
-            im_array = tf.keras.applications.resnet50.preprocess_input((im_array)
+            im_array = tf.keras.applications.resnet50.preprocess_input(im_array)
             # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
             targetTensor = np.load(os.path.join(HMvalDIR,HMvalidationFilenames[i]))
             xValidationData.append(im_array)
