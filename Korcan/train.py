@@ -66,6 +66,7 @@ def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
 #         I = tf.keras.preprocessing.image.load_img(os.path.join(b,a))
 #         I = I.resize([224, 224])
 #         im_array = tf.keras.preprocessing.image.img_to_array(I)
+#         im_array = tf.keras.applications.resnet50.preprocess_input(im_array)
 #         # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
 #         targetTensor = np.load(os.path.join(c,a[:-4]+"npy"))
 #         return (im_array,targetTensor)
@@ -81,6 +82,7 @@ def generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize):
 #     I = tf.keras.preprocessing.image.load_img(os.path.join(b,a))
 #     I = I.resize([224, 224])
 #     im_array = tf.keras.preprocessing.image.img_to_array(I)
+#     im_array = tf.keras.applications.resnet50.preprocess_input(im_array)
 #     # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
 #     targetTensor = np.load(os.path.join(c,d))
 #     return (im_array,targetTensor)
@@ -239,7 +241,9 @@ if __name__ == "__main__":
     checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath='checkpoints/model.{epoch:02d}-{val_loss:.2f}.h5')
     reduce_lr = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
-    # mobileModel.fit(tset,epochs=15,validation_data=vset,batch_size=100,
+    # tset=readT(folderFilePath,trainDir,HMtrainDIR)
+    # vset=readV(valDir,HMvalDIR)
+    # mobileModel.fit(tset,epochs=20,validation_data=vset,batch_size=32,
     # callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1)
 
 
@@ -249,7 +253,7 @@ if __name__ == "__main__":
 
     mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize),validation_steps=1000/batchSize,epochs=20,
     validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1,workers=10,use_multiprocessing=True)
+    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1,workers=12,use_multiprocessing=True)
 
 
 #Unnecessary Junk
