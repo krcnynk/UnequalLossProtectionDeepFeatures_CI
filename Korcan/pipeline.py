@@ -722,7 +722,7 @@ if __name__ == "__main__":
     # splitLayer = "pool2_conv"
 
     modelName = "resnet"
-    splitLayer = "conv2_block1_add"
+    splitLayer = "conv2_block2_add"
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
@@ -733,8 +733,8 @@ if __name__ == "__main__":
     )
     trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
     # trained_model_path = "/home/foniks/projects/def-ibajic/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/checkpoints/model.15-0.00.h5"
-    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
