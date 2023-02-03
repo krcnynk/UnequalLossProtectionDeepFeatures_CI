@@ -118,7 +118,7 @@ if __name__ == "__main__":
     # modelName = "dense"
     # splitLayer = "pool2_conv"
     modelName = "resnet"
-    splitLayer = "conv2_block2_add"
+    splitLayer = "conv2_block1_add"
     argumentName = sys.argv[1]
     typeProcess = sys.argv[2]
     findHeatmaps(splitLayer,modelName,str(argumentName),int(typeProcess))
