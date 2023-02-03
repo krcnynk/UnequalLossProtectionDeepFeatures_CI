@@ -722,7 +722,7 @@ if __name__ == "__main__":
     # splitLayer = "pool2_conv"
 
     modelName = "resnet"
-    splitLayer = "conv2_block2_add"
+    splitLayer = "conv2_block1_add"
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
