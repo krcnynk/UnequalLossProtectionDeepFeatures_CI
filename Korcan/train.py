@@ -233,8 +233,9 @@ if __name__ == "__main__":
 
     # with strategy.scope():
     mobileModel = loadModel(modelName, splitLayer)
+    mobileModel = self.trained_model = tf.keras.models.load_model("checkpoints/model")
     mobileModel.trainable = True
-    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-1),
+    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
                 loss=tf.keras.losses.MeanSquaredError(),)
 
     # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
@@ -253,7 +254,7 @@ if __name__ == "__main__":
 
     mobileModel.fit(generate_arrays_from_file(folderFilePath,trainDir,HMtrainDIR,batchSize),steps_per_epoch=datasetCount/(batchSize),validation_steps=1000/batchSize,epochs=20,
     validation_data=generate_arrays_from_file_Validation(valDir,HMvalDIR,batchSize),
-    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1,workers=10,use_multiprocessing=True)
+    callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1,workers=12,use_multiprocessing=True)
 
 
 #Unnecessary Junk
