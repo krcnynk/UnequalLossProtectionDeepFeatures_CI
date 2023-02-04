@@ -172,7 +172,7 @@ def loadModel(modelName, splitLayer):
     return tf.keras.models.clone_model(mobile_model)
 
 def scheduler(epoch, lr):
-    if epoch < 0:
+    if epoch < 3:
         lr = 0.1
     elif epoch >=3 and epoch < 5:
         lr = 0.01
@@ -235,7 +235,7 @@ if __name__ == "__main__":
     mobileModel = loadModel(modelName, splitLayer)
     # mobileModel = self.trained_model = tf.keras.models.load_model("checkpoints/model")
     mobileModel.trainable = True
-    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1e-4),
+    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1),
                 loss=tf.keras.losses.MeanSquaredError(),)
 
     # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
