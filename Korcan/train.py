@@ -172,14 +172,14 @@ def loadModel(modelName, splitLayer):
     return tf.keras.models.clone_model(mobile_model)
 
 def scheduler(epoch, lr):
-    if epoch == 2:
-        lr = 0.1
+    if epoch < 2:
+        lr = 0.00001
     elif epoch >=3 and epoch < 5:
-        lr = 0.01
+        lr = 0.000001
     elif epoch >=5 and epoch < 7:
-        lr = 0.001
+        lr = 0.0000001
     elif epoch >=7:
-        lr = 0.0001
+        lr = 0.00000001
     return lr
 
 if __name__ == "__main__":
@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
     # with strategy.scope():
     mobileModel = loadModel(modelName, splitLayer)
-    mobileModel = tf.keras.models.load_model("/local-scratch/localhome/kuyanik/trained03020_1435_resnet_checkpoint/model.07-0.00.h5")
+    mobileModel = tf.keras.models.load_model("/local-scratch/localhome/kuyanik/trained03020_1435_resnet_checkpoint2/model.05-0.00.h5")
     mobileModel.trainable = True
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1-1),
                 loss=tf.keras.losses.MeanSquaredError(),)
