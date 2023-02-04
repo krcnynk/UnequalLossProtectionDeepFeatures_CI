@@ -227,15 +227,14 @@ if __name__ == "__main__":
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     batchSize = 128
 
-
     # strategy = tf.distribute.MirroredStrategy()
     # print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
 
     # with strategy.scope():
     mobileModel = loadModel(modelName, splitLayer)
-    # mobileModel = self.trained_model = tf.keras.models.load_model("checkpoints/model")
+    mobileModel = tf.keras.models.load_model("/local-scratch/localhome/kuyanik/trained03020_1435_resnet_checkpoint/model.07-0.00.h5")
     mobileModel.trainable = True
-    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1),
+    mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1-1),
                 loss=tf.keras.losses.MeanSquaredError(),)
 
     # reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.1,patience=4, min_lr=1e-7,min_delta=1e-4,verbose=1)
