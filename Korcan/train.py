@@ -173,13 +173,13 @@ def loadModel(modelName, splitLayer):
 
 def scheduler(epoch, lr):
     if epoch < 2:
-        lr = 0.00001
-    elif epoch >=3 and epoch < 5:
-        lr = 0.000001
-    elif epoch >=5 and epoch < 7:
-        lr = 0.0000001
-    elif epoch >=7:
         lr = 0.00000001
+    elif epoch >=3 and epoch < 5:
+        lr = 0.000000001
+    elif epoch >=5 and epoch < 7:
+        lr = 0.0000000001
+    elif epoch >=7:
+        lr = 0.00000000001
     return lr
 
 if __name__ == "__main__":
