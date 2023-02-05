@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
     # with strategy.scope():
     mobileModel = loadModel(modelName, splitLayer)
-    mobileModel = tf.keras.models.load_model("/local-scratch/localhome/kuyanik/trained03020_1435_resnet_checkpoint2/model.05-0.00.h5")
+    mobileModel = tf.keras.models.load_model("/local-scratch/localhome/kuyanik/trained03020_1435_resnet_checkpoint3/model.05-0.00.h5")
     mobileModel.trainable = True
     mobileModel.compile(optimizer=tf.keras.optimizers.Adam(1-1),
                 loss=tf.keras.losses.MeanSquaredError(),)
