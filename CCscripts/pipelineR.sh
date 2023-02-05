@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 #SBATCH --time=4:00:00
 #SBATCH --array=1-11
 #SBATCH --mem=50G
