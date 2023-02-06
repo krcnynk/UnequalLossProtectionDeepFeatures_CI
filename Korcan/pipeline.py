@@ -71,7 +71,7 @@ class pipeline:
             matrixFeature = np.empty((iS[1] * 6, iS[2] * 4))
             matrixHeat = np.empty((iS[1] * 6, iS[2] * 4))
             ind = 0
-            heatMap = heatMapBatch[i_b]
+            heatMap = self.__normalizeToUnit(heatMapBatch[i_b])
             for i_cx in range(6):
                 for i_cy in range(4):
                     # print(featureMap.shape)
@@ -82,7 +82,7 @@ class pipeline:
                     matrixHeat[
                         i_cx * iS[1] : i_cx * iS[1] + iS[1],
                         i_cy * iS[1] : i_cy * iS[1] + iS[1],
-                    ] = self.__normalizeToUnit(heatMap[:, :, ind])
+                    ] = heatMap[:, :, ind]
                     ind = ind + 1
 
             jet = cm.get_cmap("jet", 256)
@@ -92,7 +92,7 @@ class pipeline:
                 colors[i][3] = r[i]
             newcmp = matplotlib.colors.ListedColormap(colors)
             plt.imshow(matrixFeature, interpolation="bilinear", cmap="gray")
-            matrixHeat = matrixHeat * 100 #HERE COMMENT
+            matrixHeat = matrixHeat * 1 #HERE COMMENT
             matrixHeat[matrixHeat > 1] = 1
             # matrixHeat[matrixHeat < 0.8] = 0.6
             # matrixHeat[matrixHeat < 0.4] = 0.3
@@ -734,10 +734,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
     
-    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
