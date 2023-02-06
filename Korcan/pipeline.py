@@ -254,9 +254,9 @@ class pipeline:
             # Save the mobile and cloud sub-model
             self.mobile_model.save(mobile_model_path)
             self.cloud_model.save(cloud_model_path)
-        self.trained_model = tf.keras.models.load_model(
-                os.path.join(trained_model_path)
-            )
+        # self.trained_model = tf.keras.models.load_model(
+        #         os.path.join(trained_model_path)
+        #     )
         self.mobile_model.summary()
         # self.cloud_model.summary()
 
@@ -265,15 +265,15 @@ class pipeline:
         self.heatMapsChannelsBatch = []
 
         for i_b in range(len(self.dataset_x_files)):
-            # a, b = self.__make_gradcam_heatmap(
-            #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
-            #     self.loaded_model,
-            #     gradientRespectToLayer,
-            #     np.array(self.dataset_y_labels_int)[i_b],
-            # )
-            a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+            a, b = self.__make_gradcam_heatmap(
                 np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+                self.loaded_model,
+                gradientRespectToLayer,
+                np.array(self.dataset_y_labels_int)[i_b],
             )
+            # a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+            #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            # )
             self.heatmapsBatch.append(a)
             self.heatMapsChannelsBatch.append(b)
         self.heatmapsBatch = np.array(self.heatmapsBatch)
@@ -754,6 +754,37 @@ if __name__ == "__main__":
     print("KORCAN LOSS",percLoss)
     case = sys.argv[2]
 
+    module.saveSuperImposedChannels()
+    saveImageLossPercent = 0
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName
+    )
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName
+    )
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
+    )
+    module.packetLossSim(
+        packetCount,
+        quantizationBits,
+        saveImageLossPercent,
+        "Random_RSCorrected",
+        50,
+        50,
+        saveImages=True,modelName
+    )
+
+    module.packetLossSim(
+        packetCount,
+        quantizationBits,
+        saveImageLossPercent,
+        "Random_RSCorrected_FECRemovesBOT_",
+        50,
+        50,
+        saveImages=True,modelName
+    )
+
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
     elif case == "makeplot":
@@ -823,6 +854,16 @@ if __name__ == "__main__":
         protectPercent = int(sys.argv[4])
         module.packetLossSim(packetCount, 8, percLoss, case, fecPercent, protectPercent,modelName=modelName)
    
+   
+    # module.findPercentileLossPerChannelFM(
+    #     saveImageLossPercent, quantizationBits, saveImages=True
+    # )
+    # module.findPercentileLossPerChannelFM(
+    #     saveImageLossPercent, quantizationBits, saveImages=True,bot=True
+    # )
+    # module.findPercentileRandomLossPerChannelFM(
+    #     saveImageLossPercent, quantizationBits, saveImages=True
+    # )
 
     # fecPercent = [10]
     # protectPercent = [20, 50, 80]
@@ -861,36 +902,5 @@ if __name__ == "__main__":
 
 
 
-    # module.saveSuperImposedChannels()
 
-    # saveImageLossPercent = 0
-    # module.findPercentileLossPerChannelFM(
-    #     saveImageLossPercent, quantizationBits, saveImages=True
-    # )
-    # module.findPercentileLossPerChannelFM(
-    #     saveImageLossPercent, quantizationBits, saveImages=True,bot=True
-    # )
-    # module.findPercentileRandomLossPerChannelFM(
-    #     saveImageLossPercent, quantizationBits, saveImages=True
-    # )
-
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
-    # )
-
-    # module.packetLossSim(
-    #     packetCount,
-    #     quantizationBits,
-    #     saveImageLossPercent,
-    #     "Random_RSCorrected",
-    #     50,
-    #     50,
-    #     saveImages=True,modelName
-    # )
 
