@@ -782,7 +782,7 @@ if __name__ == "__main__":
         "Random_RSCorrected_FECRemovesBOT_",
         50,
         50,
-        saveImages=True,modelName
+        saveImages=True,modelName=modelName
     )
 
     if case == "Top" or case == "Bot" or case == "Random":
