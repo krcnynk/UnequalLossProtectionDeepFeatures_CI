@@ -757,13 +757,13 @@ if __name__ == "__main__":
     module.saveSuperImposedChannels()
     saveImageLossPercent = 0
     module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName
+        packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
     )
     module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName
+        packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName=modelName
     )
     module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName
+        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName=modelName
     )
     module.packetLossSim(
         packetCount,
