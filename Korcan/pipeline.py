@@ -92,7 +92,7 @@ class pipeline:
                 colors[i][3] = r[i]
             newcmp = matplotlib.colors.ListedColormap(colors)
             plt.imshow(matrixFeature, interpolation="bilinear", cmap="gray")
-            matrixHeat = matrixHeat * 1 #HERE COMMENT
+            matrixHeat = matrixHeat * 6 #HERE COMMENT
             matrixHeat[matrixHeat > 1] = 1
             # matrixHeat[matrixHeat < 0.8] = 0.6
             # matrixHeat[matrixHeat < 0.4] = 0.3
