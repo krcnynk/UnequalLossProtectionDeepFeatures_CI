@@ -94,7 +94,7 @@ class pipeline:
             plt.imshow(matrixFeature, interpolation="bilinear", cmap="gray")
             matrixHeat = matrixHeat * 1 #HERE COMMENT
             matrixHeat[matrixHeat > 1] = 1
-            matrixHeat[matrixHeat < 0.8 and matrixHeat > 0.4] = 0.6
+            matrixHeat[matrixHeat < 0.8] = 0.6
             matrixHeat[matrixHeat < 0.4] = 0.3
             plt.imshow(matrixHeat, interpolation="bilinear", cmap=newcmp)
             plt.colorbar()
