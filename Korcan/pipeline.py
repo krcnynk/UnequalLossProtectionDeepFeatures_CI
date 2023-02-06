@@ -772,7 +772,7 @@ if __name__ == "__main__":
         "Random_RSCorrected",
         50,
         50,
-        saveImages=True,modelName
+        saveImages=True,modelName=modelName
     )
 
     module.packetLossSim(
