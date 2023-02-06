@@ -92,9 +92,9 @@ class pipeline:
                 colors[i][3] = r[i]
             newcmp = matplotlib.colors.ListedColormap(colors)
             plt.imshow(matrixFeature, interpolation="bilinear", cmap="gray")
-            matrixHeat = matrixHeat * 3
+            # matrixHeat = matrixHeat * 3
             matrixHeat[matrixHeat > 1] = 1
-            # plt.imshow( , interpolation="bilinear", cmap=newcmp)
+            plt.imshow(matrixHeat, interpolation="bilinear", cmap=newcmp)
             plt.colorbar()
             plt.savefig(
                 os.path.join(
