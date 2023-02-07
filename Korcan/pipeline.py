@@ -267,15 +267,15 @@ class pipeline:
         self.heatMapsChannelsBatch = []
 
         for i_b in range(len(self.dataset_x_files)):
-            a, b = self.__make_gradcam_heatmap(
-                np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
-                self.loaded_model,
-                gradientRespectToLayer,
-                np.array(self.dataset_y_labels_int)[i_b],
-            )
-            # a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+            # a, b = self.__make_gradcam_heatmap(
             #     np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            #     self.loaded_model,
+            #     gradientRespectToLayer,
+            #     np.array(self.dataset_y_labels_int)[i_b],
             # )
+            a, b = self.__make_gradcam_heatmap_fromTrainedModel(
+                np.expand_dims(np.array(self.dataset_x_files)[i_b], axis=0),
+            )
             self.heatmapsBatch.append(a)
             self.heatMapsChannelsBatch.append(b)
         self.heatmapsBatch = np.array(self.heatmapsBatch)
@@ -734,10 +734,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
     
-    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
@@ -756,36 +756,35 @@ if __name__ == "__main__":
     print("KORCAN LOSS",percLoss)
     case = sys.argv[2]
 
-    module.saveSuperImposedChannels(modelName)
-    saveImageLossPercent = 50
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
-    )
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName=modelName
-    )
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName=modelName
-    )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Random_RSCorrected",
-        50,
-        50,
-        saveImages=True,modelName=modelName
-    )
-
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Random_RSCorrected_FECRemovesBOT_",
-        50,
-        50,
-        saveImages=True,modelName=modelName
-    )
+    # module.saveSuperImposedChannels(modelName)
+    # saveImageLossPercent = 50
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName=modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName=modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Random_RSCorrected",
+    #     50,
+    #     50,
+    #     saveImages=True,modelName=modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Random_RSCorrected_FECRemovesBOT_",
+    #     50,
+    #     50,
+    #     saveImages=True,modelName=modelName
+    # )
 
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
