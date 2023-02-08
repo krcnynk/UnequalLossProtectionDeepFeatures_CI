@@ -756,35 +756,35 @@ if __name__ == "__main__":
     print("KORCAN LOSS",percLoss)
     case = sys.argv[2]
 
-    module.saveSuperImposedChannels(modelName)
-    saveImageLossPercent = 40
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
-    )
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName=modelName
-    )
-    module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName=modelName
-    )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Random_RSCorrected",
-        50,
-        50,
-        saveImages=True,modelName=modelName
-    )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Random_RSCorrected_FECRemovesBOT",
-        50,
-        50,
-        saveImages=True,modelName=modelName
-    )
+    # module.saveSuperImposedChannels(modelName)
+    # saveImageLossPercent = 40
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName=modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName=modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Random_RSCorrected",
+    #     50,
+    #     50,
+    #     saveImages=True,modelName=modelName
+    # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Random_RSCorrected_FECRemovesBOT",
+    #     50,
+    #     50,
+    #     saveImages=True,modelName=modelName
+    # )
 
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
