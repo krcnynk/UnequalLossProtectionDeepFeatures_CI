@@ -6,7 +6,7 @@
 
 module restore uneq
 source /project/6008756/foniks/Project_1/uneqENV/bin/activate
-mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet/Random_RSCorrected_70_30
+mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet/Random_RSCorrected_30_70
 cd ..
 
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) Random_RSCorrected 50 50
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) Random_RSCorrected 30_70
