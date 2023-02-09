@@ -327,7 +327,7 @@ class pipeline:
         "R_RS_FEC_40_60","m",".","-.",
         "R_RS_FEC_50_50","m",".",":",]
 
-        types = list(set([i[1] for i in self.pdict.keys()]))
+        types = sorted(list(set([i[1] for i in self.pdict.keys()])))
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
         for key, value in self.pdict.items():
@@ -340,13 +340,13 @@ class pipeline:
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            print(types[s])
             if(types[s]=="Top" or types[s]=="Bot" or types[s]=="Random"):
                 plt.scatter(seriesX[s], seriesY[s],s=5, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
                 plt.plot(seriesX[s], seriesY[s],label='_nolegend_',linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
             else:
+                print(types[s])
                 plt.scatter(seriesX[s], seriesY[s],s=5, marker=cases[mapping+2],color=cases[mapping+1])
-                plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
+                plt.plot(seriesX[s], seriesY[s],label=cases[mapping] ,linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
