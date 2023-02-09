@@ -324,7 +324,7 @@ class pipeline:
         "R_RS_FEC_10_90","m",".","-",
         "R_RS_FEC_20_80","y",".","--",
         "R_RS_FEC_30_70","k",".","-.",
-        "R_RS_FEC_40_60","w",".","solid",
+        "R_RS_FEC_40_60",('#008000'),".","solid",
         "R_RS_FEC_50_50","c",".",":",]
 
         types = list(set([i[1] for i in self.pdict.keys()]))
