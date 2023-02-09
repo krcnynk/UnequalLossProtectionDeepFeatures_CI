@@ -852,7 +852,10 @@ if __name__ == "__main__":
                     # print("b____")
                     # print({"acc": acc/count, "loss": loss/count})
                     if(key[1] == "Random_RSCorrected_FECRemovesBOT"):
+                        key = list(key)
                         key[1] = d
+                        key = tuple(key)
+                        
                     module.pdict[key] = {"acc": acc/count, "loss": loss/count}
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
         module.makePlot(
