@@ -810,7 +810,7 @@ if __name__ == "__main__":
                         module.pdict[key] = val
             dirNames = []
             dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
-            dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
+            # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
             dirNames.append("Random")
             for d in dirNames:
                 listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d) 
