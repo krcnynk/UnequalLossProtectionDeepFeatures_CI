@@ -326,7 +326,6 @@ class pipeline:
         "R_RS_FEC_30_70","k",".","-.",
         "R_RS_FEC_40_60","w",".","solid",
         "R_RS_FEC_50_50","c",".",":",]
-        b’	blue
 
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
