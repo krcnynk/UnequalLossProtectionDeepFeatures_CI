@@ -855,11 +855,9 @@ if __name__ == "__main__":
                     # print({"acc": acc/count, "loss": loss/count})
                     if(key[1] == "Random_RSCorrected_FECRemovesBOT"):
                         key = list(key)
-                        print(d)
-                        print(key[1])
-                        key[1] = d
+                        dp = "R_RS_FEC"+d[-6:]
+                        key[1] = dp
                         key = tuple(key)
-                        print(key)
                     
                     module.pdict[key] = {"acc": acc/count, "loss": loss/count}
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
