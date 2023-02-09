@@ -343,15 +343,13 @@ class pipeline:
             plt.scatter(seriesX[s], seriesY[s],s=5, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
             plt.plot(seriesX[s], seriesY[s],label='_nolegend_',linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
-        plt.legend(
-            # ["Top",
-            # "Bot",
-            # "Random",
-            # "R_RS_FEC_10_90",
-            # "R_RS_FEC_20_80",
-            # "R_RS_FEC_30_70",
-            # "R_RS_FEC_40_60",
-            # "R_RS_FEC_50_50",],
+        # reordering the labels
+        handles, labels = plt.gca().get_legend_handles_labels()
+        
+        # specify order
+        order = [2, 3, 4, 7,0,6,5,4]
+
+        plt.legend([handles[i] for i in order], [labels[i] for i in order],
             loc="upper right",
             fontsize="xx-small",
             markerscale=0.7,
