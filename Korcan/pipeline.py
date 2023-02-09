@@ -344,14 +344,14 @@ class pipeline:
             plt.plot(seriesX[s], seriesY[s],label='_nolegend_',linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
         plt.legend(
-            ["Top",None,
-            "Bot",None,
-            "Random",None,
-            "R_RS_FEC_10_90",None,
-            "R_RS_FEC_20_80",None,
-            "R_RS_FEC_30_70",None,
-            "R_RS_FEC_40_60",None,
-            "R_RS_FEC_50_50",None,],
+            ["Top",
+            "Bot",
+            "Random",
+            "R_RS_FEC_10_90",
+            "R_RS_FEC_20_80",
+            "R_RS_FEC_30_70",
+            "R_RS_FEC_40_60",
+            "R_RS_FEC_50_50",],
             loc="upper right",
             fontsize="xx-small",
             markerscale=0.7,
