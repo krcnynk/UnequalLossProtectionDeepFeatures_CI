@@ -857,6 +857,7 @@ if __name__ == "__main__":
                         print(key[1])
                         key[1] = d
                         key = tuple(key)
+                        print(key)
                     
                     module.pdict[key] = {"acc": acc/count, "loss": loss/count}
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
