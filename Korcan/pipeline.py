@@ -345,7 +345,7 @@ class pipeline:
                 plt.plot(seriesX[s], seriesY[s],label='_nolegend_',linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
             else:
                 plt.scatter(seriesX[s], seriesY[s],s=5, marker=cases[mapping+2],color=cases[mapping+1])
-                plt.plot(seriesX[s], seriesY[s],label=cases[mapping+3],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
+                plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
@@ -853,7 +853,7 @@ if __name__ == "__main__":
                         count = count + 1
                         acc = acc + s["acc"]
                         loss = loss + s["loss"]
-                    print(count)
+                    # print(count)
                     # print(key)
                     # print("a____")
                     # print(val)
