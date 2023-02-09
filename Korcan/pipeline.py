@@ -351,7 +351,7 @@ class pipeline:
         handles, labels = plt.gca().get_legend_handles_labels()
         
         # specify order
-        print(len(handles))
+        print("HEY",len(handles))
         order=[0,1,2,3,4,5,6]
         # order=[3,5,6, 2,0,1,7,4]
 
