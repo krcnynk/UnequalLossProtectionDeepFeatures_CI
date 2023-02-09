@@ -347,7 +347,7 @@ class pipeline:
         handles, labels = plt.gca().get_legend_handles_labels()
         
         # specify order
-        order = [2, 3, 4, 7,0,6,5,8]
+        order = [2, 3, 4, 7,0,6,5,1]
 
         plt.legend([handles[i] for i in order], [labels[i] for i in order],
             loc="upper right",
