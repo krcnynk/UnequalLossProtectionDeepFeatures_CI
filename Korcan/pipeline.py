@@ -323,9 +323,9 @@ class pipeline:
         "Random","r",".","-",
         # "R_RS_FEC_10_90","m",".","-",
         "R_RS_FEC_20_80","m",".","-",
-        "R_RS_FEC_30_70","m",".","-.",
-        "R_RS_FEC_40_60","m",".","-",
-        "R_RS_FEC_50_50","m",".","-",]
+        "R_RS_FEC_30_70","m",".","--",
+        "R_RS_FEC_40_60","m",".","-.",
+        "R_RS_FEC_50_50","m",".",":",]
 
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
