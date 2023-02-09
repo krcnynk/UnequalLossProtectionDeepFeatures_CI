@@ -341,7 +341,7 @@ class pipeline:
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             plt.scatter(seriesX[s], seriesY[s],s=5, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
-            plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
+            plt.plot(seriesX[s], seriesY[s],label='_nolegend_',linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
         plt.legend(
             ["Top",None,
