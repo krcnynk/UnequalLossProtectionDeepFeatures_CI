@@ -851,7 +851,7 @@ if __name__ == "__main__":
                     # print(val)
                     # print("b____")
                     # print({"acc": acc/count, "loss": loss/count})
-                    if(key[1] == "Random_RSCorrected_FECRemovesBOT")
+                    if(key[1] == "Random_RSCorrected_FECRemovesBOT"):
                         key[1] = d
                     module.pdict[key] = {"acc": acc/count, "loss": loss/count}
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
