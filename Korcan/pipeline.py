@@ -339,12 +339,8 @@ class pipeline:
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            if(mapping>11):
-                plt.scatter(seriesX[s], seriesY[s],s=2, label=cases[mapping+2], marker=cases[mapping+2],color=cases[mapping+1])
-                plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
-            else:
-                plt.scatter(seriesX[s], seriesY[s],s=2, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
-                plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
+            plt.scatter(seriesX[s], seriesY[s],s=2, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
+            plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
         # plt.legend(
         #     bbox_to_anchor=(1.04, 1),
