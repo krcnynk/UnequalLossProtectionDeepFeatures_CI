@@ -322,10 +322,12 @@ class pipeline:
         "Bot","g",".","-",
         "Random","r",".","-",
         "R_RS_FEC_10_90","m",".","-",
-        "R_RS_FEC_20_80","m",".","--",
-        "R_RS_FEC_30_70","m",".","-.",
-        "R_RS_FEC_40_60","m",".","solid",
-        "R_RS_FEC_50_50","m",".",":",]
+        "R_RS_FEC_20_80","y",".","--",
+        "R_RS_FEC_30_70","k",".","-.",
+        "R_RS_FEC_40_60","w",".","solid",
+        "R_RS_FEC_50_50","c",".",":",]
+        b’	blue
+
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
