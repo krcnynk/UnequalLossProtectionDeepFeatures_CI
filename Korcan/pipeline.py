@@ -343,14 +343,15 @@ class pipeline:
             plt.scatter(seriesX[s], seriesY[s],s=5, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
             plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
-        # plt.legend(
-        #     bbox_to_anchor=(1.04, 1),
-        #     loc="upper left",
-        #     ncol=2,
-        #     fancybox=True,
-        #     shadow=True,
-        # )
         plt.legend(
+            ["Top",
+            "Bot",
+            "Random",
+            "R_RS_FEC_10_90",
+            "R_RS_FEC_20_80",
+            "R_RS_FEC_30_70",
+            "R_RS_FEC_40_60",
+            "R_RS_FEC_50_50"],
             loc="upper right",
             fontsize="xx-small",
             markerscale=0.7,
