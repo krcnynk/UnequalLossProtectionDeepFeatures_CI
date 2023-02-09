@@ -318,9 +318,9 @@ class pipeline:
         # perc,type -> acc,loss
 
         # cases = ["Top","b","1","Bot","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
-        cases = ["Top","b","1","-",
-        "Bot","g","+","-",
-        "Random","r","v","-",
+        cases = ["Top","b",".","-",
+        "Bot","g",".","-",
+        "Random","r",".","-",
         "R_RS_FEC_10_90","m",".","-",
         "R_RS_FEC_20_80","m",".","--",
         "R_RS_FEC_30_70","m",".","-.",
