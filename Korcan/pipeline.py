@@ -318,12 +318,14 @@ class pipeline:
         # perc,type -> acc,loss
 
         # cases = ["Top","b","1","Bot","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
-        cases = ["Top","b","1","Bot","g","+","Random","r",".",
-        "Random_RSCorrected_FECRemovesBOT_10_90","m","h",
-        "Random_RSCorrected_FECRemovesBOT_20_80","m","*",
-        "Random_RSCorrected_FECRemovesBOT_30_70","m","*",
-        "Random_RSCorrected_FECRemovesBOT_40_60","m","*",
-        "Random_RSCorrected_FECRemovesBOT_50_50","m","*"]
+        cases = ["Top","b","1","-",
+        "Bot","g","+","-",
+        "Random","r",".","-",
+        "Random_RSCorrected_FECRemovesBOT_10_90","m","h","-",
+        "Random_RSCorrected_FECRemovesBOT_20_80","m","*","--",
+        "Random_RSCorrected_FECRemovesBOT_30_70","m","*","-.",
+        "Random_RSCorrected_FECRemovesBOT_40_60","m","*",":",
+        "Random_RSCorrected_FECRemovesBOT_50_50","m","*","solid",]
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
@@ -338,7 +340,7 @@ class pipeline:
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             plt.scatter(seriesX[s], seriesY[s],s=1, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
-            plt.plot(seriesX[s], seriesY[s], linewidth=0.5, color=cases[mapping+1])
+            plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+4] ,linewidth=0.5, color=cases[mapping+1])
 
         # plt.legend(
         #     bbox_to_anchor=(1.04, 1),
