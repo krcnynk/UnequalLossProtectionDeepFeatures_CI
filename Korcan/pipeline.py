@@ -861,8 +861,8 @@ if __name__ == "__main__":
                     module.pdict[key] = {"acc": acc/count, "loss": loss/count}
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
         module.makePlot(
-                "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized"+str(fp[0])+"_"+str(fp[1]),
-                "Korcan/Plots/"+modelName+"/LossPlotPacketized"+str(fp[0])+"_"+str(fp[1]),
+                "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized",
+                "Korcan/Plots/"+modelName+"/LossPlotPacketized",
             )
     else:
         fecPercent = int(sys.argv[3])
