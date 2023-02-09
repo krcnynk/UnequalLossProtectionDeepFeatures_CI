@@ -321,11 +321,11 @@ class pipeline:
         cases = ["Top","b","1","-",
         "Bot","g","+","-",
         "Random","r",".","-",
-        "R_RS_FEC_10_90","m","h","-",
-        "R_RS_FEC_20_80","m","d","--",
-        "R_RS_FEC_30_70","m","*","-.",
-        "R_RS_FEC_40_60","m","s","solid",
-        "R_RS_FEC_50_50","m","p",":",]
+        "R_RS_FEC_10_90","m",".","-",
+        "R_RS_FEC_20_80","m",".","--",
+        "R_RS_FEC_30_70","m",".","-.",
+        "R_RS_FEC_40_60","m",".","solid",
+        "R_RS_FEC_50_50","m",".",":",]
         types = list(set([i[1] for i in self.pdict.keys()]))
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
@@ -339,8 +339,12 @@ class pipeline:
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            plt.scatter(seriesX[s], seriesY[s],s=2, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
-            plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
+            if(mapping>11):
+                plt.scatter(seriesX[s], seriesY[s],s=2, label=cases[mapping+2], marker=cases[mapping+2],color=cases[mapping+1])
+                plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
+            else:
+                plt.scatter(seriesX[s], seriesY[s],s=2, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
+                plt.plot(seriesX[s], seriesY[s],linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
         # plt.legend(
         #     bbox_to_anchor=(1.04, 1),
