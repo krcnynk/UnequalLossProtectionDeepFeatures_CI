@@ -320,7 +320,7 @@ class pipeline:
         # cases = ["Top","b","1","Bot","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
         cases = ["Top","b","1","-",
         "Bot","g","+","-",
-        "Random","r",".","-",
+        "Random","r","v","-",
         "R_RS_FEC_10_90","m",".","-",
         "R_RS_FEC_20_80","m",".","--",
         "R_RS_FEC_30_70","m",".","-.",
