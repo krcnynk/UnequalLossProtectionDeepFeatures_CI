@@ -341,11 +341,11 @@ class pipeline:
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             if(types[s]=="Top" or types[s]=="Bot" or types[s]=="Random"):
-                plt.scatter(seriesX[s], seriesY[s],s=5, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
+                plt.scatter(seriesX[s], seriesY[s],s=15, label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
                 plt.plot(seriesX[s], seriesY[s],label='_nolegend_',linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
             else:
                 print(types[s])
-                plt.scatter(seriesX[s], seriesY[s],s=5, marker=cases[mapping+2],color=cases[mapping+1])
+                plt.scatter(seriesX[s], seriesY[s],s=15, marker=cases[mapping+2],color=cases[mapping+1])
                 plt.plot(seriesX[s], seriesY[s],label=cases[mapping] ,linestyle=cases[mapping+3] ,linewidth=0.5, color=cases[mapping+1])
 
         # reordering the labels
@@ -863,10 +863,20 @@ if __name__ == "__main__":
                     # print({"acc": acc/count, "loss": loss/count})
                     if(key[1] == "Random_RSCorrected_FECRemovesBOT"):
                         key = list(key)
-                        dp = "R_RS_FEC"+d[-6:]
+                        dp = "FEC"+d[-6:]
                         key[1] = dp
                         key = tuple(key)
-                    
+                    elif (key[1] == "Top"):
+                        key = list(key)
+                        dp = "Most important"
+                        key[1] = dp
+                        key = tuple(key)
+                    elif (key[1] == "Bot"):
+                        key = list(key)
+                        dp = "Least imporant"
+                        key[1] = dp
+                        key = tuple(key)
+                    else
                     module.pdict[key] = {"acc": acc/count, "loss": loss/count}
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
         module.makePlot(
