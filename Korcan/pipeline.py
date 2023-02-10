@@ -319,7 +319,7 @@ class pipeline:
 
         # cases = ["Top","b","1","Bot","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
         cases = ["Most important","b",".","-",
-        "Least imporant","g",".","-",
+        "Least important","g",".","-",
         "Random","r",".","-",
         # "R_RS_FEC_10_90","m",".","-",
         "FEC_20_80","m",".","-",
@@ -340,7 +340,7 @@ class pipeline:
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            if(types[s]=="Least imporant" or types[s]=="Most important" or types[s]=="Random"):
+            if(types[s]=="Least important" or types[s]=="Most important" or types[s]=="Random"):
                 plt.scatter(seriesX[s], seriesY[s],s=20, label='_nolegend_', marker=cases[mapping+2],color=cases[mapping+1])
                 plt.plot(seriesX[s], seriesY[s],label=cases[mapping],linestyle=cases[mapping+3] ,linewidth=1.2, color=cases[mapping+1])
             else:
@@ -831,7 +831,7 @@ if __name__ == "__main__":
                         key = tuple(key)
                     elif (key[1] == "Bot"):
                         key = list(key)
-                        dp = "Least imporant"
+                        dp = "Least important"
                         key[1] = dp
                         key = tuple(key)
 
