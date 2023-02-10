@@ -322,10 +322,10 @@ class pipeline:
         "Bot","g",".","-",
         "Random","r",".","-",
         # "R_RS_FEC_10_90","m",".","-",
-        "R_RS_FEC_20_80","m",".","-",
-        "R_RS_FEC_30_70","m",".","--",
-        "R_RS_FEC_40_60","m",".","-.",
-        "R_RS_FEC_50_50","m",".",":",]
+        "FEC_20_80","m",".","-",
+        "FEC_30_70","m",".","--",
+        "FEC_40_60","m",".","-.",
+        "FEC_50_50","m",".",":",]
 
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
         seriesX = [[] for _ in range(len(types))]
