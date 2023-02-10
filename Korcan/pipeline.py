@@ -341,11 +341,11 @@ class pipeline:
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             if(types[s]=="Least important" or types[s]=="Most important" or types[s]=="Random"):
-                plt.scatter(seriesX[s], seriesY[s],s=20, label='_nolegend_', marker=cases[mapping+2],color=cases[mapping+1])
+                plt.scatter(seriesX[s], seriesY[s],s=25, label='_nolegend_', marker=cases[mapping+2],color=cases[mapping+1])
                 plt.plot(seriesX[s], seriesY[s],label=cases[mapping],linestyle=cases[mapping+3] ,linewidth=1.2, color=cases[mapping+1])
             else:
                 print(types[s])
-                plt.scatter(seriesX[s], seriesY[s],s=20, marker=cases[mapping+2],color=cases[mapping+1])
+                plt.scatter(seriesX[s], seriesY[s],s=25, marker=cases[mapping+2],color=cases[mapping+1])
                 plt.plot(seriesX[s], seriesY[s],label=cases[mapping] ,linestyle=cases[mapping+3] ,linewidth=1.2, color=cases[mapping+1])
 
         # reordering the labels
