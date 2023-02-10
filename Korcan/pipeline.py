@@ -364,7 +364,7 @@ class pipeline:
             # ncol=2,
             fancybox=True,
             # shadow=True,
-            prop={'size': 15}
+            prop={'size': 8}
         )
         plt.savefig(
             pathAcc,
