@@ -876,7 +876,6 @@ if __name__ == "__main__":
                         dp = "Least imporant"
                         key[1] = dp
                         key = tuple(key)
-                    else
                     module.pdict[key] = {"acc": acc/count, "loss": loss/count}
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
         module.makePlot(
