@@ -823,6 +823,18 @@ if __name__ == "__main__":
                         key = pickle.load(f)
                     with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname[3:], 'rb') as f:
                         val = pickle.load(f)
+
+                    if (key[1] == "Top"):
+                        key = list(key)
+                        dp = "Most important"
+                        key[1] = dp
+                        key = tuple(key)
+                    elif (key[1] == "Bot"):
+                        key = list(key)
+                        dp = "Least imporant"
+                        key[1] = dp
+                        key = tuple(key)
+                        
                     module.pdict[key] = val
         dirNames = []
         for fp in fpPairs:
@@ -864,16 +876,6 @@ if __name__ == "__main__":
                     if(key[1] == "Random_RSCorrected_FECRemovesBOT"):
                         key = list(key)
                         dp = "FEC"+d[-6:]
-                        key[1] = dp
-                        key = tuple(key)
-                    elif (key[1] == "Top"):
-                        key = list(key)
-                        dp = "Most important"
-                        key[1] = dp
-                        key = tuple(key)
-                    elif (key[1] == "Bot"):
-                        key = list(key)
-                        dp = "Least imporant"
                         key[1] = dp
                         key = tuple(key)
                     module.pdict[key] = {"acc": acc/count, "loss": loss/count}
