@@ -9,4 +9,4 @@ source /project/6008756/foniks/Project_1/uneqENV/bin/activate
 mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet/Random_RSCorrected_20_80
 cd ..
 
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) Random_RSCorrected 20 80
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) Random_RSCorrected 50 50
