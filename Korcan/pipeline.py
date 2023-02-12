@@ -317,8 +317,8 @@ class pipeline:
         # self.pdict
         # perc,type -> acc,loss
 
-        cases = ["Most important(GRADCAM)","b",".","-",
-        "Least important(GRADCAM)","g",".","-",
+        cases = ["Most important(GradCAM)","b",".","-",
+        "Least important(GradCAM)","g",".","-",
         # "R_RS_FEC_10_90","m",".","-",
         "Most important(Proxy)","b",".",":",
         "Least important(Proxy)","g",".",":",]
@@ -345,7 +345,7 @@ class pipeline:
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            if(types[s]=="Least important" or types[s]=="Most important" or types[s]=="Random" or types[s]=="Most important(GRADCAM)" or types[s]=="Least important(GRADCAM)"):
+            if(types[s]=="Least important" or types[s]=="Most important" or types[s]=="Random" or types[s]=="Most important(GradCAM)" or types[s]=="Least important(GradCAM)"):
                 plt.scatter(seriesX[s], seriesY[s],s=25, label='_nolegend_', marker=cases[mapping+2],color=cases[mapping+1])
                 plt.plot(seriesX[s], seriesY[s],label=cases[mapping],linestyle=cases[mapping+3] ,linewidth=1.2, color=cases[mapping+1])
             else:
@@ -854,12 +854,12 @@ if __name__ == "__main__":
                         key = tuple(key)    
                     elif(d == "TopG"):
                         key = list(key)
-                        dp = "Most important(GRADCAM)"
+                        dp = "Most important(GradCAM)"
                         key[1] = dp
                         key = tuple(key)
                     elif(d == "BotG"):
                         key = list(key)
-                        dp = "Least important(GRADCAM)"
+                        dp = "Least important(GradCAM)"
                         key[1] = dp
                         key = tuple(key)
 
