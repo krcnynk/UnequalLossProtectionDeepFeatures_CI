@@ -317,15 +317,20 @@ class pipeline:
         # self.pdict
         # perc,type -> acc,loss
 
-        # cases = ["Top","b","1","Bot","g","+","Random","r",".","Random_RSCorrected","c","h","Random_RSCorrected_FECRemovesBOT","m","*"]
-        cases = ["Most important","b",".","-",
-        "Least important","g",".","-",
-        "Random","r",".","-",
+        cases = ["Most important(GRADCAM)","b",".","-",
+        "Least important(GRADCAM)","g",".","-",
         # "R_RS_FEC_10_90","m",".","-",
-        "FEC_20_80","m",".","-",
-        "FEC_30_70","m",".","--",
-        "FEC_40_60","m",".","-.",
-        "FEC_50_50","m",".",":",]
+        "Most important(Proxy)","b",".",":",
+        "Least important(Proxy)","g",".",":",]
+
+        # cases = ["Most important","b",".","-",
+        # "Least important","g",".","-",
+        # "Random","r",".","-",
+        # # "R_RS_FEC_10_90","m",".","-",
+        # "FEC_20_80","m",".","-",
+        # "FEC_30_70","m",".","--",
+        # "FEC_40_60","m",".","-.",
+        # "FEC_50_50","m",".",":",]
 
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
         seriesX = [[] for _ in range(len(types))]
@@ -340,7 +345,7 @@ class pipeline:
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            if(types[s]=="Least important" or types[s]=="Most important" or types[s]=="Random"):
+            if(types[s]=="Least important" or types[s]=="Most important" or types[s]=="Random" or types[s]=="Most important(GRADCAM)" or types[s]=="Least important(GRADCAM)"):
                 plt.scatter(seriesX[s], seriesY[s],s=25, label='_nolegend_', marker=cases[mapping+2],color=cases[mapping+1])
                 plt.plot(seriesX[s], seriesY[s],label=cases[mapping],linestyle=cases[mapping+3] ,linewidth=1.2, color=cases[mapping+1])
             else:
@@ -352,7 +357,6 @@ class pipeline:
         handles, labels = plt.gca().get_legend_handles_labels()
         
         # specify order
-        print("HEY",len(handles))
         # order=[0,6,5,1,2,3,4]
         # order=[3,5,6, 2,0,1,7,4]
 
@@ -751,10 +755,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
     
-    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     #CREATE FOLDERS
@@ -816,6 +820,8 @@ if __name__ == "__main__":
         dirNames = []
         dirNames.append("Top")
         dirNames.append("Bot")
+        dirNames.append("TopG")
+        dirNames.append("BotG")
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
             for fname in listFiles:
@@ -836,7 +842,32 @@ if __name__ == "__main__":
                         key[1] = dp
                         key = tuple(key)
 
+                    if(d == "Top"):
+                        key = list(key)
+                        dp = "Most important(Proxy)"
+                        key[1] = dp
+                        key = tuple(key)
+                    elif(d == "Bot"):
+                        key = list(key)
+                        dp = "Least important(Proxy)"
+                        key[1] = dp
+                        key = tuple(key)    
+                    elif(d == "TopG"):
+                        key = list(key)
+                        dp = "Most important(GRADCAM)"
+                        key[1] = dp
+                        key = tuple(key)
+                    elif(d == "BotG"):
+                        key = list(key)
+                        dp = "Least important(GRADCAM)"
+                        key[1] = dp
+                        key = tuple(key)
+
+                    
+
                     module.pdict[key] = val
+
+
         dirNames = []
         for fp in fpPairs:
             dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
