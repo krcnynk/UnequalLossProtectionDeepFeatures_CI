@@ -912,10 +912,10 @@ if __name__ == "__main__":
         #                 key = tuple(key)
         #             module.pdict[key] = {"acc": acc/count, "loss": loss/count}
         # ##WILL BE HANDLED DIFFERENTELY COMING UP!
-        # module.makePlot(
-        #         "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized",
-        #         "Korcan/Plots/"+modelName+"/LossPlotPacketized",
-        #     )
+        module.makePlot(
+                "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized",
+                "Korcan/Plots/"+modelName+"/LossPlotPacketized",
+            )
     else:
         fecPercent = int(sys.argv[3])
         protectPercent = int(sys.argv[4])
