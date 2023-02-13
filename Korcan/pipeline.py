@@ -693,7 +693,7 @@ class pipeline:
 
         if saveImages:
             self.__savePacketLossImages(fmLPacketizedLoss, case, modelName)
-            self.__savePacketLossImages(importancePacketsTensor, "packetImportance",modelName)
+            self.__savePacketLossImages(self.__normalizeToUnit(importancePacketsTensor), "packetImportance",modelName)
             return
 
         # scores.append(self.getMetrics(fmLPacketizedLoss))
