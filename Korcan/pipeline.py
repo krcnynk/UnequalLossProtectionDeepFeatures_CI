@@ -778,7 +778,7 @@ if __name__ == "__main__":
     case = sys.argv[2]
 
     module.saveSuperImposedChannels(modelName)
-    saveImageLossPercent = 40
+    saveImageLossPercent = 0
     module.packetLossSim(
         packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
     )
