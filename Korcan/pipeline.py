@@ -68,12 +68,12 @@ class pipeline:
         heatMapBatch = np.array(self.heatMapsChannelsBatch)
         iS = featureMapBatch.shape
         for i_b in range(len(featureMapBatch)):  # 9
-            matrixFeature = np.empty((iS[1] * 6, iS[2] * 4))
-            matrixHeat = np.empty((iS[1] * 6, iS[2] * 4))
+            matrixFeature = np.empty((iS[1] * 16, iS[2] * 16))
+            matrixHeat = np.empty((iS[1] * 16, iS[2] * 16))
             ind = 0
             heatMap = self.__normalizeToUnit(heatMapBatch[i_b])
-            for i_cx in range(6):
-                for i_cy in range(4):
+            for i_cx in range(16):
+                for i_cy in range(16):
                     # print(featureMap.shape)
                     matrixFeature[
                         i_cx * iS[1] : i_cx * iS[1] + iS[1],
@@ -777,35 +777,35 @@ if __name__ == "__main__":
     print("KORCAN LOSS",percLoss)
     case = sys.argv[2]
 
-    # module.saveSuperImposedChannels(modelName)
-    # saveImageLossPercent = 40
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName=modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName=modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount,
-    #     quantizationBits,
-    #     saveImageLossPercent,
-    #     "Random_RSCorrected",
-    #     50,
-    #     50,
-    #     saveImages=True,modelName=modelName
-    # )
-    # module.packetLossSim(
-    #     packetCount,
-    #     quantizationBits,
-    #     saveImageLossPercent,
-    #     "Random_RSCorrected_FECRemovesBOT",
-    #     50,
-    #     50,
-    #     saveImages=True,modelName=modelName
-    # )
+    module.saveSuperImposedChannels(modelName)
+    saveImageLossPercent = 40
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
+    )
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName=modelName
+    )
+    module.packetLossSim(
+        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName=modelName
+    )
+    module.packetLossSim(
+        packetCount,
+        quantizationBits,
+        saveImageLossPercent,
+        "Random_RSCorrected",
+        50,
+        50,
+        saveImages=True,modelName=modelName
+    )
+    module.packetLossSim(
+        packetCount,
+        quantizationBits,
+        saveImageLossPercent,
+        "Random_RSCorrected_FECRemovesBOT",
+        50,
+        50,
+        saveImages=True,modelName=modelName
+    )
 
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
