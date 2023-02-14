@@ -305,6 +305,7 @@ class pipeline:
                     ] = lossedTensorBatchArray[i_b, :, :, ind]
                     ind = ind + 1
             im = plt.matshow(arr, cmap="gray")
+            plt.axis('off')
             plt.savefig(
                 os.path.join(
                     mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]
