@@ -68,12 +68,12 @@ class pipeline:
         heatMapBatch = np.array(self.heatMapsChannelsBatch)
         iS = featureMapBatch.shape
         for i_b in range(len(featureMapBatch)):  # 9
-            matrixFeature = np.empty((iS[1] * 16, iS[2] * 16))
-            matrixHeat = np.empty((iS[1] * 16, iS[2] * 16))
+            matrixFeature = np.empty((iS[1] * 6, iS[2] * 4))
+            matrixHeat = np.empty((iS[1] * 6, iS[2] * 4))
             ind = 0
             heatMap = self.__normalizeToUnit(heatMapBatch[i_b])
-            for i_cx in range(16):
-                for i_cy in range(16):
+            for i_cx in range(6):
+                for i_cy in range(4):
                     # print(featureMap.shape)
                     matrixFeature[
                         i_cx * iS[1] : i_cx * iS[1] + iS[1],
@@ -98,12 +98,13 @@ class pipeline:
             # matrixHeat[matrixHeat < 0.4] = 0.3
             plt.imshow(matrixHeat, interpolation="bilinear", cmap=newcmp)
             plt.colorbar()
+            plt.axis('off')
             plt.savefig(
                 os.path.join(
                     mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]
                 ),
                 bbox_inches="tight",
-                dpi=300,
+                dpi=600,
             )
             plt.close()
 
@@ -292,10 +293,10 @@ class pipeline:
         lossedTensorBatchArray = np.array(lossedTensorBatchArray).astype(np.float64)
         shape = lossedTensorBatchArray.shape
         for i_b in range(len(lossedTensorBatchArray)):  # 9
-            arr = np.empty((shape[1] * 16, shape[2] * 16))
+            arr = np.empty((shape[1] * 6, shape[2] * 4))
             ind = 0
-            for i_cx in range(16):
-                for i_cy in range(16):
+            for i_cx in range(6):
+                for i_cy in range(4):
                     # lossedTensorBatchArray[i_b, :, :, ind] = self.__normalizeToUnit(
                     #     lossedTensorBatchArray[i_b, :, :, ind]
                     # )
@@ -309,7 +310,7 @@ class pipeline:
                     mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]
                 ),
                 bbox_inches="tight",
-                dpi=1200,
+                dpi=600,
             )
             plt.close()
 
@@ -370,6 +371,7 @@ class pipeline:
             # shadow=True,
             prop={'size': 8}
         )
+        plt.axis('off')
         plt.savefig(
             pathAcc,
             bbox_inches="tight",
