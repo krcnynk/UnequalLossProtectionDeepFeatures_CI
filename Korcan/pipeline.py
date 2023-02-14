@@ -104,7 +104,7 @@ class pipeline:
                     mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]
                 ),
                 bbox_inches="tight",
-                dpi=600,
+                dpi=400,
             )
             plt.close()
 
@@ -310,7 +310,7 @@ class pipeline:
                     mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]
                 ),
                 bbox_inches="tight",
-                dpi=600,
+                dpi=400,
             )
             plt.close()
 
