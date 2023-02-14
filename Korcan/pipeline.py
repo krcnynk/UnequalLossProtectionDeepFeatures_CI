@@ -627,8 +627,7 @@ class pipeline:
                         #     protectedPacketCount:
                         # ]
                         # rng.shuffle(unprotectedPackets)
-                        # indexOfLossedPackets = unprotectedPackets[0:lostUnprotectedPackets]
-                        continue
+                        indexOfLossedPackets = []
                     else:  # CANNOT RECOVER,lostProtectedPackets valid
                         # unprotectedPackets = OrderedImportanceOfPacketsIndex[
                         #     protectedPacketCount:
