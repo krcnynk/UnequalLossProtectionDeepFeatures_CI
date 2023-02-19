@@ -319,11 +319,11 @@ class pipeline:
         # self.pdict
         # perc,type -> acc,loss
 
-        cases = ["Most important(GradCAM)","b",".","-",
-        "Least important(GradCAM)","g",".","-",
+        cases = ["Most important(GradCAM)","b",".",":",
+        "Least important(GradCAM)","g",".",":",
         # "R_RS_FEC_10_90","m",".","-",
-        "Most important(Proxy)","b",".",":",
-        "Least important(Proxy)","g",".",":",]
+        "Most important(Proxy)","b",".","-",
+        "Least important(Proxy)","g",".","-",]
 
         # cases = ["Most important","b",".","-",
         # "Least important","g",".","-",
@@ -781,7 +781,7 @@ if __name__ == "__main__":
     case = sys.argv[2]
 
     module.saveSuperImposedChannels(modelName)
-    saveImageLossPercent = 40
+    saveImageLossPercent = 60
     module.packetLossSim(
         packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
     )
@@ -809,7 +809,6 @@ if __name__ == "__main__":
         60,
         saveImages=True,modelName=modelName
     )
-
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
     elif case == "makeplot":
