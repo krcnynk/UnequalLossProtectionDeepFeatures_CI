@@ -372,7 +372,7 @@ class pipeline:
             # shadow=True,
             prop={'size': 8}
         )
-        plt.axis('off')
+        # plt.axis('off')
         plt.savefig(
             pathAcc,
             bbox_inches="tight",
