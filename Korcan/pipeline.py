@@ -319,20 +319,20 @@ class pipeline:
         # self.pdict
         # perc,type -> acc,loss
 
-        cases = ["Most important (GradCAM)","b",".",":",
-        "Least important (GradCAM)","g",".",":",
-        # "R_RS_FEC_10_90","m",".","-",
-        "Most important (Proxy)","b",".","-",
-        "Least important (Proxy)","g",".","-",]
-
-        # cases = ["Most important","b",".","-",
-        # "Least important","g",".","-",
-        # "Random","r",".","-",
+        # cases = ["Most important (GradCAM)","b",".",":",
+        # "Least important (GradCAM)","g",".",":",
         # # "R_RS_FEC_10_90","m",".","-",
-        # "FEC_20_80","m",".","-",
-        # "FEC_30_70","m",".","--",
-        # "FEC_40_60","m",".","-.",
-        # "FEC_50_50","m",".",":",]
+        # "Most important (Proxy)","b",".","-",
+        # "Least important (Proxy)","g",".","-",]
+
+        cases = ["Most important","b",".","-",
+        "Least important","g",".","-",
+        "Random","r",".","-",
+        # "R_RS_FEC_10_90","m",".","-",
+        "FEC_20_80","m",".","-",
+        "FEC_30_70","m",".","--",
+        "FEC_40_60","m",".","-.",
+        "FEC_50_50","m",".",":",]
 
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
         seriesX = [[] for _ in range(len(types))]
@@ -359,8 +359,8 @@ class pipeline:
         handles, labels = plt.gca().get_legend_handles_labels()
         
         # specify order
-        order=[0,2,1,3]
-        # order=[3,5,6, 2,0,1,7,4]
+        # order=[0,2,1,3]
+        order=[3,5,6, 2,0,1,7,4]
 
         plt.legend(
             [handles[i] for i in order], [labels[i] for i in order],
@@ -822,8 +822,8 @@ if __name__ == "__main__":
         dirNames = []
         dirNames.append("Top")
         dirNames.append("Bot")
-        dirNames.append("TopG")
-        dirNames.append("BotG")
+        # dirNames.append("TopG")
+        # dirNames.append("BotG")
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
             for fname in listFiles:
@@ -844,26 +844,26 @@ if __name__ == "__main__":
                         key[1] = dp
                         key = tuple(key)
 
-                    if(d == "Top"):
-                        key = list(key)
-                        dp = "Most important (Proxy)"
-                        key[1] = dp
-                        key = tuple(key)
-                    elif(d == "Bot"):
-                        key = list(key)
-                        dp = "Least important (Proxy)"
-                        key[1] = dp
-                        key = tuple(key)    
-                    elif(d == "TopG"):
-                        key = list(key)
-                        dp = "Most important (GradCAM)"
-                        key[1] = dp
-                        key = tuple(key)
-                    elif(d == "BotG"):
-                        key = list(key)
-                        dp = "Least important (GradCAM)"
-                        key[1] = dp
-                        key = tuple(key)
+                    # if(d == "Top"):
+                    #     key = list(key)
+                    #     dp = "Most important (Proxy)"
+                    #     key[1] = dp
+                    #     key = tuple(key)
+                    # elif(d == "Bot"):
+                    #     key = list(key)
+                    #     dp = "Least important (Proxy)"
+                    #     key[1] = dp
+                    #     key = tuple(key)    
+                    # elif(d == "TopG"):
+                    #     key = list(key)
+                    #     dp = "Most important (GradCAM)"
+                    #     key[1] = dp
+                    #     key = tuple(key)
+                    # elif(d == "BotG"):
+                    #     key = list(key)
+                    #     dp = "Least important (GradCAM)"
+                    #     key[1] = dp
+                    #     key = tuple(key)
 
                     
 
