@@ -846,22 +846,22 @@ if __name__ == "__main__":
 
                     if(d == "Top"):
                         key = list(key)
-                        dp = "Most important(Proxy)"
+                        dp = "Most important (Proxy)"
                         key[1] = dp
                         key = tuple(key)
                     elif(d == "Bot"):
                         key = list(key)
-                        dp = "Least important(Proxy)"
+                        dp = "Least important (Proxy)"
                         key[1] = dp
                         key = tuple(key)    
                     elif(d == "TopG"):
                         key = list(key)
-                        dp = "Most important(GradCAM)"
+                        dp = "Most important (GradCAM)"
                         key[1] = dp
                         key = tuple(key)
                     elif(d == "BotG"):
                         key = list(key)
-                        dp = "Least important(GradCAM)"
+                        dp = "Least important (GradCAM)"
                         key[1] = dp
                         key = tuple(key)
 
