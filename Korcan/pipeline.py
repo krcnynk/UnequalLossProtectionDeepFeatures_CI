@@ -319,11 +319,11 @@ class pipeline:
         # self.pdict
         # perc,type -> acc,loss
 
-        cases = ["Most important(GradCAM)","b",".",":",
-        "Least important(GradCAM)","g",".",":",
+        cases = ["Most important (GradCAM)","b",".",":",
+        "Least important (GradCAM)","g",".",":",
         # "R_RS_FEC_10_90","m",".","-",
-        "Most important(Proxy)","b",".","-",
-        "Least important(Proxy)","g",".","-",]
+        "Most important (Proxy)","b",".","-",
+        "Least important (Proxy)","g",".","-",]
 
         # cases = ["Most important","b",".","-",
         # "Least important","g",".","-",
@@ -341,9 +341,9 @@ class pipeline:
             index = types.index(key[1])
             seriesX[index].append(float(key[0]))
             seriesY[index].append(float(value["acc"]))
-        plt.title("Top1 Accuracy")
+        # plt.title("Top1 Accuracy")
         plt.xlabel("Percent Lost")
-        plt.ylabel("Accuracy")
+        plt.ylabel("Top-1 Accuracy")
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
