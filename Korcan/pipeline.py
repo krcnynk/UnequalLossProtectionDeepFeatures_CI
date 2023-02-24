@@ -327,7 +327,7 @@ class pipeline:
 
         cases = ["Most important","b",".","-",
         "Least important","g",".","-",
-        "Random","r",".","-",
+        "Unprotected","r",".","-",
         # "R_RS_FEC_10_90","m",".","-",
         "FEC_20_80","m",".","-",
         "FEC_30_70","m",".","--",
