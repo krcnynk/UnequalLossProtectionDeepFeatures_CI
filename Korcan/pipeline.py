@@ -2,11 +2,11 @@ import tensorflow as tf
 import numpy as np
 import matplotlib
 import matplotlib as mpl
-import pickle 
+import pickle
+
 mpl.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-# import cv2 as cv
 import sys, os
 import math
 import random
@@ -18,6 +18,7 @@ from runExpt.simmods import *
 from models.quantizer import QLayer
 
 np.seterr(over="raise")
+
 
 class pipeline:
     pdict = {}
@@ -56,8 +57,10 @@ class pipeline:
         superimposed_img = jet_heatmap * alpha + img
         return superimposed_img
 
-    def saveSuperImposedChannels(self,modelName):
-        mainPath = os.path.abspath("Korcan/Plots/"+modelName+"/tensorHeatmapOverlay/")
+    def saveSuperImposedChannels(self, modelName):
+        mainPath = os.path.abspath(
+            "Korcan/Plots/" + modelName + "/tensorHeatmapOverlay/"
+        )
         if not os.path.exists(mainPath):
             os.makedirs(mainPath)
         for label in self.dataset_y_labels:
@@ -92,13 +95,13 @@ class pipeline:
                 colors[i][3] = r[i]
             newcmp = matplotlib.colors.ListedColormap(colors)
             plt.imshow(matrixFeature, interpolation="bilinear", cmap="gray")
-            matrixHeat = matrixHeat * 1 #HERE COMMENT
+            matrixHeat = matrixHeat * 1  # HERE COMMENT
             matrixHeat[matrixHeat > 1] = 1
             # matrixHeat[matrixHeat < 0.8] = 0.6
             # matrixHeat[matrixHeat < 0.4] = 0.3
             plt.imshow(matrixHeat, interpolation="bilinear", cmap=newcmp)
             plt.colorbar()
-            plt.axis('off')
+            plt.axis("off")
             plt.savefig(
                 os.path.join(
                     mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]
@@ -153,9 +156,9 @@ class pipeline:
         # )
         return [np.array(heatmap), np.array(heatmapTensor)]
 
-    def __make_gradcam_heatmap_fromTrainedModel(self,input):
-        pred = np.squeeze(self.trained_model.predict(input),axis=0) #56x56x24
-        return None,pred
+    def __make_gradcam_heatmap_fromTrainedModel(self, input):
+        pred = np.squeeze(self.trained_model.predict(input), axis=0)  # 56x56x24
+        return None, pred
 
     def __rgb2gray(self, rgb):
         r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
@@ -211,7 +214,11 @@ class pipeline:
         # self.mobile_model.summary()
 
         # self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files))
-        self.latentOutputBatch = self.mobile_model.predict(tf.keras.applications.resnet50.preprocess_input(np.array(self.dataset_x_files)))
+        self.latentOutputBatch = self.mobile_model.predict(
+            tf.keras.applications.resnet50.preprocess_input(
+                np.array(self.dataset_x_files)
+            )
+        )
         # self.latentOutputBatch = self.mobile_model.predict(tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files)))
 
         # x=tf.keras.applications.densenet.preprocess_input(np.array(self.dataset_x_files), data_format=None)
@@ -234,7 +241,14 @@ class pipeline:
         self.W = self.latentOutputBatch.shape[2]
         self.C = self.latentOutputBatch.shape[3]
 
-    def loadModel(self, model_path, mobile_model_path, cloud_model_path,trained_model_path, splitLayer):
+    def loadModel(
+        self,
+        model_path,
+        mobile_model_path,
+        cloud_model_path,
+        trained_model_path,
+        splitLayer,
+    ):
         self.loaded_model = tf.keras.models.load_model(os.path.join(model_path))
         self.loaded_model.summary()
         loaded_model_config = self.loaded_model.get_config()
@@ -258,12 +272,12 @@ class pipeline:
             self.mobile_model.save(mobile_model_path)
             self.cloud_model.save(cloud_model_path)
         self.trained_model = tf.keras.models.load_model(
-                os.path.join(trained_model_path)
-            )
+            os.path.join(trained_model_path)
+        )
         self.mobile_model.summary()
         # self.cloud_model.summary()
 
-    def findHeatmaps(self, gradientRespectToLayer,modelName,dataSet):
+    def findHeatmaps(self, gradientRespectToLayer, modelName, dataSet):
         self.heatmapsBatch = []
         self.heatMapsChannelsBatch = []
 
@@ -283,7 +297,7 @@ class pipeline:
         self.heatMapsChannelsBatch = np.array(self.heatMapsChannelsBatch)
 
     def __savePacketLossImages(self, lossedTensorBatchArray, case, modelName):
-        mainPath = os.path.abspath("Korcan/Plots/"+modelName+"/tensorLoss/" + case)
+        mainPath = os.path.abspath("Korcan/Plots/" + modelName + "/tensorLoss/" + case)
         if not os.path.exists(mainPath):
             os.makedirs(mainPath)
         for label in self.dataset_y_labels:
@@ -305,7 +319,7 @@ class pipeline:
                     ] = lossedTensorBatchArray[i_b, :, :, ind]
                     ind = ind + 1
             im = plt.matshow(arr, cmap="gray")
-            plt.axis('off')
+            plt.axis("off")
             plt.savefig(
                 os.path.join(
                     mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]
@@ -325,14 +339,37 @@ class pipeline:
         # "Most important (Proxy)","b",".","-",
         # "Least important (Proxy)","g",".","-",]
 
-        cases = ["Most important","b",".","-",
-        "Least important","g",".","-",
-        "Unprotected","r",".","-",
-        # "R_RS_FEC_10_90","m",".","-",
-        "FEC_20_80","m",".","-",
-        "FEC_30_70","m",".","--",
-        "FEC_40_60","m",".","-.",
-        "FEC_50_50","m",".",":",]
+        cases = [
+            "Most important",
+            "b",
+            ".",
+            "-",
+            "Least important",
+            "g",
+            ".",
+            "-",
+            "Unprotected",
+            "r",
+            ".",
+            "-",
+            # "R_RS_FEC_10_90","m",".","-",
+            "FEC_20_80",
+            "m",
+            ".",
+            "-",
+            "FEC_30_70",
+            "m",
+            ".",
+            "--",
+            "FEC_40_60",
+            "m",
+            ".",
+            "-.",
+            "FEC_50_50",
+            "m",
+            ".",
+            ":",
+        ]
 
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
         seriesX = [[] for _ in range(len(types))]
@@ -347,17 +384,50 @@ class pipeline:
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            if(types[s]=="Least important" or types[s]=="Most important" or types[s]=="Random" or types[s]=="Most important(GradCAM)" or types[s]=="Least important(GradCAM)"):
-                plt.scatter(seriesX[s], seriesY[s],s=25, label='_nolegend_', marker=cases[mapping+2],color=cases[mapping+1])
-                plt.plot(seriesX[s], seriesY[s],label=cases[mapping],linestyle=cases[mapping+3] ,linewidth=1.2, color=cases[mapping+1])
+            if (
+                types[s] == "Least important"
+                or types[s] == "Most important"
+                or types[s] == "Random"
+                or types[s] == "Most important(GradCAM)"
+                or types[s] == "Least important(GradCAM)"
+            ):
+                plt.scatter(
+                    seriesX[s],
+                    seriesY[s],
+                    s=25,
+                    label="_nolegend_",
+                    marker=cases[mapping + 2],
+                    color=cases[mapping + 1],
+                )
+                plt.plot(
+                    seriesX[s],
+                    seriesY[s],
+                    label=cases[mapping],
+                    linestyle=cases[mapping + 3],
+                    linewidth=1.2,
+                    color=cases[mapping + 1],
+                )
             else:
                 print(types[s])
-                plt.scatter(seriesX[s], seriesY[s],s=25, marker=cases[mapping+2],color=cases[mapping+1])
-                plt.plot(seriesX[s], seriesY[s],label=cases[mapping] ,linestyle=cases[mapping+3] ,linewidth=1.2, color=cases[mapping+1])
+                plt.scatter(
+                    seriesX[s],
+                    seriesY[s],
+                    s=25,
+                    marker=cases[mapping + 2],
+                    color=cases[mapping + 1],
+                )
+                plt.plot(
+                    seriesX[s],
+                    seriesY[s],
+                    label=cases[mapping],
+                    linestyle=cases[mapping + 3],
+                    linewidth=1.2,
+                    color=cases[mapping + 1],
+                )
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
-        
+
         # specify order
         # order=[0,2,1,3]
         # order=[3,5,6, 2,0,1,7,4]
@@ -370,7 +440,7 @@ class pipeline:
             # ncol=2,
             fancybox=True,
             # shadow=True,
-            prop={'size': 8}
+            prop={"size": 8},
         )
         # plt.axis('off')
         plt.savefig(
@@ -393,8 +463,14 @@ class pipeline:
         for s in range(len(seriesX)):
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            plt.scatter(seriesX[s], seriesY[s], label=cases[mapping], marker=cases[mapping+2],color=cases[mapping+1])
-            plt.plot(seriesX[s], seriesY[s], linewidth=0.5,color=cases[mapping+1])
+            plt.scatter(
+                seriesX[s],
+                seriesY[s],
+                label=cases[mapping],
+                marker=cases[mapping + 2],
+                color=cases[mapping + 1],
+            )
+            plt.plot(seriesX[s], seriesY[s], linewidth=0.5, color=cases[mapping + 1])
         plt.legend(
             bbox_to_anchor=(1.04, 1),
             loc="upper left",
@@ -515,14 +591,14 @@ class pipeline:
         fecPerc=None,
         protectedPerc=None,
         saveImages=False,
-        modelName = None,
+        modelName=None,
     ):
-    # iteration = 1
-    # if(case == "Random" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
-    #     iteration = 1
-    # scores = []
+        # iteration = 1
+        # if(case == "Random" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
+        #     iteration = 1
+        # scores = []
 
-    # for i in range(iteration):          
+        # for i in range(iteration):
         packetHeight = math.ceil(self.H / packetNum)  # 55/12, 4.66->5
         remainder = self.H % packetHeight  # 1
         if remainder != 0:
@@ -602,7 +678,7 @@ class pipeline:
                     unprotectedPacketCount = unprotectedPacketCount - len(
                         lowestImportanceIndex
                     )
-                    if(unprotectedPacketCount < 0):
+                    if unprotectedPacketCount < 0:
                         print("Cannot delete more!\n")
                         return
                     packetsSent = packetsSent + totalNumPackets
@@ -696,48 +772,123 @@ class pipeline:
 
         if saveImages:
             self.__savePacketLossImages(fmLPacketizedLoss, case, modelName)
-            self.__savePacketLossImages(self.__normalizeToUnit(np.array(importancePacketsTensor)), "packetImportance",modelName)
+            self.__savePacketLossImages(
+                self.__normalizeToUnit(np.array(importancePacketsTensor)),
+                "packetImportance",
+                modelName,
+            )
             return
 
         # scores.append(self.getMetrics(fmLPacketizedLoss))
         metrics = self.getMetrics(fmLPacketizedLoss)
 
-    # with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(packetNum)+"_"+str(percOfPacketLoss)+".npy", 'wb') as f:
-    #         np.save(f, np.array(scores))
+        # with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(packetNum)+"_"+str(percOfPacketLoss)+".npy", 'wb') as f:
+        #         np.save(f, np.array(scores))
 
-    # acc = 0
-    # loss = 0
-    # count = 0
-    # for s in scores:
-    #     count = count + 1
-    #     acc = acc + s["acc"]
-    #     loss = loss + s["loss"]
+        # acc = 0
+        # loss = 0
+        # count = 0
+        # for s in scores:
+        #     count = count + 1
+        #     acc = acc + s["acc"]
+        #     loss = loss + s["loss"]
         if case == "Top" or case == "Bot" or case == "Random":
-            if not os.path.exists("Korcan/Plots/"+modelName+"/"+case):
-                os.makedirs("Korcan/Plots/"+modelName+"/"+case)
-            
-            pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent),case)
+            if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
+                os.makedirs("Korcan/Plots/" + modelName + "/" + case)
+
+            pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
             pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
             rand = int(random.randint(1, sys.maxsize))
-            with open("Korcan/Plots/"+modelName+"/"+case+"/key_"+"{:.3f}".format(100 * packetsLost / packetsSent)+"_"+str(rand)+"_.pkl", 'wb') as f:
+            with open(
+                "Korcan/Plots/"
+                + modelName
+                + "/"
+                + case
+                + "/key_"
+                + "{:.3f}".format(100 * packetsLost / packetsSent)
+                + "_"
+                + str(rand)
+                + "_.pkl",
+                "wb",
+            ) as f:
                 pickle.dump(pdictKey, f)
-            with open("Korcan/Plots/"+modelName+"/"+case+"/val_"+"{:.3f}".format(100 * packetsLost / packetsSent)+"_"+str(rand)+"_.pkl", 'wb') as f:
+            with open(
+                "Korcan/Plots/"
+                + modelName
+                + "/"
+                + case
+                + "/val_"
+                + "{:.3f}".format(100 * packetsLost / packetsSent)
+                + "_"
+                + str(rand)
+                + "_.pkl",
+                "wb",
+            ) as f:
                 pickle.dump(pdictVal, f)
         else:
-            if not os.path.exists("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)):
-                os.makedirs("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc))
+            if not os.path.exists(
+                "Korcan/Plots/"
+                + modelName
+                + "/"
+                + case
+                + "_"
+                + str(fecPerc)
+                + "_"
+                + str(protectedPerc)
+            ):
+                os.makedirs(
+                    "Korcan/Plots/"
+                    + modelName
+                    + "/"
+                    + case
+                    + "_"
+                    + str(fecPerc)
+                    + "_"
+                    + str(protectedPerc)
+                )
 
-            pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent),case)
+            pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
             pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
             rand = int(random.randint(1, sys.maxsize))
-            with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)+"/key_"+"{:.3f}".format(100 * packetsLost / packetsSent)+"_"+str(rand)+"_.pkl", 'wb') as f:
+            with open(
+                "Korcan/Plots/"
+                + modelName
+                + "/"
+                + case
+                + "_"
+                + str(fecPerc)
+                + "_"
+                + str(protectedPerc)
+                + "/key_"
+                + "{:.3f}".format(100 * packetsLost / packetsSent)
+                + "_"
+                + str(rand)
+                + "_.pkl",
+                "wb",
+            ) as f:
                 pickle.dump(pdictKey, f)
-            with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(fecPerc)+"_"+str(protectedPerc)+"/val_"+"{:.3f}".format(100 * packetsLost / packetsSent)+"_"+str(rand)+"_.pkl", 'wb') as f:
+            with open(
+                "Korcan/Plots/"
+                + modelName
+                + "/"
+                + case
+                + "_"
+                + str(fecPerc)
+                + "_"
+                + str(protectedPerc)
+                + "/val_"
+                + "{:.3f}".format(100 * packetsLost / packetsSent)
+                + "_"
+                + str(rand)
+                + "_.pkl",
+                "wb",
+            ) as f:
                 pickle.dump(pdictVal, f)
 
         # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
+
 
 if __name__ == "__main__":
     # modelName = "efficientnetb0"
@@ -749,7 +900,7 @@ if __name__ == "__main__":
 
     modelName = "resnet"
     splitLayer = "conv2_block1_add"
-    os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_mobile_model.h5"
@@ -757,39 +908,56 @@ if __name__ == "__main__":
     cloud_model_path = (
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
-    
+
     trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
     dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
     # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
     # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
-    #CREATE FOLDERS
+    # CREATE FOLDERS
     if not os.path.exists("Korcan/Plots"):
         os.makedirs("Korcan/Plots")
-    if not os.path.exists("Korcan/Plots/"+modelName):
-        os.makedirs("Korcan/Plots/"+modelName)
+    if not os.path.exists("Korcan/Plots/" + modelName):
+        os.makedirs("Korcan/Plots/" + modelName)
 
     module = pipeline()
-    module.loadModel(modelPath, mobile_model_path, cloud_model_path,trained_model_path, splitLayer)
+    module.loadModel(
+        modelPath, mobile_model_path, cloud_model_path, trained_model_path, splitLayer
+    )
     module.loadData(dataName, [224, 224], False)
-    module.findHeatmaps(splitLayer,modelName,dataName)
+    module.findHeatmaps(splitLayer, modelName, dataName)
 
     packetCount = 8
     percLoss = int(sys.argv[1])
-    print("KORCAN LOSS",percLoss)
+    print("KORCAN LOSS", percLoss)
     case = sys.argv[2]
 
     module.saveSuperImposedChannels(modelName)
     saveImageLossPercent = 60
     module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Top", saveImages=True,modelName=modelName
+        packetCount,
+        quantizationBits,
+        saveImageLossPercent,
+        "Top",
+        saveImages=True,
+        modelName=modelName,
     )
     module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Bot", saveImages=True,modelName=modelName
+        packetCount,
+        quantizationBits,
+        saveImageLossPercent,
+        "Bot",
+        saveImages=True,
+        modelName=modelName,
     )
     module.packetLossSim(
-        packetCount, quantizationBits, saveImageLossPercent, "Random", saveImages=True,modelName=modelName
+        packetCount,
+        quantizationBits,
+        saveImageLossPercent,
+        "Random",
+        saveImages=True,
+        modelName=modelName,
     )
     module.packetLossSim(
         packetCount,
@@ -798,7 +966,8 @@ if __name__ == "__main__":
         "Random_RSCorrected",
         40,
         60,
-        saveImages=True,modelName=modelName
+        saveImages=True,
+        modelName=modelName,
     )
     module.packetLossSim(
         packetCount,
@@ -807,17 +976,22 @@ if __name__ == "__main__":
         "Random_RSCorrected_FECRemovesBOT",
         40,
         60,
-        saveImages=True,modelName=modelName
+        saveImages=True,
+        modelName=modelName,
     )
     if case == "Top" or case == "Bot" or case == "Random":
-        module.packetLossSim(packetCount, 8, percLoss, case,modelName=modelName)
+        module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
-        dirs = [name for name in os.listdir("Korcan/Plots/"+modelName) if os.path.isdir("Korcan/Plots/"+modelName)]
+        dirs = [
+            name
+            for name in os.listdir("Korcan/Plots/" + modelName)
+            if os.path.isdir("Korcan/Plots/" + modelName)
+        ]
         fpPairs = []
         for d in dirs:
             splitted = d.split("_")
-            if len(splitted) == 5:  
-                fpPairs.append(splitted[3:]) #Random_RSCorrected_FECRemovesBOT_10_50
+            if len(splitted) == 5:
+                fpPairs.append(splitted[3:])  # Random_RSCorrected_FECRemovesBOT_10_50
 
         dirNames = []
         dirNames.append("Top")
@@ -825,20 +999,25 @@ if __name__ == "__main__":
         # dirNames.append("TopG")
         # dirNames.append("BotG")
         for d in dirNames:
-            listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d)
+            listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             for fname in listFiles:
                 if fname[:3] == "key":
-                    with open("Korcan/Plots/"+modelName+"/"+d+"/"+fname, 'rb') as f:
+                    with open(
+                        "Korcan/Plots/" + modelName + "/" + d + "/" + fname, "rb"
+                    ) as f:
                         key = pickle.load(f)
-                    with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname[3:], 'rb') as f:
+                    with open(
+                        "Korcan/Plots/" + modelName + "/" + d + "/" + "val" + fname[3:],
+                        "rb",
+                    ) as f:
                         val = pickle.load(f)
 
-                    if (key[1] == "Top"):
+                    if key[1] == "Top":
                         key = list(key)
                         dp = "Most important"
                         key[1] = dp
                         key = tuple(key)
-                    elif (key[1] == "Bot"):
+                    elif key[1] == "Bot":
                         key = list(key)
                         dp = "Least important"
                         key[1] = dp
@@ -853,7 +1032,7 @@ if __name__ == "__main__":
                     #     key = list(key)
                     #     dp = "Least important (Proxy)"
                     #     key[1] = dp
-                    #     key = tuple(key)    
+                    #     key = tuple(key)
                     # elif(d == "TopG"):
                     #     key = list(key)
                     #     dp = "Most important (GradCAM)"
@@ -865,18 +1044,15 @@ if __name__ == "__main__":
                     #     key[1] = dp
                     #     key = tuple(key)
 
-                    
-
                     module.pdict[key] = val
-
 
         dirNames = []
         for fp in fpPairs:
-            dirNames.append("Random_RSCorrected_FECRemovesBOT_"+fp[0]+"_"+fp[1])
+            dirNames.append("Random_RSCorrected_FECRemovesBOT_" + fp[0] + "_" + fp[1])
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
         dirNames.append("Random")
         for d in dirNames:
-            listFiles = os.listdir("Korcan/Plots/"+modelName+"/"+d) 
+            listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             keyIndexes = []
             for i in range(len(listFiles)):
                 if listFiles[i][:3] == "key":
@@ -886,13 +1062,38 @@ if __name__ == "__main__":
             for i in range(len(keyIndexes)):
                 lossPercInfo = listFiles[i].split("_")[1]
                 if lossPercInfo not in blacklist:
-                    allRunsWithSamePercentage = glob.glob("Korcan/Plots/"+modelName+'/'+d+'/key_'+lossPercInfo+'*')
+                    allRunsWithSamePercentage = glob.glob(
+                        "Korcan/Plots/"
+                        + modelName
+                        + "/"
+                        + d
+                        + "/key_"
+                        + lossPercInfo
+                        + "*"
+                    )
                     blacklist.extend(allRunsWithSamePercentage)
                     val = []
                     for fname in allRunsWithSamePercentage:
-                        with open("Korcan/Plots/"+modelName+"/"+d+"/"+fname.split("/")[-1:][0], 'rb') as f:
+                        with open(
+                            "Korcan/Plots/"
+                            + modelName
+                            + "/"
+                            + d
+                            + "/"
+                            + fname.split("/")[-1:][0],
+                            "rb",
+                        ) as f:
                             key = pickle.load(f)
-                        with open("Korcan/Plots/"+modelName+"/"+d+"/"+"val"+fname.split("/")[-1:][0][3:], 'rb') as f:
+                        with open(
+                            "Korcan/Plots/"
+                            + modelName
+                            + "/"
+                            + d
+                            + "/"
+                            + "val"
+                            + fname.split("/")[-1:][0][3:],
+                            "rb",
+                        ) as f:
                             val.append(pickle.load(f))
                     acc = 0
                     loss = 0
@@ -907,28 +1108,35 @@ if __name__ == "__main__":
                     # print(val)
                     # print("b____")
                     # print({"acc": acc/count, "loss": loss/count})
-                    if(key[1] == "Random_RSCorrected_FECRemovesBOT"):
+                    if key[1] == "Random_RSCorrected_FECRemovesBOT":
                         key = list(key)
-                        dp = "FEC"+d[-6:]
+                        dp = "FEC" + d[-6:]
                         key[1] = dp
                         key = tuple(key)
                     else:
                         key = list(key)
                         key[1] = "Unprotected"
                         key = tuple(key)
-                    module.pdict[key] = {"acc": acc/count, "loss": loss/count}
+                    module.pdict[key] = {"acc": acc / count, "loss": loss / count}
 
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
         module.makePlot(
-                "Korcan/Plots/"+modelName+"/AccuracyPlotPacketized",
-                "Korcan/Plots/"+modelName+"/LossPlotPacketized",
-            )
+            "Korcan/Plots/" + modelName + "/AccuracyPlotPacketized",
+            "Korcan/Plots/" + modelName + "/LossPlotPacketized",
+        )
     else:
         fecPercent = int(sys.argv[3])
         protectPercent = int(sys.argv[4])
-        module.packetLossSim(packetCount, 8, percLoss, case, fecPercent, protectPercent,modelName=modelName)
-   
-   
+        module.packetLossSim(
+            packetCount,
+            8,
+            percLoss,
+            case,
+            fecPercent,
+            protectPercent,
+            modelName=modelName,
+        )
+
     # module.findPercentileLossPerChannelFM(
     #     saveImageLossPercent, quantizationBits, saveImages=True
     # )
@@ -970,11 +1178,3 @@ if __name__ == "__main__":
     #             "Korcan/Plots/"+modelName+"/LossPlotPacketized2_" + fecProtectInfo,
     #         )
     #         module.cleanPlot()
-
-
-
-
-
-
-
-
