@@ -501,86 +501,86 @@ class pipeline:
         Loss = cce(tf.one_hot(self.dataset_y_labels_int, 1000), predicted).numpy()
         return {"acc": Accuracy, "loss": Loss}
 
-    def findPercentileLossPerChannelFM(
-        self, percent, qBits, saveImages=False, bot=False
-    ):
-        fmLBatch = []
-        for i_b in range(self.heatMapsChannelsBatch.shape[0]):
-            quantizedData, minVal, maxVal = self.__quantize(
-                self.latentOutputBatch[i_b], qBits
-            )
-            fmL = np.copy(quantizedData)  ##Single Tensor i.e batch element
-            lHC = np.zeros_like(quantizedData, dtype=bool)
+    # def findPercentileLossPerChannelFM(
+    #     self, percent, qBits, saveImages=False, bot=False
+    # ):
+    #     fmLBatch = []
+    #     for i_b in range(self.heatMapsChannelsBatch.shape[0]):
+    #         quantizedData, minVal, maxVal = self.__quantize(
+    #             self.latentOutputBatch[i_b], qBits
+    #         )
+    #         fmL = np.copy(quantizedData)  ##Single Tensor i.e batch element
+    #         lHC = np.zeros_like(quantizedData, dtype=bool)
 
-            numberOfPointsToLose = math.ceil(
-                np.prod(quantizedData.shape[:2]) * percent / 100
-            )
-            if numberOfPointsToLose != 0:
-                for i_c in range(lHC.shape[2]):
-                    if bot == False:
-                        Inds = np.argsort(
-                            self.heatMapsChannelsBatch[i_b, ..., i_c].flatten(),
-                        )[-numberOfPointsToLose:]
-                    else:
-                        Inds = np.argsort(
-                            self.heatMapsChannelsBatch[i_b, ..., i_c].flatten(),
-                        )[:numberOfPointsToLose]
-                    lHC[..., i_c][
-                        np.unravel_index(
-                            Inds, self.heatMapsChannelsBatch[i_b, ..., i_c].shape
-                        )
-                    ] = True
-                # self.lHC_Batch.append(lHC)
-                fmL[lHC] = 0
-            # print("NR", np.count_nonzero(lHC), percent)
-            fmL = self.__inverseQuantize(fmL, qBits, minVal, maxVal)
-            fmLBatch.append(fmL)
-        if bot == True:
-            self.pdict[
-                "{:.1f}".format(percent), "lossmapTargetedBot"
-            ] = self.getMetrics(fmLBatch)
-        else:
-            self.pdict[
-                "{:.1f}".format(percent), "lossmapTargetedTop"
-            ] = self.getMetrics(fmLBatch)
+    #         numberOfPointsToLose = math.ceil(
+    #             np.prod(quantizedData.shape[:2]) * percent / 100
+    #         )
+    #         if numberOfPointsToLose != 0:
+    #             for i_c in range(lHC.shape[2]):
+    #                 if bot == False:
+    #                     Inds = np.argsort(
+    #                         self.heatMapsChannelsBatch[i_b, ..., i_c].flatten(),
+    #                     )[-numberOfPointsToLose:]
+    #                 else:
+    #                     Inds = np.argsort(
+    #                         self.heatMapsChannelsBatch[i_b, ..., i_c].flatten(),
+    #                     )[:numberOfPointsToLose]
+    #                 lHC[..., i_c][
+    #                     np.unravel_index(
+    #                         Inds, self.heatMapsChannelsBatch[i_b, ..., i_c].shape
+    #                     )
+    #                 ] = True
+    #             # self.lHC_Batch.append(lHC)
+    #             fmL[lHC] = 0
+    #         # print("NR", np.count_nonzero(lHC), percent)
+    #         fmL = self.__inverseQuantize(fmL, qBits, minVal, maxVal)
+    #         fmLBatch.append(fmL)
+    #     if bot == True:
+    #         self.pdict[
+    #             "{:.1f}".format(percent), "lossmapTargetedBot"
+    #         ] = self.getMetrics(fmLBatch)
+    #     else:
+    #         self.pdict[
+    #             "{:.1f}".format(percent), "lossmapTargetedTop"
+    #         ] = self.getMetrics(fmLBatch)
 
-        if saveImages:
-            if bot == True:
-                self.__savePacketLossImages(fmLBatch, "targetedPixelLoss" + "BOT")
-            else:
-                self.__savePacketLossImages(fmLBatch, "targetedPixelLoss" + "TOP")
+    #     if saveImages:
+    #         if bot == True:
+    #             self.__savePacketLossImages(fmLBatch, "targetedPixelLoss" + "BOT")
+    #         else:
+    #             self.__savePacketLossImages(fmLBatch, "targetedPixelLoss" + "TOP")
 
-    def findPercentileRandomLossPerChannelFM(self, percent, qBits, saveImages=False):
-        fmLRandomBatch = []
-        for i_b in range(self.heatMapsChannelsBatch.shape[0]):
-            quantizedData, minVal, maxVal = self.__quantize(
-                self.latentOutputBatch[i_b], qBits
-            )
-            fmL = np.copy(quantizedData)
-            lHC = np.zeros_like(quantizedData, dtype=bool)
-            numberOfPointsToLose = math.ceil(
-                np.prod(quantizedData.shape[:2]) * percent / 100
-            )
-            # print(numberOfPointsToLose)
-            if numberOfPointsToLose != 0:
-                for i_c in range(lHC.shape[2]):
-                    rng = np.random.default_rng()
-                    channel = np.zeros(np.prod(quantizedData.shape[:2]))
-                    channel[:numberOfPointsToLose] = True
-                    rng.shuffle(channel)
-                    channel = np.resize(channel, quantizedData.shape[:2])
-                    rng.shuffle(channel, axis=0)
-                    rng.shuffle(channel, axis=1)
-                    lHC[..., i_c] = channel
-                fmL[lHC] = 0
-            # print("R", np.count_nonzero(lHC), percent)
-            fmL = self.__inverseQuantize(fmL, qBits, minVal, maxVal)
-            fmLRandomBatch.append(fmL)
-        self.pdict["{:.1f}".format(percent), "lossmapRandom"] = self.getMetrics(
-            fmLRandomBatch
-        )
-        if saveImages:
-            self.__savePacketLossImages(fmLRandomBatch, "randomPixelLoss")
+    # def findPercentileRandomLossPerChannelFM(self, percent, qBits, saveImages=False):
+    #     fmLRandomBatch = []
+    #     for i_b in range(self.heatMapsChannelsBatch.shape[0]):
+    #         quantizedData, minVal, maxVal = self.__quantize(
+    #             self.latentOutputBatch[i_b], qBits
+    #         )
+    #         fmL = np.copy(quantizedData)
+    #         lHC = np.zeros_like(quantizedData, dtype=bool)
+    #         numberOfPointsToLose = math.ceil(
+    #             np.prod(quantizedData.shape[:2]) * percent / 100
+    #         )
+    #         # print(numberOfPointsToLose)
+    #         if numberOfPointsToLose != 0:
+    #             for i_c in range(lHC.shape[2]):
+    #                 rng = np.random.default_rng()
+    #                 channel = np.zeros(np.prod(quantizedData.shape[:2]))
+    #                 channel[:numberOfPointsToLose] = True
+    #                 rng.shuffle(channel)
+    #                 channel = np.resize(channel, quantizedData.shape[:2])
+    #                 rng.shuffle(channel, axis=0)
+    #                 rng.shuffle(channel, axis=1)
+    #                 lHC[..., i_c] = channel
+    #             fmL[lHC] = 0
+    #         # print("R", np.count_nonzero(lHC), percent)
+    #         fmL = self.__inverseQuantize(fmL, qBits, minVal, maxVal)
+    #         fmLRandomBatch.append(fmL)
+    #     self.pdict["{:.1f}".format(percent), "lossmapRandom"] = self.getMetrics(
+    #         fmLRandomBatch
+    #     )
+    #     if saveImages:
+    #         self.__savePacketLossImages(fmLRandomBatch, "randomPixelLoss")
 
     def packetLossSim(
         self,
