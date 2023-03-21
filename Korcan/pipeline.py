@@ -930,7 +930,6 @@ if __name__ == "__main__":
 
     packetCount = 8
     percLoss = int(sys.argv[1])
-    print("KORCAN LOSS", percLoss)
     case = sys.argv[2]
 
     module.saveSuperImposedChannels(modelName)
@@ -979,6 +978,7 @@ if __name__ == "__main__":
         saveImages=True,
         modelName=modelName,
     )
+    
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
