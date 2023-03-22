@@ -11,6 +11,7 @@ import sys, os
 import math
 import random
 import glob
+import gbChannel
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from models.BrokenModel import BrokenModel
@@ -653,20 +654,24 @@ class pipeline:
             )
             totalNumPackets = len(packetizedheatMap)
 
+            obj = gbChannel.GBC(0.7,7)
+            sim = obj.simulate(totalNumPackets)
+
             if (
-                case == "Random_RSCorrected"
-                or case == "Random_RSCorrected_FECRemovesBOT"
+                # case == "Random_RSCorrected"
+                # or
+                case == "Random_RSCorrected_FECRemovesBOT"
             ):
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
                 unprotectedPacketCount = totalNumPackets - protectedPacketCount
-                if case == "Random_RSCorrected":
-                    packetsSent = packetsSent + FECPacketCount + totalNumPackets
-                    numOfPacketsToLose = math.floor(
-                        (FECPacketCount + totalNumPackets) * percOfPacketLoss / 100
-                    )
-                    packetsLost = packetsLost + numOfPacketsToLose
-                elif case == "Random_RSCorrected_FECRemovesBOT":
+                # if case == "Random_RSCorrected":
+                #     packetsSent = packetsSent + FECPacketCount + totalNumPackets
+                #     numOfPacketsToLose = math.floor(
+                #         (FECPacketCount + totalNumPackets) * percOfPacketLoss / 100
+                #     )
+                #     packetsLost = packetsLost + numOfPacketsToLose
+                if case == "Random_RSCorrected_FECRemovesBOT":
                     lowestImportanceIndex = OrderedImportanceOfPacketsIndex[
                         -FECPacketCount:
                     ]
@@ -719,9 +724,10 @@ class pipeline:
                     )
             elif case == "Random":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = list(range(0, totalNumPackets))
-                rng.shuffle(indexOfLossedPackets)
-                indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
+                # indexOfLossedPackets = list(range(0, totalNumPackets))
+                indexOfLossedPackets = (~sim).nonzero()
+                # rng.shuffle(indexOfLossedPackets)
+                # indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
             elif case == "Top":
                 packetsSent = packetsSent + totalNumPackets
@@ -958,16 +964,16 @@ if __name__ == "__main__":
         saveImages=True,
         modelName=modelName,
     )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Random_RSCorrected",
-        40,
-        60,
-        saveImages=True,
-        modelName=modelName,
-    )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Random_RSCorrected",
+    #     40,
+    #     60,
+    #     saveImages=True,
+    #     modelName=modelName,
+    # )
     module.packetLossSim(
         packetCount,
         quantizationBits,
@@ -978,7 +984,7 @@ if __name__ == "__main__":
         saveImages=True,
         modelName=modelName,
     )
-    
+
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
