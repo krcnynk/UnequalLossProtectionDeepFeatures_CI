@@ -308,10 +308,10 @@ class pipeline:
         lossedTensorBatchArray = np.array(lossedTensorBatchArray).astype(np.float64)
         shape = lossedTensorBatchArray.shape
         for i_b in range(len(lossedTensorBatchArray)):  # 9
-            arr = np.empty((shape[1] * 6, shape[2] * 4))
+            arr = np.empty((shape[1] * 16, shape[2] * 16))
             ind = 0
-            for i_cx in range(6):
-                for i_cy in range(4):
+            for i_cx in range(16):
+                for i_cy in range(16):
                     # lossedTensorBatchArray[i_b, :, :, ind] = self.__normalizeToUnit(
                     #     lossedTensorBatchArray[i_b, :, :, ind]
                     # )
