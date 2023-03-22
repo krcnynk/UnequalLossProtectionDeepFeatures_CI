@@ -725,8 +725,7 @@ class pipeline:
             elif case == "Random":
                 packetsSent = packetsSent + totalNumPackets
                 # indexOfLossedPackets = list(range(0, totalNumPackets))
-                indexOfLossedPackets = (~sim).nonzero()
-                print(indexOfLossedPackets)
+                indexOfLossedPackets = (~sim).nonzero()[0]
                 # rng.shuffle(indexOfLossedPackets)
                 # indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
