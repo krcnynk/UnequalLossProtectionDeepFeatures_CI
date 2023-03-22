@@ -649,13 +649,14 @@ class pipeline:
             OrderedImportanceOfPacketsIndex = self.__getOrderedImportantPacketIndex(
                 importanceOfPackets
             )
-            numOfPacketsToLose = math.floor(
-                len(packetizedheatMap) * percOfPacketLoss / 100
-            )
+            # numOfPacketsToLose = math.floor(
+            #     len(packetizedheatMap) * percOfPacketLoss / 100
+            # )
             totalNumPackets = len(packetizedheatMap)
 
-            obj = gbChannel.GBC(0.7,7)
+            obj = gbChannel.GBC(percOfPacketLoss/100,7)
             sim = obj.simulate(totalNumPackets)
+            numOfPacketsToLose = (~sim).nonzero()[0].size
 
             if (
                 # case == "Random_RSCorrected"
@@ -664,7 +665,7 @@ class pipeline:
             ):
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
-                unprotectedPacketCount = totalNumPackets - protectedPacketCount
+                # unprotectedPacketCount = totalNumPackets - protectedPacketCount
                 # if case == "Random_RSCorrected":
                 #     packetsSent = packetsSent + FECPacketCount + totalNumPackets
                 #     numOfPacketsToLose = math.floor(
@@ -680,47 +681,48 @@ class pipeline:
                     ]
                     for j in lowestImportanceIndex:
                         packetizedfmL[j][...] = 0
-                    unprotectedPacketCount = unprotectedPacketCount - len(
-                        lowestImportanceIndex
-                    )
-                    if unprotectedPacketCount < 0:
-                        print("Cannot delete more!\n")
-                        return
+                    # unprotectedPacketCount = unprotectedPacketCount - len(
+                    #     lowestImportanceIndex
+                    # )
+                    # if unprotectedPacketCount < 0:
+                    #     print("Cannot delete more!\n")
+                    #     return
                     packetsSent = packetsSent + totalNumPackets
                     packetsLost = packetsLost + numOfPacketsToLose
 
                 newPacketizedFECChannel = []
-                for i_p in range(unprotectedPacketCount):
-                    newPacketizedFECChannel.append(0)  # Unprotected Packets
+                # for i_p in range(unprotectedPacketCount):
+                #     newPacketizedFECChannel.append(0)  # Unprotected Packets
                 for i_p in range(protectedPacketCount):
                     newPacketizedFECChannel.append(1)  # Protected Top Packets k
                 for i_p in range(FECPacketCount):
                     newPacketizedFECChannel.append(2)  # Redundant packets n-k
                 rng.shuffle(newPacketizedFECChannel)
                 lostPackets = newPacketizedFECChannel[0:numOfPacketsToLose]
-                lostUnprotectedPackets = lostPackets.count(0)
+                # lostUnprotectedPackets = lostPackets.count(0)
                 lostProtectedPackets = lostPackets.count(1)
                 lostRedundantPackets = lostPackets.count(2)
                 if (
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
-                    unprotectedPackets = OrderedImportanceOfPacketsIndex[
-                        protectedPacketCount:
-                    ]
-                    rng.shuffle(unprotectedPackets)
-                    indexOfLossedPackets = unprotectedPackets[0:lostUnprotectedPackets]
+                    pass
+                    # unprotectedPackets = OrderedImportanceOfPacketsIndex[
+                    #     protectedPacketCount:
+                    # ]
+                    # rng.shuffle(unprotectedPackets)
+                    # indexOfLossedPackets = unprotectedPackets[0:lostUnprotectedPackets]
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    unprotectedPackets = OrderedImportanceOfPacketsIndex[
-                        protectedPacketCount:
-                    ]
+                    # unprotectedPackets = OrderedImportanceOfPacketsIndex[
+                    #     protectedPacketCount:
+                    # ]
                     protectedPackets = OrderedImportanceOfPacketsIndex[
                         0:protectedPacketCount
                     ]
-                    rng.shuffle(unprotectedPackets)
+                    # rng.shuffle(unprotectedPackets)
                     rng.shuffle(protectedPackets)
                     indexOfLossedPackets = (
-                        unprotectedPackets[:lostUnprotectedPackets]
-                        + protectedPackets[:lostProtectedPackets]
+                        # unprotectedPackets[:lostUnprotectedPackets]+
+                          protectedPackets[:lostProtectedPackets]
                     )
             elif case == "Random":
                 packetsSent = packetsSent + totalNumPackets
