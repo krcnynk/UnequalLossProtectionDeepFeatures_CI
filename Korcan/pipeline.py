@@ -654,10 +654,14 @@ class pipeline:
             # )
             totalNumPackets = len(packetizedheatMap)
 
-            obj = gbChannel.GBC(percOfPacketLoss / 100, 7)
-            sim = obj.simulate(totalNumPackets)
-            numOfPacketsToLose = (~sim).nonzero()[0].size
-
+            if percOfPacketLoss != 0:
+                obj = gbChannel.GBC(percOfPacketLoss / 100, 7)
+                sim = obj.simulate(totalNumPackets)
+                numOfPacketsToLose = (~sim).nonzero()[0].size
+            else:
+                sim = np.full((1,totalNumPackets),True)
+                numOfPacketsToLose = 0
+                
             if (
                 # case == "Random_RSCorrected"
                 # or
