@@ -654,14 +654,15 @@ class pipeline:
             # )
             totalNumPackets = len(packetizedheatMap)
 
-            obj = gbChannel.GBC(percOfPacketLoss/100,7)
+            obj = gbChannel.GBC(percOfPacketLoss / 100, 7)
             sim = obj.simulate(totalNumPackets)
             numOfPacketsToLose = (~sim).nonzero()[0].size
 
             if (
                 # case == "Random_RSCorrected"
                 # or
-                case == "Random_RSCorrected_FECRemovesBOT"
+                case
+                == "Random_RSCorrected_FECRemovesBOT"
             ):
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
@@ -722,7 +723,7 @@ class pipeline:
                     rng.shuffle(protectedPackets)
                     indexOfLossedPackets = (
                         # unprotectedPackets[:lostUnprotectedPackets]+
-                          protectedPackets[:lostProtectedPackets]
+                        protectedPackets[:lostProtectedPackets]
                     )
             elif case == "Random":
                 packetsSent = packetsSent + totalNumPackets
@@ -940,52 +941,52 @@ if __name__ == "__main__":
     percLoss = int(sys.argv[1])
     case = sys.argv[2]
 
-    module.saveSuperImposedChannels(modelName)
-    saveImageLossPercent = 60
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Top",
-        saveImages=True,
-        modelName=modelName,
-    )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Bot",
-        saveImages=True,
-        modelName=modelName,
-    )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Random",
-        saveImages=True,
-        modelName=modelName,
-    )
+    # module.saveSuperImposedChannels(modelName)
+    # saveImageLossPercent = 40
     # module.packetLossSim(
     #     packetCount,
     #     quantizationBits,
     #     saveImageLossPercent,
-    #     "Random_RSCorrected",
+    #     "Top",
+    #     saveImages=True,
+    #     modelName=modelName,
+    # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Bot",
+    #     saveImages=True,
+    #     modelName=modelName,
+    # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Random",
+    #     saveImages=True,
+    #     modelName=modelName,
+    # )
+    # # module.packetLossSim(
+    # #     packetCount,
+    # #     quantizationBits,
+    # #     saveImageLossPercent,
+    # #     "Random_RSCorrected",
+    # #     40,
+    # #     60,
+    # #     saveImages=True,
+    # #     modelName=modelName,
+    # # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Random_RSCorrected_FECRemovesBOT",
     #     40,
     #     60,
     #     saveImages=True,
     #     modelName=modelName,
     # )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Random_RSCorrected_FECRemovesBOT",
-        40,
-        60,
-        saveImages=True,
-        modelName=modelName,
-    )
 
     if case == "Top" or case == "Bot" or case == "Random":
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
