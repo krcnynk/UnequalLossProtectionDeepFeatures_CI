@@ -899,7 +899,7 @@ class pipeline:
                 "wb",
             ) as f:
                 pickle.dump(pdictVal, f)
-
+        print(100 * packetsLost / packetsSent)
         # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
 
