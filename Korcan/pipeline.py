@@ -805,7 +805,7 @@ class pipeline:
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
 
-            pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
+            pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
             pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
             rand = int(random.randint(1, sys.maxsize))
@@ -815,7 +815,7 @@ class pipeline:
                 + "/"
                 + case
                 + "/key_"
-                + "{:.3f}".format(100 * packetsLost / packetsSent)
+                + "{:.3f}".format(percOfPacketLoss)
                 + "_"
                 + str(rand)
                 + "_.pkl",
@@ -828,7 +828,7 @@ class pipeline:
                 + "/"
                 + case
                 + "/val_"
-                + "{:.3f}".format(100 * packetsLost / packetsSent)
+                + "{:.3f}".format(percOfPacketLoss)
                 + "_"
                 + str(rand)
                 + "_.pkl",
