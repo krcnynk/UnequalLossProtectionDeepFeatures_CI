@@ -383,6 +383,7 @@ class pipeline:
         seriesYmin = [[] for _ in range(len(types))]
         seriesYmax = [[] for _ in range(len(types))]
         for key, value in self.pdict.items():
+            print(value)
             index = types.index(key[1])
             seriesX[index].append(float(key[0]))
             seriesY[index].append(float(value["acc"]))
