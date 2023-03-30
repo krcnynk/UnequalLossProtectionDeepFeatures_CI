@@ -1142,12 +1142,14 @@ if __name__ == "__main__":
                     acc = 0
                     loss = 0
                     count = 0
-                    min = np.amin(np.array(val))
-                    max = np.amax(np.array(val))
+                    accList = []
                     for s in val:
                         count = count + 1
                         acc = acc + s["acc"]
+                        accList.append(s["acc"])
                         loss = loss + s["loss"]
+                    min = np.amin(np.array(accList))
+                    max = np.amax(np.array(accList))
                     # print(count)
                     # print(key)
                     # print("a____")
