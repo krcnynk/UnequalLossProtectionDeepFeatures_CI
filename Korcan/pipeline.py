@@ -393,7 +393,7 @@ class pipeline:
         plt.xlabel("Percent Lost")
         plt.ylabel("Top-1 Accuracy")
         for s in range(len(seriesX)):
-            print(cases)
+            print(types[s])
             mapping = cases.index(types[s])
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             if (
