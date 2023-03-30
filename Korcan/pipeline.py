@@ -357,7 +357,6 @@ class pipeline:
             "m",
             ".",
             "-",
-
             # "R_RS_FEC_10_90","m",".","-",
             "FEC_20_80",
             "m",
@@ -437,7 +436,8 @@ class pipeline:
                     linewidth=1.2,
                     color=cases[mapping + 1],
                 )
-            plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s])
+            if types[s] == "Unprotected (IID)" or types[s] == "Unprotected (Burst)":
+                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s])
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
@@ -457,8 +457,6 @@ class pipeline:
             prop={"size": 8},
         )
 
-
-        
         # plt.axis('off')
         plt.savefig(
             pathAcc,
@@ -675,7 +673,7 @@ class pipeline:
                 sim = obj.simulate(totalNumPackets)
                 numOfPacketsToLose = (~sim).nonzero()[0].size
             else:
-                sim = np.full((1,totalNumPackets),True)
+                sim = np.full((1, totalNumPackets), True)
                 numOfPacketsToLose = 0
 
             if (
@@ -829,12 +827,22 @@ class pipeline:
         #     count = count + 1
         #     acc = acc + s["acc"]
         #     loss = loss + s["loss"]
-        if case == "Most important" or case == "Least important" or case == "Unprotected (IID)" or case == "Unprotected (Burst)":
+        if (
+            case == "Most important"
+            or case == "Least important"
+            or case == "Unprotected (IID)"
+            or case == "Unprotected (Burst)"
+        ):
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
 
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
-            pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"], "min":0,"max":0}
+            pdictVal = {
+                "acc": metrics["acc"],
+                "loss": metrics["loss"],
+                "min": 0,
+                "max": 0,
+            }
 
             rand = int(random.randint(1, sys.maxsize))
             with open(
@@ -886,7 +894,12 @@ class pipeline:
                 )
 
             pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
-            pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"], "min":0,"max":0}
+            pdictVal = {
+                "acc": metrics["acc"],
+                "loss": metrics["loss"],
+                "min": 0,
+                "max": 0,
+            }
 
             rand = int(random.randint(1, sys.maxsize))
             with open(
@@ -1025,7 +1038,12 @@ if __name__ == "__main__":
     #     modelName=modelName,
     # )
 
-    if case == "Most important" or case == "Least important" or case == "Unprotected (IID)" or case == "Unprotected (Burst)":
+    if (
+        case == "Most important"
+        or case == "Least important"
+        or case == "Unprotected (IID)"
+        or case == "Unprotected (Burst)"
+    ):
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
         dirs = [
@@ -1168,7 +1186,12 @@ if __name__ == "__main__":
                     #     key = list(key)
                     #     key[1] = "Unprotected"
                     #     key = tuple(key)
-                    module.pdict[key] = {"acc": acc / count, "loss": loss / count, "min": min ,"max": max}
+                    module.pdict[key] = {
+                        "acc": acc / count,
+                        "loss": loss / count,
+                        "min": min,
+                        "max": max,
+                    }
 
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
         module.makePlot(
