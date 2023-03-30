@@ -966,32 +966,42 @@ if __name__ == "__main__":
     percLoss = int(sys.argv[1])
     case = sys.argv[2]
 
+    if case == "1":
+        case = "Most important"
+    elif case == "2":
+        case = "Least important"
+    elif case == "3":
+        case = "Unprotected (IID)"
+    elif case == "4":
+        case = "Unprotected (Burst)"
     # module.saveSuperImposedChannels(modelName)
-    saveImageLossPercent = 40
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Most important",
-        saveImages=True,
-        modelName=modelName,
-    )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Least important",
-        saveImages=True,
-        modelName=modelName,
-    )
-    module.packetLossSim(
-        packetCount,
-        quantizationBits,
-        saveImageLossPercent,
-        "Unprotected (IID)",
-        saveImages=True,
-        modelName=modelName,
-    )
+
+    # saveImageLossPercent = 40
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Most important",
+    #     saveImages=True,
+    #     modelName=modelName,
+    # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Least important",
+    #     saveImages=True,
+    #     modelName=modelName,
+    # )
+    # module.packetLossSim(
+    #     packetCount,
+    #     quantizationBits,
+    #     saveImageLossPercent,
+    #     "Unprotected (IID)",
+    #     saveImages=True,
+    #     modelName=modelName,
+    # )
+
     # # module.packetLossSim(
     # #     packetCount,
     # #     quantizationBits,
@@ -1013,7 +1023,7 @@ if __name__ == "__main__":
     #     modelName=modelName,
     # )
 
-    if case == "Most important" or case == "Least important" or case == "Unprotected (IID)":
+    if case == "Most important" or case == "Least important" or case == "Unprotected (IID)" or case == "Unprotected (Burst)":
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
         dirs = [
