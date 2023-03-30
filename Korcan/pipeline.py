@@ -1097,6 +1097,7 @@ if __name__ == "__main__":
             dirNames.append("Random_RSCorrected_FECRemovesBOT_" + fp[0] + "_" + fp[1])
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
         dirNames.append("Unprotected (IID)")
+        dirNames.append("Unprotected (Burst)")
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             keyIndexes = []
@@ -1163,10 +1164,10 @@ if __name__ == "__main__":
                         dp = "FEC" + d[-6:]
                         key[1] = dp
                         key = tuple(key)
-                    else:
-                        key = list(key)
-                        key[1] = "Unprotected"
-                        key = tuple(key)
+                    # else:
+                    #     key = list(key)
+                    #     key[1] = "Unprotected"
+                    #     key = tuple(key)
                     module.pdict[key] = {"acc": acc / count, "loss": loss / count, "min": min ,"max": max}
 
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
