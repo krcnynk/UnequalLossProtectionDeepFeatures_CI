@@ -394,6 +394,8 @@ class pipeline:
         for s in range(len(seriesX)):
             print(types[s])
             mapping = cases.index(types[s])
+            _, seriesYmax[s] = zip(*sorted(zip(seriesX[s], seriesYmax[s])))
+            _, seriesYmin[s] = zip(*sorted(zip(seriesX[s], seriesYmin[s])))
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             if (
                 types[s] == "Least important"
