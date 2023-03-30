@@ -349,10 +349,15 @@ class pipeline:
             "g",
             ".",
             "-",
-            "Unprotected",
+            "Unprotected (IID)",
             "r",
             ".",
             "-",
+            "Unprotected (Burst)",
+            "m",
+            ".",
+            "-",
+
             # "R_RS_FEC_10_90","m",".","-",
             "FEC_20_80",
             "m",
@@ -375,10 +380,14 @@ class pipeline:
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
+        seriesYmin = [[] for _ in range(len(types))]
+        seriesYmax = [[] for _ in range(len(types))]
         for key, value in self.pdict.items():
             index = types.index(key[1])
             seriesX[index].append(float(key[0]))
             seriesY[index].append(float(value["acc"]))
+            seriesYmin[index].append(float(value["min"]))
+            seriesYmax[index].append(float(value["max"]))
         # plt.title("Top1 Accuracy")
         plt.xlabel("Percent Lost")
         plt.ylabel("Top-1 Accuracy")
@@ -388,7 +397,8 @@ class pipeline:
             if (
                 types[s] == "Least important"
                 or types[s] == "Most important"
-                or types[s] == "Random"
+                or types[s] == "Unprotected (IID)"
+                or types[s] == "Unprotected (Burst)"
                 or types[s] == "Most important(GradCAM)"
                 or types[s] == "Least important(GradCAM)"
             ):
@@ -425,6 +435,7 @@ class pipeline:
                     linewidth=1.2,
                     color=cases[mapping + 1],
                 )
+            plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s])
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
@@ -443,6 +454,9 @@ class pipeline:
             # shadow=True,
             prop={"size": 8},
         )
+
+
+        
         # plt.axis('off')
         plt.savefig(
             pathAcc,
@@ -451,40 +465,40 @@ class pipeline:
         )
         plt.close()
 
-        types = list(set([i[1] for i in self.pdict.keys()]))
-        seriesX = [[] for _ in range(len(types))]
-        seriesY = [[] for _ in range(len(types))]
-        for key, value in self.pdict.items():
-            index = types.index(key[1])
-            seriesX[index].append(float(key[0]))
-            seriesY[index].append(float(value["loss"]))
-        plt.title("Top1 Loss")
-        plt.xlabel("Percent Lost")
-        plt.ylabel("Loss")
-        for s in range(len(seriesX)):
-            mapping = cases.index(types[s])
-            seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            plt.scatter(
-                seriesX[s],
-                seriesY[s],
-                label=cases[mapping],
-                marker=cases[mapping + 2],
-                color=cases[mapping + 1],
-            )
-            plt.plot(seriesX[s], seriesY[s], linewidth=0.5, color=cases[mapping + 1])
-        plt.legend(
-            bbox_to_anchor=(1.04, 1),
-            loc="upper left",
-            ncol=2,
-            fancybox=True,
-            shadow=True,
-        )
-        plt.savefig(
-            pathLoss,
-            bbox_inches="tight",
-            dpi=300,
-        )
-        plt.close()
+        # types = list(set([i[1] for i in self.pdict.keys()]))
+        # seriesX = [[] for _ in range(len(types))]
+        # seriesY = [[] for _ in range(len(types))]
+        # for key, value in self.pdict.items():
+        #     index = types.index(key[1])
+        #     seriesX[index].append(float(key[0]))
+        #     seriesY[index].append(float(value["loss"]))
+        # plt.title("Top1 Loss")
+        # plt.xlabel("Percent Lost")
+        # plt.ylabel("Loss")
+        # for s in range(len(seriesX)):
+        #     mapping = cases.index(types[s])
+        #     seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
+        #     plt.scatter(
+        #         seriesX[s],
+        #         seriesY[s],
+        #         label=cases[mapping],
+        #         marker=cases[mapping + 2],
+        #         color=cases[mapping + 1],
+        #     )
+        #     plt.plot(seriesX[s], seriesY[s], linewidth=0.5, color=cases[mapping + 1])
+        # plt.legend(
+        #     bbox_to_anchor=(1.04, 1),
+        #     loc="upper left",
+        #     ncol=2,
+        #     fancybox=True,
+        #     shadow=True,
+        # )
+        # plt.savefig(
+        #     pathLoss,
+        #     bbox_inches="tight",
+        #     dpi=300,
+        # )
+        # plt.close()
         return
 
     def cleanPlot(self):
@@ -547,9 +561,9 @@ class pipeline:
 
     #     if saveImages:
     #         if bot == True:
-    #             self.__savePacketLossImages(fmLBatch, "targetedPixelLoss" + "BOT")
+    #             self.__savePacketLossImages(fmLBatch, "targetedPixelLoss" + "Least important")
     #         else:
-    #             self.__savePacketLossImages(fmLBatch, "targetedPixelLoss" + "TOP")
+    #             self.__savePacketLossImages(fmLBatch, "targetedPixelLoss" + "Most important")
 
     # def findPercentileRandomLossPerChannelFM(self, percent, qBits, saveImages=False):
     #     fmLRandomBatch = []
@@ -595,7 +609,7 @@ class pipeline:
         modelName=None,
     ):
         # iteration = 1
-        # if(case == "Random" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
+        # if(case == "Unprotected (IID)" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
         #     iteration = 1
         # scores = []
 
@@ -729,20 +743,28 @@ class pipeline:
                         # unprotectedPackets[:lostUnprotectedPackets]+
                         protectedPackets[:lostProtectedPackets]
                     )
-            elif case == "Random":
+            elif case == "Unprotected (Burst)":
                 packetsSent = packetsSent + totalNumPackets
                 # indexOfLossedPackets = list(range(0, totalNumPackets))
                 indexOfLossedPackets = (~sim).nonzero()[0]
                 # rng.shuffle(indexOfLossedPackets)
                 # indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
-            elif case == "Top":
+
+            elif case == "Unprotected (IID)":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = list(range(0, totalNumPackets))
+                rng.shuffle(indexOfLossedPackets)
+                indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
+            elif case == "Most important":
                 packetsSent = packetsSent + totalNumPackets
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
                     0:numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
-            elif case == "Bot":
+            elif case == "Least important":
                 packetsSent = packetsSent + totalNumPackets
                 OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
@@ -805,7 +827,7 @@ class pipeline:
         #     count = count + 1
         #     acc = acc + s["acc"]
         #     loss = loss + s["loss"]
-        if case == "Top" or case == "Bot" or case == "Random":
+        if case == "Most important" or case == "Least important" or case == "Unprotected (IID)":
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
 
@@ -950,7 +972,7 @@ if __name__ == "__main__":
         packetCount,
         quantizationBits,
         saveImageLossPercent,
-        "Top",
+        "Most important",
         saveImages=True,
         modelName=modelName,
     )
@@ -958,7 +980,7 @@ if __name__ == "__main__":
         packetCount,
         quantizationBits,
         saveImageLossPercent,
-        "Bot",
+        "Least important",
         saveImages=True,
         modelName=modelName,
     )
@@ -966,7 +988,7 @@ if __name__ == "__main__":
         packetCount,
         quantizationBits,
         saveImageLossPercent,
-        "Random",
+        "Unprotected (IID)",
         saveImages=True,
         modelName=modelName,
     )
@@ -991,7 +1013,7 @@ if __name__ == "__main__":
     #     modelName=modelName,
     # )
 
-    if case == "Top" or case == "Bot" or case == "Random":
+    if case == "Most important" or case == "Least important" or case == "Unprotected (IID)":
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
         dirs = [
@@ -1006,8 +1028,8 @@ if __name__ == "__main__":
                 fpPairs.append(splitted[3:])  # Random_RSCorrected_FECRemovesBOT_10_50
 
         dirNames = []
-        dirNames.append("Top")
-        dirNames.append("Bot")
+        dirNames.append("Most important")
+        dirNames.append("Least important")
         # dirNames.append("TopG")
         # dirNames.append("BotG")
         for d in dirNames:
@@ -1024,23 +1046,23 @@ if __name__ == "__main__":
                     ) as f:
                         val = pickle.load(f)
 
-                    if key[1] == "Top":
-                        key = list(key)
-                        dp = "Most important"
-                        key[1] = dp
-                        key = tuple(key)
-                    elif key[1] == "Bot":
-                        key = list(key)
-                        dp = "Least important"
-                        key[1] = dp
-                        key = tuple(key)
+                    # if key[1] == "Most important":
+                    #     key = list(key)
+                    #     dp = "Most important"
+                    #     key[1] = dp
+                    #     key = tuple(key)
+                    # elif key[1] == "Least important":
+                    #     key = list(key)
+                    #     dp = "Least important"
+                    #     key[1] = dp
+                    #     key = tuple(key)
 
-                    # if(d == "Top"):
+                    # if(d == "Most important"):
                     #     key = list(key)
                     #     dp = "Most important (Proxy)"
                     #     key[1] = dp
                     #     key = tuple(key)
-                    # elif(d == "Bot"):
+                    # elif(d == "Least important"):
                     #     key = list(key)
                     #     dp = "Least important (Proxy)"
                     #     key[1] = dp
@@ -1062,7 +1084,7 @@ if __name__ == "__main__":
         for fp in fpPairs:
             dirNames.append("Random_RSCorrected_FECRemovesBOT_" + fp[0] + "_" + fp[1])
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
-        dirNames.append("Random")
+        dirNames.append("Unprotected (IID)")
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             keyIndexes = []
@@ -1110,6 +1132,8 @@ if __name__ == "__main__":
                     acc = 0
                     loss = 0
                     count = 0
+                    min = np.amin(np.array(s))
+                    max = np.amax(np.array(s))
                     for s in val:
                         count = count + 1
                         acc = acc + s["acc"]
@@ -1129,7 +1153,7 @@ if __name__ == "__main__":
                         key = list(key)
                         key[1] = "Unprotected"
                         key = tuple(key)
-                    module.pdict[key] = {"acc": acc / count, "loss": loss / count}
+                    module.pdict[key] = {"acc": acc / count, "loss": loss / count, "min": min ,"max": max}
 
         ##WILL BE HANDLED DIFFERENTELY COMING UP!
         module.makePlot(
@@ -1166,9 +1190,9 @@ if __name__ == "__main__":
     #         fecProtectInfo = "fec" + str(f) + "protect" + str(p)
 
     #         for percLoss in np.concatenate((np.linspace(0, 4, 2),np.linspace(4, 15, 2)),axis=None):
-    #             module.packetLossSim(packetCount, 8, percLoss, "Top",modelName=modelName)
-    #             module.packetLossSim(packetCount, 8, percLoss, "Bot",modelName=modelName)
-    #             # module.packetLossSim(packetCount, 8, percLoss,"Random",modelName=modelName)
+    #             module.packetLossSim(packetCount, 8, percLoss, "Most important",modelName=modelName)
+    #             module.packetLossSim(packetCount, 8, percLoss, "Least important",modelName=modelName)
+    #             # module.packetLossSim(packetCount, 8, percLoss,"Unprotected (IID)",modelName=modelName)
     #             # module.packetLossSim(
     #             #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
     #             # )
@@ -1176,7 +1200,7 @@ if __name__ == "__main__":
     #             #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
     #             # )
     #         for percLoss in np.linspace(15, 50, 2):
-    #             # module.packetLossSim(packetCount, 8, percLoss, "Bot",modelName=modelName)
+    #             # module.packetLossSim(packetCount, 8, percLoss, "Least important",modelName=modelName)
     #             # module.packetLossSim(
     #             #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
     #             # )
