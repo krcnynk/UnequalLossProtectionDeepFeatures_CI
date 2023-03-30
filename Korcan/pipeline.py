@@ -833,7 +833,7 @@ class pipeline:
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
 
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
-            pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
+            pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"], "min":0,"max":0}
 
             rand = int(random.randint(1, sys.maxsize))
             with open(
