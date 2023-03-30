@@ -884,7 +884,7 @@ class pipeline:
                 )
 
             pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
-            pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"]}
+            pdictVal = {"acc": metrics["acc"], "loss": metrics["loss"], "min":0,"max":0}
 
             rand = int(random.randint(1, sys.maxsize))
             with open(
