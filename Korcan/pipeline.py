@@ -1142,8 +1142,8 @@ if __name__ == "__main__":
                     acc = 0
                     loss = 0
                     count = 0
-                    min = np.amin(np.array(s))
-                    max = np.amax(np.array(s))
+                    min = np.amin(np.array(val))
+                    max = np.amax(np.array(val))
                     for s in val:
                         count = count + 1
                         acc = acc + s["acc"]
