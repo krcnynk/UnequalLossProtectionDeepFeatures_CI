@@ -827,7 +827,7 @@ class pipeline:
         #     count = count + 1
         #     acc = acc + s["acc"]
         #     loss = loss + s["loss"]
-        if case == "Most important" or case == "Least important" or case == "Unprotected (IID)":
+        if case == "Most important" or case == "Least important" or case == "Unprotected (IID)" or case == "Unprotected (Burst)":
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
 
