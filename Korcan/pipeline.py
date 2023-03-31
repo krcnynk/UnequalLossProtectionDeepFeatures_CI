@@ -439,9 +439,9 @@ class pipeline:
                     color=cases[mapping + 1],
                 )
             if types[s] == "Unprotected (IID)":
-                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.3,facecolor="r")
+                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.3,facecolor="y")
             elif types[s] == "Unprotected (Burst)":
-                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.3,facecolor="m")
+                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.3,facecolor="c")
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
