@@ -679,6 +679,8 @@ class pipeline:
                     sim = obj.simulate(totalNumPackets)
                     numOfPacketsToLose = (~sim).nonzero()[0].size
                     perc = round(numOfPacketsToLose/totalNumPackets*100)
+                    if(perc == percOfPacketLoss):
+                        flag = True
             else:
                 sim = np.full((1, totalNumPackets), True)
                 numOfPacketsToLose = 0
