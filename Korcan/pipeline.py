@@ -441,7 +441,7 @@ class pipeline:
             if types[s] == "Unprotected (IID)":
                 plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.3,facecolor="r")
             elif types[s] == "Unprotected (Burst)":
-                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.3,facecolor="m")
+                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.4,facecolor="m")
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
@@ -673,9 +673,12 @@ class pipeline:
             totalNumPackets = len(packetizedheatMap)
 
             if percOfPacketLoss != 0:
-                obj = gbChannel.GBC(percOfPacketLoss / 100, 7)
-                sim = obj.simulate(totalNumPackets)
-                numOfPacketsToLose = (~sim).nonzero()[0].size
+                flag = False
+                while(not flag):
+                    obj = gbChannel.GBC(percOfPacketLoss / 100, 7)
+                    sim = obj.simulate(totalNumPackets)
+                    numOfPacketsToLose = (~sim).nonzero()[0].size
+                    perc = round(numOfPacketsToLose/totalNumPackets*100)
             else:
                 sim = np.full((1, totalNumPackets), True)
                 numOfPacketsToLose = 0
