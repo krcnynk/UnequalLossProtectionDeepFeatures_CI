@@ -675,7 +675,7 @@ class pipeline:
             if percOfPacketLoss != 0:
                 flag = False
                 while(not flag):
-                    obj = gbChannel.GBC(percOfPacketLoss / 100, 7)
+                    obj = gbChannel.GBC(percOfPacketLoss / 100, 16)
                     sim = obj.simulate(totalNumPackets)
                     numOfPacketsToLose = (~sim).nonzero()[0].size
                     perc = round(numOfPacketsToLose/totalNumPackets*100)
