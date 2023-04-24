@@ -1084,11 +1084,11 @@ if __name__ == "__main__":
     ):
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
-        dirs = [
-            name
-            for name in os.listdir("Korcan/Plots/" + modelName)
-            if os.path.isdir("Korcan/Plots/" + modelName)
-        ]
+        # dirs = [
+        #     name
+        #     for name in os.listdir("Korcan/Plots/" + modelName)
+        #     if os.path.isdir("Korcan/Plots/" + modelName)
+        # ]
         # fpPairs = []
         # for d in dirs:
         #     splitted = d.split("_")
@@ -1111,13 +1111,14 @@ if __name__ == "__main__":
                         "rb",
                     ) as f:
                         val = pickle.load(f)
+                module.pdict[key] = val
 
         dirNames = []
         dirNames.append("FEC (IID)")
         dirNames.append("FEC (Burst)")
         # for fp in fpPairs:
-            # dirNames.append("FEC (IID)" + "_" + fp[0] + "_" + fp[1])
-            # dirNames.append("FEC (Burst)" + "_" + fp[0] + "_" + fp[1])
+        # dirNames.append("FEC (IID)" + "_" + fp[0] + "_" + fp[1])
+        # dirNames.append("FEC (Burst)" + "_" + fp[0] + "_" + fp[1])
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
         dirNames.append("Unprotected (IID)")
         dirNames.append("Unprotected (Burst)")
