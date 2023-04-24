@@ -10,6 +10,6 @@ for i in {1..50}
 do
     sbatch pipelineRBUR.sh
     sbatch pipelineRIID.sh
-#     sbatch pipelineRRS.sh
-#     sbatch pipelineRRSF.sh
+    sbatch pipelineRSBUR.sh
+    sbatch pipelineRSIID.sh
 done

@@ -359,40 +359,38 @@ class pipeline:
             ".",
             "-",
             # "R_RS_FEC_10_90","m",".","-",
-            "FEC (IID)"+"_20_80",
+            "FEC (IID)" + "_20_80",
             "m",
             ".",
             "-",
-            "FEC (IID)"+"_30_70",
+            "FEC (IID)" + "_30_70",
             "m",
             ".",
             "--",
-           "FEC (IID)"+"_40_60",
+            "FEC (IID)" + "_40_60",
             "m",
             ".",
             "-.",
-            "FEC (IID)"+"_50_50",
+            "FEC (IID)" + "_50_50",
             "m",
             ".",
             ":",
-
-            "FEC (Burst)"+"_20_80",
+            "FEC (Burst)" + "_20_80",
             "m",
             ".",
             ":",
-            "FEC (Burst)"+"_30_70",
+            "FEC (Burst)" + "_30_70",
             "m",
             ".",
             "-.",
-           "FEC (Burst)"+"_40_60",
+            "FEC (Burst)" + "_40_60",
             "m",
             ".",
             "--",
-            "FEC (Burst)"+"_50_50",
+            "FEC (Burst)" + "_50_50",
             "m",
             ".",
             "-",
-
         ]
 
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
@@ -1081,8 +1079,8 @@ if __name__ == "__main__":
         or case == "Least important"
         or case == "Unprotected (IID)"
         or case == "Unprotected (Burst)"
-        or case == "FEC (IID)"
-        or case == "FEC (Burst)"
+        # or case == "FEC (IID)"
+        # or case == "FEC (Burst)"
     ):
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
@@ -1116,8 +1114,8 @@ if __name__ == "__main__":
 
         dirNames = []
         for fp in fpPairs:
-            dirNames.append("FEC (IID)"+"_" + fp[0] + "_" + fp[1])
-            dirNames.append("FEC (Burst)"+"_" + fp[0] + "_" + fp[1])
+            dirNames.append("FEC (IID)" + "_" + fp[0] + "_" + fp[1])
+            dirNames.append("FEC (Burst)" + "_" + fp[0] + "_" + fp[1])
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
         dirNames.append("Unprotected (IID)")
         dirNames.append("Unprotected (Burst)")
@@ -1358,7 +1356,7 @@ if __name__ == "__main__":
         #     bbox_inches="tight",
         #     dpi=300,
         # )
-    else:
+    elif case == "FEC (IID)" or case == "FEC (Burst)":
         fecPercent = int(sys.argv[3])
         protectPercent = int(sys.argv[4])
         module.packetLossSim(
