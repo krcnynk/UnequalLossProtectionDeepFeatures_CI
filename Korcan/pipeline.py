@@ -357,7 +357,7 @@ class pipeline:
             "Unprotected (Burst)",
             "c",
             ".",
-            "-",
+            ":",
             # "R_RS_FEC_10_90","m",".","-",
             # "FEC (IID)" + "_20_80",
             # "m",
@@ -461,7 +461,7 @@ class pipeline:
                 )
             elif types[s] == "Unprotected (Burst)":
                 plt.fill_between(
-                    seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.4, facecolor="m"
+                    seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.4, facecolor="c"
                 )
 
         # reordering the labels
@@ -770,6 +770,7 @@ class pipeline:
                     indexOfLossedPackets =[]
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
                     pass
+
             elif case == "Unprotected (Burst)":
                 packetsSent = packetsSent + totalNumPackets
                 # indexOfLossedPackets = list(range(0, totalNumPackets))
@@ -791,6 +792,7 @@ class pipeline:
                     0:numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
+
             elif case == "Least important":
                 packetsSent = packetsSent + totalNumPackets
                 OrderedImportanceOfPacketsIndexExcludeFEC = (
@@ -800,6 +802,7 @@ class pipeline:
                     0:numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
+
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
