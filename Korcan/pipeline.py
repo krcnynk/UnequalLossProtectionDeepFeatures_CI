@@ -355,7 +355,7 @@ class pipeline:
             ".",
             "-",
             "Unprotected (Burst)",
-            "m",
+            "c",
             ".",
             "-",
             # "R_RS_FEC_10_90","m",".","-",
@@ -388,7 +388,7 @@ class pipeline:
             # ".",
             # "--",
             "FEC (Burst)",
-            "m",
+            "y",
             ".",
             "-",
         ]
