@@ -1,4 +1,4 @@
-# import tensorflow as tf
+import tensorflow as tf
 import numpy as np
 import matplotlib
 import matplotlib as mpl
@@ -15,8 +15,8 @@ import glob
 import gbChannel
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-# from models.BrokenModel import BrokenModel
-# from runExpt.simmods import *
+from models.BrokenModel import BrokenModel
+from runExpt.simmods import *
 from models.quantizer import QLayer
 
 np.seterr(over="raise")
@@ -276,7 +276,7 @@ class pipeline:
         self.trained_model = tf.keras.models.load_model(
             os.path.join(trained_model_path)
         )
-        self.mobile_model.summary()
+        # self.mobile_model.summary()
         # self.cloud_model.summary()
 
     def findHeatmaps(self, gradientRespectToLayer, modelName, dataSet):
