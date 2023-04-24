@@ -1089,11 +1089,11 @@ if __name__ == "__main__":
             for name in os.listdir("Korcan/Plots/" + modelName)
             if os.path.isdir("Korcan/Plots/" + modelName)
         ]
-        fpPairs = []
-        for d in dirs:
-            splitted = d.split("_")
-            if len(splitted) == 5:
-                fpPairs.append(splitted[3:])  # FEC_10_50
+        # fpPairs = []
+        # for d in dirs:
+        #     splitted = d.split("_")
+        #     if len(splitted) == 5:
+        #         fpPairs.append(splitted[3:])  # FEC_10_50
 
         dirNames = []
         dirNames.append("Most important")
@@ -1113,9 +1113,11 @@ if __name__ == "__main__":
                         val = pickle.load(f)
 
         dirNames = []
-        for fp in fpPairs:
-            dirNames.append("FEC (IID)" + "_" + fp[0] + "_" + fp[1])
-            dirNames.append("FEC (Burst)" + "_" + fp[0] + "_" + fp[1])
+        dirNames.append("FEC (IID)")
+        dirNames.append("FEC (Burst)")
+        # for fp in fpPairs:
+            # dirNames.append("FEC (IID)" + "_" + fp[0] + "_" + fp[1])
+            # dirNames.append("FEC (Burst)" + "_" + fp[0] + "_" + fp[1])
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
         dirNames.append("Unprotected (IID)")
         dirNames.append("Unprotected (Burst)")
