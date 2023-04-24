@@ -1195,31 +1195,30 @@ if __name__ == "__main__":
                     # print(val)
                     # print("b____")
                     # print({"acc": acc/count, "loss": loss/count})
-                    if key[1] == "FEC (IID)":
-                        key = list(key)
-                        dp = "FEC (IID)" + d[-6:]
-                        key[1] = dp
-                        key = tuple(key)
-                    elif key[1] == "FEC (Burst)":
-                        key = list(key)
-                        dp = "FEC (Burst)" + d[-6:]
-                        key[1] = dp
-                        key = tuple(key)
-        module.makePlot(
-            "Korcan/Plots/" + modelName + "/AccuracyPlotPacketized",
-            "Korcan/Plots/" + modelName + "/LossPlotPacketized",
-        )
+                    # if key[1] == "FEC (IID)":
+                    #     key = list(key)
+                    #     dp = "FEC (IID)" + d[-6:]
+                    #     key[1] = dp
+                    #     key = tuple(key)
+                    # elif key[1] == "FEC (Burst)":
+                    #     key = list(key)
+                    #     dp = "FEC (Burst)" + d[-6:]
+                    #     key[1] = dp
+                    #     key = tuple(key)
                     # else:
                     #     key = list(key)
                     #     key[1] = "Unprotected"
                     #     key = tuple(key)
-                    # module.pdict[key] = {
-                    #     "acc": acc / count,
-                    #     "loss": loss / count,
-                    #     "min": min,
-                    #     "max": max,
-                    # }
-
+                    module.pdict[key] = {
+                        "acc": acc / count,
+                        "loss": loss / count,
+                        "min": min,
+                        "max": max,
+                    }
+        module.makePlot(
+            "Korcan/Plots/" + modelName + "/AccuracyPlotPacketized",
+            "Korcan/Plots/" + modelName + "/LossPlotPacketized",
+        )
         # tTestDict = {}
         # tTestDictL = {}
         # tTestDictG = {}
