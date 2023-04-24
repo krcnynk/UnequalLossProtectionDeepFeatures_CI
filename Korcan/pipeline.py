@@ -1203,6 +1203,10 @@ if __name__ == "__main__":
                         dp = "FEC (Burst)" + d[-6:]
                         key[1] = dp
                         key = tuple(key)
+        module.makePlot(
+            "Korcan/Plots/" + modelName + "/AccuracyPlotPacketized",
+            "Korcan/Plots/" + modelName + "/LossPlotPacketized",
+        )
                     # else:
                     #     key = list(key)
                     #     key[1] = "Unprotected"
