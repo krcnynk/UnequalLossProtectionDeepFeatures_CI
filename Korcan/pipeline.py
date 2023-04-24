@@ -733,7 +733,7 @@ class pipeline:
                 if (
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
-                    indexOfLossedPackets = None
+                    indexOfLossedPackets = []
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
                     pass
 
@@ -767,7 +767,7 @@ class pipeline:
                 if (
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
-                    indexOfLossedPackets = None
+                    indexOfLossedPackets =[]
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
                     pass
             elif case == "Unprotected (Burst)":
@@ -803,9 +803,8 @@ class pipeline:
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
-            if indexOfLossedPackets != None:
-                for j in indexOfLossedPackets:
-                    packetizedfmL[j][...] = 0
+            for j in indexOfLossedPackets:
+                packetizedfmL[j][...] = 0
 
             channelReconstructed = [
                 np.vstack(packetizedfmL[i : i + packetNum])
