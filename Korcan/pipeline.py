@@ -1,8 +1,9 @@
-import tensorflow as tf
+# import tensorflow as tf
 import numpy as np
 import matplotlib
 import matplotlib as mpl
 import pickle
+import scipy
 
 mpl.use("Agg")
 import matplotlib.pyplot as plt
@@ -14,8 +15,8 @@ import glob
 import gbChannel
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from models.BrokenModel import BrokenModel
-from runExpt.simmods import *
+# from models.BrokenModel import BrokenModel
+# from runExpt.simmods import *
 from models.quantizer import QLayer
 
 np.seterr(over="raise")
@@ -358,22 +359,40 @@ class pipeline:
             ".",
             "-",
             # "R_RS_FEC_10_90","m",".","-",
-            "FEC_20_80",
+            "FEC (IID)"+"_20_80",
             "m",
             ".",
             "-",
-            "FEC_30_70",
+            "FEC (IID)"+"_30_70",
             "m",
             ".",
             "--",
-            "FEC_40_60",
+           "FEC (IID)"+"_40_60",
             "m",
             ".",
             "-.",
-            "FEC_50_50",
+            "FEC (IID)"+"_50_50",
             "m",
             ".",
             ":",
+
+            "FEC (Burst)"+"_20_80",
+            "m",
+            ".",
+            ":",
+            "FEC (Burst)"+"_30_70",
+            "m",
+            ".",
+            "-.",
+           "FEC (Burst)"+"_40_60",
+            "m",
+            ".",
+            "--",
+            "FEC (Burst)"+"_50_50",
+            "m",
+            ".",
+            "-",
+
         ]
 
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
@@ -402,8 +421,8 @@ class pipeline:
                 or types[s] == "Most important"
                 or types[s] == "Unprotected (IID)"
                 or types[s] == "Unprotected (Burst)"
-                or types[s] == "Most important(GradCAM)"
-                or types[s] == "Least important(GradCAM)"
+                or types[s] == "FEC (IID)"
+                or types[s] == "FEC (Burst)"
             ):
                 plt.scatter(
                     seriesX[s],
@@ -439,9 +458,13 @@ class pipeline:
                     color=cases[mapping + 1],
                 )
             if types[s] == "Unprotected (IID)":
-                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.3,facecolor="r")
+                plt.fill_between(
+                    seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.3, facecolor="r"
+                )
             elif types[s] == "Unprotected (Burst)":
-                plt.fill_between(seriesX[s], seriesYmin[s], seriesYmax[s],alpha=.4,facecolor="m")
+                plt.fill_between(
+                    seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.4, facecolor="m"
+                )
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
@@ -613,7 +636,7 @@ class pipeline:
         modelName=None,
     ):
         # iteration = 1
-        # if(case == "Unprotected (IID)" or case == "Random_RSCorrected" or case == "Random_RSCorrected_FECRemovesBOT"):
+        # if(case == "Unprotected (IID)" or case == "Random_RSCorrected" or case == "FEC"):
         #     iteration = 1
         # scores = []
 
@@ -664,8 +687,8 @@ class pipeline:
             importanceOfPackets = [
                 np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
             ]
-            OrderedImportanceOfPacketsIndex = self.__getOrderedImportantPacketIndex(
-                importanceOfPackets
+            OrderedImportanceOfPacketsIndexExcludeFEC = (
+                self.__getOrderedImportantPacketIndex(importanceOfPackets)
             )
             # numOfPacketsToLose = math.floor(
             #     len(packetizedheatMap) * percOfPacketLoss / 100
@@ -674,84 +697,81 @@ class pipeline:
 
             if percOfPacketLoss != 0:
                 flag = False
-                while(not flag):
+                while not flag:
                     obj = gbChannel.GBC(percOfPacketLoss / 100, 32)
                     sim = obj.simulate(totalNumPackets)
                     numOfPacketsToLose = (~sim).nonzero()[0].size
-                    perc = round(numOfPacketsToLose/totalNumPackets*100)
-                    if(perc == percOfPacketLoss):
+                    perc = round(numOfPacketsToLose / totalNumPackets * 100)
+                    if perc == percOfPacketLoss:
                         flag = True
             else:
                 sim = np.full((1, totalNumPackets), True)
                 numOfPacketsToLose = 0
 
-            if (
-                # case == "Random_RSCorrected"
-                # or
-                case
-                == "Random_RSCorrected_FECRemovesBOT"
-            ):
+            if case == "FEC (Burst)":
+                indexOfLossedPackets = (~sim).nonzero()[0]
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
-                # unprotectedPacketCount = totalNumPackets - protectedPacketCount
-                # if case == "Random_RSCorrected":
-                #     packetsSent = packetsSent + FECPacketCount + totalNumPackets
-                #     numOfPacketsToLose = math.floor(
-                #         (FECPacketCount + totalNumPackets) * percOfPacketLoss / 100
-                #     )
-                #     packetsLost = packetsLost + numOfPacketsToLose
-                if case == "Random_RSCorrected_FECRemovesBOT":
-                    lowestImportanceIndex = OrderedImportanceOfPacketsIndex[
-                        -FECPacketCount:
-                    ]
-                    OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[
-                        :-FECPacketCount
-                    ]
-                    for j in lowestImportanceIndex:
-                        packetizedfmL[j][...] = 0
-                    # unprotectedPacketCount = unprotectedPacketCount - len(
-                    #     lowestImportanceIndex
-                    # )
-                    # if unprotectedPacketCount < 0:
-                    #     print("Cannot delete more!\n")
-                    #     return
-                    packetsSent = packetsSent + totalNumPackets
-                    packetsLost = packetsLost + numOfPacketsToLose
+                lowestImportanceIndex = OrderedImportanceOfPacketsIndexExcludeFEC[
+                    -FECPacketCount:
+                ]
+                OrderedImportanceOfPacketsIndexExcludeFEC = (
+                    OrderedImportanceOfPacketsIndexExcludeFEC[:-FECPacketCount]
+                )
+                for j in lowestImportanceIndex:
+                    packetizedfmL[j][...] = 0
+                packetsSent = packetsSent + totalNumPackets
+                packetsLost = packetsLost + numOfPacketsToLose
 
-                newPacketizedFECChannel = []
-                # for i_p in range(unprotectedPacketCount):
-                #     newPacketizedFECChannel.append(0)  # Unprotected Packets
-                for i_p in range(protectedPacketCount):
-                    newPacketizedFECChannel.append(1)  # Protected Top Packets k
-                for i_p in range(FECPacketCount):
-                    newPacketizedFECChannel.append(2)  # Redundant packets n-k
-                rng.shuffle(newPacketizedFECChannel)
-                lostPackets = newPacketizedFECChannel[0:numOfPacketsToLose]
+                common_elementsProtected = np.intersect1d(
+                    indexOfLossedPackets, OrderedImportanceOfPacketsIndexExcludeFEC
+                )
+                common_elementsFEC = np.intersect1d(
+                    indexOfLossedPackets, lowestImportanceIndex
+                )
                 # lostUnprotectedPackets = lostPackets.count(0)
-                lostProtectedPackets = lostPackets.count(1)
-                lostRedundantPackets = lostPackets.count(2)
+                lostProtectedPackets = len(common_elementsProtected)
+                lostRedundantPackets = len(common_elementsFEC)
                 if (
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
-                    pass
-                    # unprotectedPackets = OrderedImportanceOfPacketsIndex[
-                    #     protectedPacketCount:
-                    # ]
-                    # rng.shuffle(unprotectedPackets)
-                    # indexOfLossedPackets = unprotectedPackets[0:lostUnprotectedPackets]
+                    indexOfLossedPackets = None
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    # unprotectedPackets = OrderedImportanceOfPacketsIndex[
-                    #     protectedPacketCount:
-                    # ]
-                    protectedPackets = OrderedImportanceOfPacketsIndex[
-                        0:protectedPacketCount
-                    ]
-                    # rng.shuffle(unprotectedPackets)
-                    rng.shuffle(protectedPackets)
-                    indexOfLossedPackets = (
-                        # unprotectedPackets[:lostUnprotectedPackets]+
-                        protectedPackets[:lostProtectedPackets]
-                    )
+                    pass
+
+            elif case == "FEC (IID)":
+                indexOfLossedPackets = list(range(0, totalNumPackets))
+                rng.shuffle(indexOfLossedPackets)
+                indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
+
+                FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
+                protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
+                lowestImportanceIndex = OrderedImportanceOfPacketsIndexExcludeFEC[
+                    -FECPacketCount:
+                ]
+                OrderedImportanceOfPacketsIndexExcludeFEC = (
+                    OrderedImportanceOfPacketsIndexExcludeFEC[:-FECPacketCount]
+                )
+                for j in lowestImportanceIndex:
+                    packetizedfmL[j][...] = 0
+                packetsSent = packetsSent + totalNumPackets
+                packetsLost = packetsLost + numOfPacketsToLose
+
+                common_elementsProtected = np.intersect1d(
+                    indexOfLossedPackets, OrderedImportanceOfPacketsIndexExcludeFEC
+                )
+                common_elementsFEC = np.intersect1d(
+                    indexOfLossedPackets, lowestImportanceIndex
+                )
+                # lostUnprotectedPackets = lostPackets.count(0)
+                lostProtectedPackets = len(common_elementsProtected)
+                lostRedundantPackets = len(common_elementsFEC)
+                if (
+                    lostProtectedPackets + lostRedundantPackets <= FECPacketCount
+                ):  # RECOVERABLE no protected part will be lost only unprotected
+                    indexOfLossedPackets = None
+                else:  # CANNOT RECOVER,lostProtectedPackets valid
+                    pass
             elif case == "Unprotected (Burst)":
                 packetsSent = packetsSent + totalNumPackets
                 # indexOfLossedPackets = list(range(0, totalNumPackets))
@@ -769,22 +789,25 @@ class pipeline:
 
             elif case == "Most important":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
                     0:numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
             elif case == "Least important":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
+                OrderedImportanceOfPacketsIndexExcludeFEC = (
+                    OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                )
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
                     0:numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
-            for j in indexOfLossedPackets:
-                packetizedfmL[j][...] = 0
+            if indexOfLossedPackets != None:
+                for j in indexOfLossedPackets:
+                    packetizedfmL[j][...] = 0
 
             channelReconstructed = [
                 np.vstack(packetizedfmL[i : i + packetNum])
@@ -841,6 +864,8 @@ class pipeline:
             or case == "Least important"
             or case == "Unprotected (IID)"
             or case == "Unprotected (Burst)"
+            or case == "FEC (IID)"
+            or case == "FEC (Burst)"
         ):
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
@@ -998,6 +1023,10 @@ if __name__ == "__main__":
         case = "Unprotected (IID)"
     elif case == "4":
         case = "Unprotected (Burst)"
+    elif case == "5":
+        case = "FEC (IID)"
+    elif case == "6":
+        case = "FEC (Burst)"
     # module.saveSuperImposedChannels(modelName)
 
     # saveImageLossPercent = 40
@@ -1040,7 +1069,7 @@ if __name__ == "__main__":
     #     packetCount,
     #     quantizationBits,
     #     saveImageLossPercent,
-    #     "Random_RSCorrected_FECRemovesBOT",
+    #     "FEC",
     #     40,
     #     60,
     #     saveImages=True,
@@ -1052,6 +1081,8 @@ if __name__ == "__main__":
         or case == "Least important"
         or case == "Unprotected (IID)"
         or case == "Unprotected (Burst)"
+        or case == "FEC (IID)"
+        or case == "FEC (Burst)"
     ):
         module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
     elif case == "makeplot":
@@ -1064,13 +1095,11 @@ if __name__ == "__main__":
         for d in dirs:
             splitted = d.split("_")
             if len(splitted) == 5:
-                fpPairs.append(splitted[3:])  # Random_RSCorrected_FECRemovesBOT_10_50
+                fpPairs.append(splitted[3:])  # FEC_10_50
 
         dirNames = []
         dirNames.append("Most important")
         dirNames.append("Least important")
-        # dirNames.append("TopG")
-        # dirNames.append("BotG")
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             for fname in listFiles:
@@ -1085,46 +1114,17 @@ if __name__ == "__main__":
                     ) as f:
                         val = pickle.load(f)
 
-                    # if key[1] == "Most important":
-                    #     key = list(key)
-                    #     dp = "Most important"
-                    #     key[1] = dp
-                    #     key = tuple(key)
-                    # elif key[1] == "Least important":
-                    #     key = list(key)
-                    #     dp = "Least important"
-                    #     key[1] = dp
-                    #     key = tuple(key)
-
-                    # if(d == "Most important"):
-                    #     key = list(key)
-                    #     dp = "Most important (Proxy)"
-                    #     key[1] = dp
-                    #     key = tuple(key)
-                    # elif(d == "Least important"):
-                    #     key = list(key)
-                    #     dp = "Least important (Proxy)"
-                    #     key[1] = dp
-                    #     key = tuple(key)
-                    # elif(d == "TopG"):
-                    #     key = list(key)
-                    #     dp = "Most important (GradCAM)"
-                    #     key[1] = dp
-                    #     key = tuple(key)
-                    # elif(d == "BotG"):
-                    #     key = list(key)
-                    #     dp = "Least important (GradCAM)"
-                    #     key[1] = dp
-                    #     key = tuple(key)
-
-                    module.pdict[key] = val
-
         dirNames = []
         for fp in fpPairs:
-            dirNames.append("Random_RSCorrected_FECRemovesBOT_" + fp[0] + "_" + fp[1])
+            dirNames.append("FEC (IID)"+"_" + fp[0] + "_" + fp[1])
+            dirNames.append("FEC (Burst)"+"_" + fp[0] + "_" + fp[1])
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
         dirNames.append("Unprotected (IID)")
         dirNames.append("Unprotected (Burst)")
+
+        tTestIID = {}
+        tTestBurst = {}
+
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             keyIndexes = []
@@ -1178,35 +1178,186 @@ if __name__ == "__main__":
                         acc = acc + s["acc"]
                         accList.append(s["acc"])
                         loss = loss + s["loss"]
-                    min = np.amin(np.array(accList))
-                    max = np.amax(np.array(accList))
+
+                    std = np.std(np.array(accList))
+                    min = (acc / count) - std
+                    max = (acc / count) + std
+                    # min = np.amin(np.array(accList))
+                    # max = np.amax(np.array(accList))
+
+                    if d == "Unprotected (IID)":
+                        tTestIID[lossPercInfo] = accList
+                    elif d == "Unprotected (Burst)":
+                        tTestBurst[lossPercInfo] = accList
                     # print(count)
                     # print(key)
                     # print("a____")
                     # print(val)
                     # print("b____")
                     # print({"acc": acc/count, "loss": loss/count})
-                    if key[1] == "Random_RSCorrected_FECRemovesBOT":
+                    if key[1] == "FEC (IID)":
                         key = list(key)
-                        dp = "FEC" + d[-6:]
+                        dp = "FEC (IID)" + d[-6:]
+                        key[1] = dp
+                        key = tuple(key)
+                    elif key[1] == "FEC (Burst)":
+                        key = list(key)
+                        dp = "FEC (Burst)" + d[-6:]
                         key[1] = dp
                         key = tuple(key)
                     # else:
                     #     key = list(key)
                     #     key[1] = "Unprotected"
                     #     key = tuple(key)
-                    module.pdict[key] = {
-                        "acc": acc / count,
-                        "loss": loss / count,
-                        "min": min,
-                        "max": max,
-                    }
+                    # module.pdict[key] = {
+                    #     "acc": acc / count,
+                    #     "loss": loss / count,
+                    #     "min": min,
+                    #     "max": max,
+                    # }
 
-        ##WILL BE HANDLED DIFFERENTELY COMING UP!
-        module.makePlot(
-            "Korcan/Plots/" + modelName + "/AccuracyPlotPacketized",
-            "Korcan/Plots/" + modelName + "/LossPlotPacketized",
-        )
+        # tTestDict = {}
+        # tTestDictL = {}
+        # tTestDictG = {}
+        # for k in tTestIID.keys():
+        #     a = np.array(tTestIID[k])
+        #     b = np.array(tTestBurst[k])
+        #     # a=np.around(a, decimals=4)
+        #     # b=np.around(b, decimals=4)
+        #     print(a)
+        #     # print(b)
+        #     # print(k)
+        #     if int(float(k)) == 0:
+        #         continue
+        #     tTestDict[int(float(k))] = scipy.stats.ttest_ind(a, b, equal_var=True)
+        #     tTestDictL[int(float(k))] = scipy.stats.ttest_ind(
+        #         a, b, alternative="less", equal_var=True
+        #     )
+        #     tTestDictG[int(float(k))] = scipy.stats.ttest_ind(
+        #         a, b, alternative="greater", equal_var=True
+        #     )
+        #     # c = scipy.stats.ttest_ind(a,b,equal_var=True)
+
+        # x = []
+        # y = []
+        # y2 = []
+        # for k, v in dict(sorted(tTestDict.items())).items():
+        #     x.append(k)
+        #     y.append(v[0])
+        #     y2.append(v[1])
+
+        # xl = []
+        # yl = []
+        # y2l = []
+        # for k, v in dict(sorted(tTestDictL.items())).items():
+        #     xl.append(k)
+        #     yl.append(v[0])
+        #     y2l.append(v[1])
+
+        # xg = []
+        # yg = []
+        # y2g = []
+        # for k, v in dict(sorted(tTestDictG.items())).items():
+        #     xg.append(k)
+        #     yg.append(v[0])
+        #     y2g.append(v[1])
+
+        # # keys = tTestDict.keys()
+        # # keys = tTestDict.keys()
+        # plt.xlabel("Percent Lost")
+        # plt.ylabel("T value")
+        # plt.scatter(
+        #     x,
+        #     y,
+        #     s=25,
+        #     label="_nolegend_",
+        # )
+        # plt.plot(
+        #     x,
+        #     y,
+        #     linewidth=1.2,
+        # )
+        # plt.scatter(
+        #     xl,
+        #     yl,
+        #     s=25,
+        #     label="_nolegend_",
+        # )
+        # plt.plot(
+        #     xl,
+        #     yl,
+        #     linewidth=1.2,
+        # )
+        # plt.scatter(
+        #     xg,
+        #     yg,
+        #     s=25,
+        #     label="_nolegend_",
+        # )
+        # plt.plot(
+        #     xg,
+        #     yg,
+        #     linewidth=1.2,
+        # )
+        # # # plt.axis('off')
+        # plt.savefig(
+        #     "Korcan/Plots/" + modelName + "/tTest",
+        #     bbox_inches="tight",
+        #     dpi=300,
+        # )
+        # plt.close()
+
+        # plt.xlabel("Percent Lost")
+        # plt.ylabel("P values")
+        # plt.hlines(y=0.05, xmin=0, xmax=100, linewidth=1, color="r")
+        # plt.scatter(
+        #     x,
+        #     y2,
+        #     s=25,
+        #     label="two-sided",
+        # )
+        # plt.plot(
+        #     x,
+        #     y2,
+        #     linewidth=1.2,
+        # )
+        # plt.scatter(
+        #     xl,
+        #     y2l,
+        #     s=25,
+        #     label="less",
+        # )
+        # plt.plot(
+        #     xl,
+        #     y2l,
+        #     linewidth=1.2,
+        # )
+        # plt.scatter(
+        #     xg,
+        #     y2g,
+        #     s=25,
+        #     label="greater",
+        # )
+        # plt.plot(
+        #     xg,
+        #     y2g,
+        #     linewidth=1.2,
+        # )
+        # plt.legend(
+        #     # [handles[i] for i in order], [labels[i] for i in order],
+        #     loc="upper right",
+        #     fontsize="xx-small",
+        #     markerscale=0.7,
+        #     # ncol=2,
+        #     fancybox=True,
+        #     # shadow=True,
+        #     prop={"size": 8},
+        # )
+        # plt.savefig(
+        #     "Korcan/Plots/" + modelName + "/tTestP",
+        #     bbox_inches="tight",
+        #     dpi=300,
+        # )
     else:
         fecPercent = int(sys.argv[3])
         protectPercent = int(sys.argv[4])
@@ -1244,7 +1395,7 @@ if __name__ == "__main__":
     #             #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
     #             # )
     #             # module.packetLossSim(
-    #             #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
+    #             #     packetCount, 8, percLoss, "FEC", f, p,modelName=modelName
     #             # )
     #         for percLoss in np.linspace(15, 50, 2):
     #             # module.packetLossSim(packetCount, 8, percLoss, "Least important",modelName=modelName)
@@ -1252,7 +1403,7 @@ if __name__ == "__main__":
     #             #     packetCount, 8, percLoss, "Random_RSCorrected", f, p,modelName=modelName
     #             # )
     #             # module.packetLossSim(
-    #             #     packetCount, 8, percLoss, "Random_RSCorrected_FECRemovesBOT", f, p,modelName=modelName
+    #             #     packetCount, 8, percLoss, "FEC", f, p,modelName=modelName
     #             # )
     #         # for percLoss in np.linspace(50, 100, 2):
     #         #     module.packetLossSim(packetCount, 8, percLoss, "Random_RSCorrected", fecPercent, protectPercent)
