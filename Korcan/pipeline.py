@@ -891,7 +891,7 @@ class pipeline:
                             i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
                         ] = maskCompleted[:, :, ind]
                         ind = ind + 1
-                img_gray_cv2 = cv.cvtColor(arr, cv.COLOR_GRAY2BGR)
+                img_gray_cv2 = cv.cvtColor(arr.astype('uint8'), cv.COLOR_GRAY2BGR)
                 dst = cv.inpaint(img_gray_cv2,mask,3,cv.INPAINT_NS)
                 dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
                 # Initialize an empty 3D tensor with shape (16, 16, 56, 56)
