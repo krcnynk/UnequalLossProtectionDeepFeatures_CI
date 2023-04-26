@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib as mpl
 import pickle
 import scipy
+import cv2 as cv
 
 mpl.use("Agg")
 import matplotlib.pyplot as plt
@@ -358,6 +359,16 @@ class pipeline:
             "c",
             ".",
             ":",
+
+            "Unprotected (IID) NS",
+            "b",
+            ".",
+            ":",
+            "Unprotected (Burst) NS",
+            "g",
+            ".",
+            ":",
+
             # "R_RS_FEC_10_90","m",".","-",
             # "FEC (IID)" + "_20_80",
             # "m",
@@ -419,6 +430,8 @@ class pipeline:
                 or types[s] == "Most important"
                 or types[s] == "Unprotected (IID)"
                 or types[s] == "Unprotected (Burst)"
+                or types[s] == "Unprotected (IID) NS"
+                or types[s] == "Unprotected (Burst) NS"
                 or types[s] == "FEC (IID)"
                 or types[s] == "FEC (Burst)"
             ):
@@ -803,21 +816,50 @@ class pipeline:
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
+            elif case == "Unprotected (IID) NS":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = list(range(0, totalNumPackets))
+                rng.shuffle(indexOfLossedPackets)
+                indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
+            elif case == "Unprotected (Burst) NS":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = (~sim).nonzero()[0]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
+            mask = []
+            for j in range (len(packetizedfmL)):
+                mask.append(np.zeros_like(packetizedfmL[j]))
+
             for j in indexOfLossedPackets:
                 packetizedfmL[j][...] = 0
+                mask[j][...] = 1
+
 
             channelReconstructed = [
                 np.vstack(packetizedfmL[i : i + packetNum])
                 for i in range(0, len(packetizedfmL), packetNum)
             ]
+
+            maskR = [
+                np.vstack(mask[i : i + packetNum])
+                for i in range(0, len(mask), packetNum)
+            ]
+
             if pad != 0:
                 channelReconstructed = [
                     channelReconstructed[i][0:-pad, ...]
                     for i in range(0, len(channelReconstructed))
                 ]
+                maskR = [
+                    maskR[i][0:-pad, ...]
+                    for i in range(0, len(maskR))
+                ]
+
             packetizedImportanceMap = [
                 np.ones_like(packetizedheatMap[i_p]) * np.sum(packetizedheatMap[i_p])
                 for i_p in range(len(packetizedheatMap))
@@ -833,6 +875,39 @@ class pipeline:
                 ]
             tensorImportanceCompleted = np.dstack(channelReconstructedImportance)
             tensorCompleted = np.dstack(channelReconstructed)
+            maskCompleted = np.dstack(maskR)
+
+            if case == "Unprotected (IID) NS" or case == "Unprotected (Burst) NS":
+                shape = tensorCompleted.shape
+                arr = np.empty((shape[0] * 16, shape[1] * 16))
+                mask = np.empty((shape[0] * 16, shape[1] * 16))
+                ind = 0
+                for i_cx in range(16):
+                    for i_cy in range(16):
+                        arr[
+                            i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                        ] = tensorCompleted[:, :, ind]
+                        mask[
+                            i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                        ] = maskCompleted[:, :, ind]
+                        ind = ind + 1
+                img_gray_cv2 = cv.cvtColor(arr, cv.COLOR_GRAY2BGR)
+                dst = cv.inpaint(img_gray_cv2,mask,3,cv.INPAINT_NS)
+                dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
+                # Initialize an empty 3D tensor with shape (16, 16, 56, 56)
+                tensorCompleted = np.zeros((56, 56, 256))
+                # Initialize an index variable
+                ind = 0
+                # Iterate over 16 x 16 blocks in arr and fill tensorCompleted with corresponding blocks
+                for i_cx in range(16):
+                    for i_cy in range(16):
+                        tensorCompleted[:, :, ind] = arr[
+                            i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                        ]
+                        ind = ind + 1
+
+                # img_gray_np = np.array(dst).astype(np.uint8)
+
             fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
             fmLPacketizedLoss.append(fmL)
             importancePacketsTensor.append(tensorImportanceCompleted)
@@ -1027,6 +1102,11 @@ if __name__ == "__main__":
         case = "FEC (IID)"
     elif case == "6":
         case = "FEC (Burst)"
+    elif case == "7":
+        case = "Unprotected (IID) NS"
+    elif case == "8":
+        case = "Unprotected (Burst) NS"
+
     # module.saveSuperImposedChannels(modelName)
 
     # saveImageLossPercent = 40
@@ -1081,6 +1161,8 @@ if __name__ == "__main__":
         or case == "Least important"
         or case == "Unprotected (IID)"
         or case == "Unprotected (Burst)"
+        or case == "Unprotected (IID) NS"
+        or case == "Unprotected (Burst) NS"
         # or case == "FEC (IID)"
         # or case == "FEC (Burst)"
     ):
@@ -1124,6 +1206,8 @@ if __name__ == "__main__":
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
         dirNames.append("Unprotected (IID)")
         dirNames.append("Unprotected (Burst)")
+        dirNames.append("Unprotected (IID) NS")
+        dirNames.append("Unprotected (Burst) NS")
 
         tTestIID = {}
         tTestBurst = {}
