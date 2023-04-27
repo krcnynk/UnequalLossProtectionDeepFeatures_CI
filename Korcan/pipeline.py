@@ -843,8 +843,10 @@ class pipeline:
 
                 encode_param = [int(cv.IMWRITE_JPEG_QUALITY), 80]
                 for j in range(len(packetizedfmL)):
+                    print(len(packetizedfmL))
                     result, encimg = cv.imencode('.jpg', packetizedfmL[j].astype('uint8'), encode_param)
                     decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
+                    print(np.array(decimg).shape)
                     packetizedfmL[j] = decimg
 
             else:
