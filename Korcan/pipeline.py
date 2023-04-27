@@ -369,6 +369,11 @@ class pipeline:
             ".",
             ":",
 
+            "Unprotected (IID) EN",
+            "k",
+            ".",
+            ":",
+
             # "R_RS_FEC_10_90","m",".","-",
             # "FEC (IID)" + "_20_80",
             # "m",
@@ -431,6 +436,7 @@ class pipeline:
                 or types[s] == "Unprotected (IID)"
                 or types[s] == "Unprotected (Burst)"
                 or types[s] == "Unprotected (IID) NS"
+                or types[s] == "Unprotected (IID) EN"
                 or types[s] == "Unprotected (Burst) NS"
                 or types[s] == "FEC (IID)"
                 or types[s] == "FEC (Burst)"
@@ -828,6 +834,19 @@ class pipeline:
                 indexOfLossedPackets = (~sim).nonzero()[0]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
+            elif case == "Unprotected (IID) EN":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = list(range(0, totalNumPackets))
+                rng.shuffle(indexOfLossedPackets)
+                indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
+                encode_param = [int(cv.IMWRITE_JPEG_QUALITY), 80]
+                for p in packetizedfmL:
+                    result, encimg = cv.imencode('.jpg', p.astype('uint8'), encode_param)
+                    decimg = cv.imdecode(encimg, 1)
+                    p = decimg
+
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
@@ -939,8 +958,11 @@ class pipeline:
             or case == "Least important"
             or case == "Unprotected (IID)"
             or case == "Unprotected (Burst)"
+            or case == "Unprotected (IID) NS"
+            or case == "Unprotected (Burst) NS"
             or case == "FEC (IID)"
             or case == "FEC (Burst)"
+            or case == "Unprotected (IID) EN"
         ):
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
@@ -1106,6 +1128,8 @@ if __name__ == "__main__":
         case = "Unprotected (IID) NS"
     elif case == "8":
         case = "Unprotected (Burst) NS"
+    elif case == "9":
+        case = "Unprotected (IID) EN"
 
     # module.saveSuperImposedChannels(modelName)
 
@@ -1163,6 +1187,7 @@ if __name__ == "__main__":
         or case == "Unprotected (Burst)"
         or case == "Unprotected (IID) NS"
         or case == "Unprotected (Burst) NS"
+        or case == "Unprotected (IID) EN"
         # or case == "FEC (IID)"
         # or case == "FEC (Burst)"
     ):
@@ -1208,6 +1233,8 @@ if __name__ == "__main__":
         dirNames.append("Unprotected (Burst)")
         dirNames.append("Unprotected (IID) NS")
         dirNames.append("Unprotected (Burst) NS")
+        dirNames.append("Unprotected (IID) EN")
+        
 
         tTestIID = {}
         tTestBurst = {}
