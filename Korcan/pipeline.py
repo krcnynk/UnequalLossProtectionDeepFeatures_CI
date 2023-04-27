@@ -847,7 +847,7 @@ class pipeline:
                     result, encimg = cv.imencode('.jpg', packetizedfmL[j].astype('uint8'), encode_param)
                     decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
                     print(np.array(decimg).shape)
-                    packetizedfmL[j] = decimg
+                    packetizedfmL[j] = np.array(decimg)
 
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
