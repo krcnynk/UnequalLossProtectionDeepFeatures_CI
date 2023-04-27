@@ -842,10 +842,10 @@ class pipeline:
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
                 encode_param = [int(cv.IMWRITE_JPEG_QUALITY), 5]
-                for p in packetizedfmL:
-                    result, encimg = cv.imencode('.jpg', p.astype('uint8'), encode_param)
-                    decimg = cv.imdecode(encimg, 1)
-                    p = decimg
+                for j in range(len(packetizedfmL)):
+                    buf = cv.imencode('.jpg', packetizedfmL[j].astype('uint8'), encode_param)
+                    decimg = cv.imdecode(buf, 1)
+                    packetizedfmL[j] = decimg
 
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
