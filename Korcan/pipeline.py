@@ -920,7 +920,7 @@ class pipeline:
                 # Iterate over 16 x 16 blocks in arr and fill tensorCompleted with corresponding blocks
                 for i_cx in range(16):
                     for i_cy in range(16):
-                        tensorCompleted[:, :, ind] = arr[
+                        tensorCompleted[:, :, ind] = dst[
                             i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
                         ]
                         ind = ind + 1
