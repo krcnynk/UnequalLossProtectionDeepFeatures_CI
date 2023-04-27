@@ -358,7 +358,7 @@ class pipeline:
             "Unprotected (Burst)",
             "c",
             ".",
-            ":",
+            "-",
 
             "Unprotected (IID) NS",
             "b",
@@ -390,7 +390,7 @@ class pipeline:
             "FEC (IID)",
             "m",
             ".",
-            ":",
+            "-",
             # "FEC (Burst)" + "_20_80",
             # "m",
             # ".",
