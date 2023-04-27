@@ -1136,7 +1136,7 @@ if __name__ == "__main__":
     # module.saveSuperImposedChannels(modelName)
 
     if case == "10":
-        saveImageLossPercent = 40
+        saveImageLossPercent = 60
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
@@ -1185,35 +1185,35 @@ if __name__ == "__main__":
         #     saveImages=True,
         #     modelName=modelName,
         # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (IID) EN",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+
         module.packetLossSim(
             packetCount,
             quantizationBits,
             saveImageLossPercent,
-            "Unprotected (IID) EN",
+            "FEC (IID)",
+            50,
+            50,
             saveImages=True,
             modelName=modelName,
         )
-
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "FEC (IID)",
-        #     50,
-        #     50,
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "FEC (Burst)",
-        #     50,
-        #     50,
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (Burst)",
+            50,
+            50,
+            saveImages=True,
+            modelName=modelName,
+        )
         sys.exit()
 
     if (
