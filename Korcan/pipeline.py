@@ -1133,52 +1133,85 @@ if __name__ == "__main__":
 
     # module.saveSuperImposedChannels(modelName)
 
-    # saveImageLossPercent = 40
-    # module.packetLossSim(
-    #     packetCount,
-    #     quantizationBits,
-    #     saveImageLossPercent,
-    #     "Most important",
-    #     saveImages=True,
-    #     modelName=modelName,
-    # )
-    # module.packetLossSim(
-    #     packetCount,
-    #     quantizationBits,
-    #     saveImageLossPercent,
-    #     "Least important",
-    #     saveImages=True,
-    #     modelName=modelName,
-    # )
-    # module.packetLossSim(
-    #     packetCount,
-    #     quantizationBits,
-    #     saveImageLossPercent,
-    #     "Unprotected (IID)",
-    #     saveImages=True,
-    #     modelName=modelName,
-    # )
+    if case == "10":
+        saveImageLossPercent = 40
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Most important",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Least important",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (IID)",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (Burst)",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (IID) NS",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (Burst) NS",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (IID) EN",
+            saveImages=True,
+            modelName=modelName,
+        )
 
-    # # module.packetLossSim(
-    # #     packetCount,
-    # #     quantizationBits,
-    # #     saveImageLossPercent,
-    # #     "Random_RSCorrected",
-    # #     40,
-    # #     60,
-    # #     saveImages=True,
-    # #     modelName=modelName,
-    # # )
-    # module.packetLossSim(
-    #     packetCount,
-    #     quantizationBits,
-    #     saveImageLossPercent,
-    #     "FEC",
-    #     40,
-    #     60,
-    #     saveImages=True,
-    #     modelName=modelName,
-    # )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (IID)",
+            50,
+            50,
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (Burst)",
+            50,
+            50,
+            saveImages=True,
+            modelName=modelName,
+        )
 
     if (
         case == "Most important"
