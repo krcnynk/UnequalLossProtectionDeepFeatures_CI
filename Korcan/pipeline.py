@@ -841,7 +841,7 @@ class pipeline:
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
-                encode_param = [int(cv.IMWRITE_JPEG_QUALITY), 5]
+                encode_param = [int(cv.IMWRITE_JPEG_QUALITY), 1]
                 for j in range(len(packetizedfmL)):
                     buf = cv.imencode('.jpg', packetizedfmL[j].astype('uint8'), encode_param)
                     decimg = cv.imdecode(buf, 1)
