@@ -751,7 +751,7 @@ class pipeline:
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    indexOfLossedPackets = indexOfLossedPackets.append(lowestImportanceIndex)
+                    indexOfLossedPackets = np.append(indexOfLossedPackets,lowestImportanceIndex)
                     pass
 
             elif case == "FEC (IID)" or "FEC (IID) NS":
@@ -786,7 +786,7 @@ class pipeline:
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    indexOfLossedPackets = indexOfLossedPackets.append(lowestImportanceIndex)
+                    indexOfLossedPackets = np.append(indexOfLossedPackets,lowestImportanceIndex)
                     pass
 
             elif case == "Unprotected (Burst)":
