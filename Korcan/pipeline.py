@@ -1138,7 +1138,7 @@ if __name__ == "__main__":
     # module.saveSuperImposedChannels(modelName)
 
     if case == "10":
-        saveImageLossPercent = 50
+        saveImageLossPercent = 10
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
@@ -1201,8 +1201,8 @@ if __name__ == "__main__":
             quantizationBits,
             saveImageLossPercent,
             "FEC (IID) NS",
-            40,
-            60,
+            5,
+            95,
             saveImages=True,
             modelName=modelName,
         )
@@ -1211,8 +1211,8 @@ if __name__ == "__main__":
             quantizationBits,
             saveImageLossPercent,
             "FEC (Burst) NS",
-            40,
-            60,
+            5,
+            95,
             saveImages=True,
             modelName=modelName,
         )
@@ -1283,6 +1283,8 @@ if __name__ == "__main__":
         dirNames = []
         dirNames.append("FEC (IID)")
         dirNames.append("FEC (Burst)")
+        dirNames.append("FEC (IID) NS")
+        dirNames.append("FEC (Burst) NS")
         # for fp in fpPairs:
         # dirNames.append("FEC (IID)" + "_" + fp[0] + "_" + fp[1])
         # dirNames.append("FEC (Burst)" + "_" + fp[0] + "_" + fp[1])
