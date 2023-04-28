@@ -731,8 +731,9 @@ class pipeline:
                 OrderedImportanceOfPacketsIndexExcludeFEC = (
                     OrderedImportanceOfPacketsIndexExcludeFEC[:-FECPacketCount]
                 )
-                for j in lowestImportanceIndex:
-                    packetizedfmL[j][...] = 0
+                # for j in lowestImportanceIndex:
+                #     packetizedfmL[j][...] = 0
+
                 packetsSent = packetsSent + totalNumPackets
                 packetsLost = packetsLost + numOfPacketsToLose
 
@@ -748,8 +749,9 @@ class pipeline:
                 if (
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
-                    indexOfLossedPackets = []
+                    indexOfLossedPackets = lowestImportanceIndex
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
+                    indexOfLossedPackets = indexOfLossedPackets + lowestImportanceIndex
                     pass
 
             elif case == "FEC (IID)" or "FEC (IID) NS":
@@ -765,8 +767,8 @@ class pipeline:
                 OrderedImportanceOfPacketsIndexExcludeFEC = (
                     OrderedImportanceOfPacketsIndexExcludeFEC[:-FECPacketCount]
                 )
-                for j in lowestImportanceIndex:
-                    packetizedfmL[j][...] = 0
+                # for j in lowestImportanceIndex:
+                #     packetizedfmL[j][...] = 0
                 packetsSent = packetsSent + totalNumPackets
                 packetsLost = packetsLost + numOfPacketsToLose
 
@@ -782,8 +784,9 @@ class pipeline:
                 if (
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
-                    indexOfLossedPackets =[]
+                    indexOfLossedPackets = lowestImportanceIndex
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
+                    indexOfLossedPackets = indexOfLossedPackets + lowestImportanceIndex
                     pass
 
             elif case == "Unprotected (Burst)":
