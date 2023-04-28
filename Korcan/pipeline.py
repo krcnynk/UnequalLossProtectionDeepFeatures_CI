@@ -391,22 +391,18 @@ class pipeline:
             "m",
             ".",
             "-",
-            # "FEC (Burst)" + "_20_80",
-            # "m",
-            # ".",
-            # ":",
-            # "FEC (Burst)" + "_30_70",
-            # "m",
-            # ".",
-            # "-.",
-            # "FEC (Burst)" + "_40_60",
-            # "m",
-            # ".",
-            # "--",
             "FEC (Burst)",
             "y",
             ".",
             "-",
+            "FEC (IID) NS",
+            "m",
+            ".",
+            ":",
+            "FEC (Burst) NS",
+            "y",
+            ".",
+            ":",
         ]
 
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
@@ -725,7 +721,7 @@ class pipeline:
                 sim = np.full((1, totalNumPackets), True)
                 numOfPacketsToLose = 0
 
-            if case == "FEC (Burst)":
+            if case == "FEC (Burst)" or "FEC (Burst) NS":
                 indexOfLossedPackets = (~sim).nonzero()[0]
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
@@ -756,7 +752,7 @@ class pipeline:
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
                     pass
 
-            elif case == "FEC (IID)":
+            elif case == "FEC (IID)" or "FEC (IID) NS":
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
@@ -898,7 +894,7 @@ class pipeline:
             tensorCompleted = np.dstack(channelReconstructed)
             maskCompleted = np.dstack(maskR)
 
-            if case == "Unprotected (IID) NS" or case == "Unprotected (Burst) NS":
+            if case == "Unprotected (IID) NS" or case == "Unprotected (Burst) NS" or "FEC (Burst) NS" or "FEC (IID) NS":
                 shape = tensorCompleted.shape
                 arr = np.empty((shape[0] * 16, shape[1] * 16))
                 mask = np.empty((shape[0] * 16, shape[1] * 16))
@@ -964,6 +960,8 @@ class pipeline:
             or case == "Unprotected (Burst) NS"
             or case == "FEC (IID)"
             or case == "FEC (Burst)"
+            or case == "FEC (IID) NS"
+            or case == "FEC (Burst) NS"
             or case == "Unprotected (IID) EN"
         ):
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
@@ -1132,6 +1130,10 @@ if __name__ == "__main__":
         case = "Unprotected (Burst) NS"
     elif case == "9":
         case = "Unprotected (IID) EN"
+    elif case == "11":
+        case = "FEC (IID) NS"
+    elif case == "12":
+        case = "FEC (Burst) NS"
 
     # module.saveSuperImposedChannels(modelName)
 
@@ -1194,6 +1196,26 @@ if __name__ == "__main__":
         #     modelName=modelName,
         # )
 
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (IID) NS",
+            40,
+            60,
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (Burst) NS",
+            40,
+            60,
+            saveImages=True,
+            modelName=modelName,
+        )
         module.packetLossSim(
             packetCount,
             quantizationBits,
@@ -1511,7 +1533,7 @@ if __name__ == "__main__":
         #     bbox_inches="tight",
         #     dpi=300,
         # )
-    elif case == "FEC (IID)" or case == "FEC (Burst)":
+    elif case == "FEC (IID)" or case == "FEC (Burst)" or case == "FEC (IID) NS" or case == "FEC (Burst) NS":
         fecPercent = int(sys.argv[3])
         protectPercent = int(sys.argv[4])
         module.packetLossSim(
