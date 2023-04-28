@@ -751,7 +751,7 @@ class pipeline:
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    indexOfLossedPackets = indexOfLossedPackets + lowestImportanceIndex
+                    indexOfLossedPackets = indexOfLossedPackets.append(lowestImportanceIndex)
                     pass
 
             elif case == "FEC (IID)" or "FEC (IID) NS":
@@ -786,7 +786,7 @@ class pipeline:
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    indexOfLossedPackets = indexOfLossedPackets + lowestImportanceIndex
+                    indexOfLossedPackets = indexOfLossedPackets.append(lowestImportanceIndex)
                     pass
 
             elif case == "Unprotected (Burst)":
