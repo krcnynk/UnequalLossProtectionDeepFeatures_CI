@@ -721,7 +721,7 @@ class pipeline:
                 sim = np.full((1, totalNumPackets), True)
                 numOfPacketsToLose = 0
 
-            if case == "FEC (Burst)" or "FEC (Burst) NS":
+            if case == "FEC (Burst)" or case == "FEC (Burst) NS":
                 indexOfLossedPackets = (~sim).nonzero()[0]
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
@@ -755,7 +755,7 @@ class pipeline:
                     indexOfLossedPackets = np.append(indexOfLossedPackets,lowestImportanceIndex)
                     pass
 
-            elif case == "FEC (IID)" or "FEC (IID) NS":
+            elif case == "FEC (IID)" or case == "FEC (IID) NS":
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
@@ -899,7 +899,7 @@ class pipeline:
             tensorCompleted = np.dstack(channelReconstructed)
             maskCompleted = np.dstack(maskR)
 
-            if case == "Unprotected (IID) NS" or case == "Unprotected (Burst) NS" or "FEC (Burst) NS" or "FEC (IID) NS":
+            if case == "Unprotected (IID) NS" or case == "Unprotected (Burst) NS" or case=="FEC (Burst) NS" or case=="FEC (IID) NS":
                 shape = tensorCompleted.shape
                 arr = np.empty((shape[0] * 16, shape[1] * 16))
                 mask = np.empty((shape[0] * 16, shape[1] * 16))
