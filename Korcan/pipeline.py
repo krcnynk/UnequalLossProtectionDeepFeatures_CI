@@ -1144,62 +1144,62 @@ if __name__ == "__main__":
 
     if case == "10":
         saveImageLossPercent = 10
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Most important",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Least important",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Unprotected (IID)",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Unprotected (Burst)",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Unprotected (IID) NS",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Unprotected (Burst) NS",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Unprotected (IID) EN",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Most important",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Least important",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (IID)",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (Burst)",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (IID) NS",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (Burst) NS",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (IID) EN",
+            saveImages=True,
+            modelName=modelName,
+        )
 
         module.packetLossSim(
             packetCount,
@@ -1226,8 +1226,8 @@ if __name__ == "__main__":
             quantizationBits,
             saveImageLossPercent,
             "FEC (IID)",
-            40,
-            60,
+            5,
+            95,
             saveImages=True,
             modelName=modelName,
         )
@@ -1236,8 +1236,8 @@ if __name__ == "__main__":
             quantizationBits,
             saveImageLossPercent,
             "FEC (Burst)",
-            40,
-            60,
+            5,
+            95,
             saveImages=True,
             modelName=modelName,
         )
