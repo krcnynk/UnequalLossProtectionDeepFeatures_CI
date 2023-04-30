@@ -750,7 +750,7 @@ class pipeline:
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
-                    indexOfLossedPackets = []
+                    # indexOfLossedPackets = []
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
                     indexOfLossedPackets = np.append(indexOfLossedPackets,lowestImportanceIndex)
                     pass
@@ -786,7 +786,7 @@ class pipeline:
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
-                    indexOfLossedPackets = []
+                    # indexOfLossedPackets = []
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
                     indexOfLossedPackets = np.append(indexOfLossedPackets,lowestImportanceIndex)
                     pass
