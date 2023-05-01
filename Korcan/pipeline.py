@@ -1100,11 +1100,11 @@ if __name__ == "__main__":
     dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
-    # CREATE FOLDERS
-    if not os.path.exists("Korcan/Plots"):
-        os.makedirs("Korcan/Plots")
-    if not os.path.exists("Korcan/Plots/" + modelName):
-        os.makedirs("Korcan/Plots/" + modelName)
+    # # CREATE FOLDERS
+    # if not os.path.exists("Korcan/Plots"):
+    #     os.makedirs("Korcan/Plots")
+    # if not os.path.exists("Korcan/Plots/" + modelName):
+    #     os.makedirs("Korcan/Plots/" + modelName)
 
     module = pipeline()
     module.loadModel(
