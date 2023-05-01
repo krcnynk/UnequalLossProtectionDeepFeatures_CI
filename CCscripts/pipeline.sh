@@ -7,7 +7,7 @@ rm -r /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Kor
 
 sbatch pipelineT.sh
 sbatch pipelineB.sh
-for i in {1..2}
+for i in {1..1}
 do
     sbatch pipelineRBUR.sh
     sbatch pipelineRIID.sh
