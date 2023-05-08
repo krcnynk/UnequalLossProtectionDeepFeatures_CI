@@ -9,9 +9,9 @@ mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/
 # sbatch pipelineT.sh
 # sbatch pipelineB.sh
 # sbatch pipelineRIID.sh
-for i in {0..10}
+for i in $(seq 0 10 100)
 do
-    echo "KEKW"
+    echo "$i"
     # sbatch --export=arg1=$i pipelineRIIDEN.sh
 done
 
