@@ -1317,7 +1317,7 @@ if __name__ == "__main__":
             if os.path.isdir(os.path.join(dir_path, d)) and d.startswith(start_string)
         ]
         dirNames = dirNames + dirs
-
+        print(dirNames)
         tTestIID = {}
         tTestBurst = {}
 
