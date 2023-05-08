@@ -1117,7 +1117,7 @@ if __name__ == "__main__":
     packetCount = 8
     percLoss = int(sys.argv[1])
     case = sys.argv[2]
-    qualityFactor = sys.argv[3]
+    qualityFactor = sys.argv[4]
 
     if case == "1":
         case = "Most important"
