@@ -388,7 +388,7 @@ class pipeline:
         l = []
         for i in range(0, 10, 100):
             l.append(
-                "Unprotected (IID) EN_" + i,
+                "Unprotected (IID) EN_" + str(i),
                 "k",
                 ".",
                 ":",
