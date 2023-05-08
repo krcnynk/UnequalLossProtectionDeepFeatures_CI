@@ -968,7 +968,7 @@ class pipeline:
             or case == "Unprotected (IID) EN"
         ):
             if case == "Unprotected (IID) EN":
-                case = "Unprotected (IID) EN_" + qualityFactor
+                case = "Unprotected (IID) EN_" + str(qualityFactor)
 
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
