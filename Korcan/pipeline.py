@@ -359,7 +359,6 @@ class pipeline:
             "c",
             ".",
             "-",
-
             "Unprotected (IID) NS",
             "b",
             ".",
@@ -368,25 +367,6 @@ class pipeline:
             "g",
             ".",
             ":",
-
-            "Unprotected (IID) EN",
-            "k",
-            ".",
-            ":",
-
-            # "R_RS_FEC_10_90","m",".","-",
-            # "FEC (IID)" + "_20_80",
-            # "m",
-            # ".",
-            # "-",
-            # "FEC (IID)" + "_30_70",
-            # "m",
-            # ".",
-            # "--",
-            # "FEC (IID)" + "_40_60",
-            # "m",
-            # ".",
-            # "-.",
             "FEC (IID)",
             "m",
             ".",
@@ -404,6 +384,16 @@ class pipeline:
             ".",
             ":",
         ]
+
+        l = []
+        for i in range(0, 10, 100):
+            l.append(
+                "Unprotected (IID) EN_" + i,
+                "k",
+                ".",
+                ":",
+            )
+        cases.extend(l)
 
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
         seriesX = [[] for _ in range(len(types))]
@@ -426,50 +416,50 @@ class pipeline:
             _, seriesYmax[s] = zip(*sorted(zip(seriesX[s], seriesYmax[s])))
             _, seriesYmin[s] = zip(*sorted(zip(seriesX[s], seriesYmin[s])))
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
-            if (
-                types[s] == "Least important"
-                or types[s] == "Most important"
-                or types[s] == "Unprotected (IID)"
-                or types[s] == "Unprotected (Burst)"
-                or types[s] == "Unprotected (IID) NS"
-                or types[s] == "Unprotected (IID) EN"
-                or types[s] == "Unprotected (Burst) NS"
-                or types[s] == "FEC (IID)"
-                or types[s] == "FEC (Burst)"
-            ):
-                plt.scatter(
-                    seriesX[s],
-                    seriesY[s],
-                    s=25,
-                    label="_nolegend_",
-                    marker=cases[mapping + 2],
-                    color=cases[mapping + 1],
-                )
-                plt.plot(
-                    seriesX[s],
-                    seriesY[s],
-                    label=cases[mapping],
-                    linestyle=cases[mapping + 3],
-                    linewidth=1.2,
-                    color=cases[mapping + 1],
-                )
-            else:
-                print(types[s])
-                plt.scatter(
-                    seriesX[s],
-                    seriesY[s],
-                    s=25,
-                    marker=cases[mapping + 2],
-                    color=cases[mapping + 1],
-                )
-                plt.plot(
-                    seriesX[s],
-                    seriesY[s],
-                    label=cases[mapping],
-                    linestyle=cases[mapping + 3],
-                    linewidth=1.2,
-                    color=cases[mapping + 1],
-                )
+            # if (
+            #     types[s] == "Least important"
+            #     or types[s] == "Most important"
+            #     or types[s] == "Unprotected (IID)"
+            #     or types[s] == "Unprotected (Burst)"
+            #     or types[s] == "Unprotected (IID) NS"
+            #     or types[s] == "Unprotected (IID) EN"
+            #     or types[s] == "Unprotected (Burst) NS"
+            #     or types[s] == "FEC (IID)"
+            #     or types[s] == "FEC (Burst)"
+            # ):
+            plt.scatter(
+                seriesX[s],
+                seriesY[s],
+                s=25,
+                label="_nolegend_",
+                marker=cases[mapping + 2],
+                color=cases[mapping + 1],
+            )
+            plt.plot(
+                seriesX[s],
+                seriesY[s],
+                label=cases[mapping],
+                linestyle=cases[mapping + 3],
+                linewidth=1.2,
+                color=cases[mapping + 1],
+            )
+        else:
+            print(types[s])
+            plt.scatter(
+                seriesX[s],
+                seriesY[s],
+                s=25,
+                marker=cases[mapping + 2],
+                color=cases[mapping + 1],
+            )
+            plt.plot(
+                seriesX[s],
+                seriesY[s],
+                label=cases[mapping],
+                linestyle=cases[mapping + 3],
+                linewidth=1.2,
+                color=cases[mapping + 1],
+            )
             if types[s] == "Unprotected (IID)":
                 plt.fill_between(
                     seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.3, facecolor="r"
@@ -647,6 +637,7 @@ class pipeline:
         protectedPerc=None,
         saveImages=False,
         modelName=None,
+        qualityFactor=80,
     ):
         # iteration = 1
         # if(case == "Unprotected (IID)" or case == "Random_RSCorrected" or case == "FEC"):
@@ -752,7 +743,9 @@ class pipeline:
                     indexOfLossedPackets = lowestImportanceIndex
                     # indexOfLossedPackets = []
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    indexOfLossedPackets = np.append(indexOfLossedPackets,lowestImportanceIndex)
+                    indexOfLossedPackets = np.append(
+                        indexOfLossedPackets, lowestImportanceIndex
+                    )
                     pass
 
             elif case == "FEC (IID)" or case == "FEC (IID) NS":
@@ -788,7 +781,9 @@ class pipeline:
                     indexOfLossedPackets = lowestImportanceIndex
                     # indexOfLossedPackets = []
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    indexOfLossedPackets = np.append(indexOfLossedPackets,lowestImportanceIndex)
+                    indexOfLossedPackets = np.append(
+                        indexOfLossedPackets, lowestImportanceIndex
+                    )
                     pass
 
             elif case == "Unprotected (Burst)":
@@ -842,10 +837,12 @@ class pipeline:
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
-                encode_param = [int(cv.IMWRITE_JPEG_QUALITY), 80]
+                encode_param = [int(cv.IMWRITE_JPEG_QUALITY), qualityFactor]
                 for j in range(len(packetizedfmL)):
                     # print(len(packetizedfmL))
-                    result, encimg = cv.imencode('.jpg', packetizedfmL[j].astype('uint8'), encode_param)
+                    result, encimg = cv.imencode(
+                        ".jpg", packetizedfmL[j].astype("uint8"), encode_param
+                    )
                     decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
                     # print(np.array(decimg).shape)
                     packetizedfmL[j] = np.array(decimg)
@@ -854,13 +851,12 @@ class pipeline:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
             mask = []
-            for j in range (len(packetizedfmL)):
+            for j in range(len(packetizedfmL)):
                 mask.append(np.zeros_like(packetizedfmL[j]))
 
             for j in indexOfLossedPackets:
                 packetizedfmL[j][...] = 0
                 mask[j][...] = 1
-
 
             channelReconstructed = [
                 np.vstack(packetizedfmL[i : i + packetNum])
@@ -877,10 +873,7 @@ class pipeline:
                     channelReconstructed[i][0:-pad, ...]
                     for i in range(0, len(channelReconstructed))
                 ]
-                maskR = [
-                    maskR[i][0:-pad, ...]
-                    for i in range(0, len(maskR))
-                ]
+                maskR = [maskR[i][0:-pad, ...] for i in range(0, len(maskR))]
 
             packetizedImportanceMap = [
                 np.ones_like(packetizedheatMap[i_p]) * np.sum(packetizedheatMap[i_p])
@@ -899,7 +892,12 @@ class pipeline:
             tensorCompleted = np.dstack(channelReconstructed)
             maskCompleted = np.dstack(maskR)
 
-            if case == "Unprotected (IID) NS" or case == "Unprotected (Burst) NS" or case=="FEC (Burst) NS" or case=="FEC (IID) NS":
+            if (
+                case == "Unprotected (IID) NS"
+                or case == "Unprotected (Burst) NS"
+                or case == "FEC (Burst) NS"
+                or case == "FEC (IID) NS"
+            ):
                 shape = tensorCompleted.shape
                 arr = np.empty((shape[0] * 16, shape[1] * 16))
                 mask = np.empty((shape[0] * 16, shape[1] * 16))
@@ -913,8 +911,8 @@ class pipeline:
                             i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
                         ] = maskCompleted[:, :, ind]
                         ind = ind + 1
-                img_gray_cv2 = cv.cvtColor(arr.astype('uint8'), cv.COLOR_GRAY2BGR)
-                dst = cv.inpaint(img_gray_cv2,mask.astype('uint8'),7,cv.INPAINT_NS)
+                img_gray_cv2 = cv.cvtColor(arr.astype("uint8"), cv.COLOR_GRAY2BGR)
+                dst = cv.inpaint(img_gray_cv2, mask.astype("uint8"), 7, cv.INPAINT_NS)
                 dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
                 # Initialize an empty 3D tensor with shape (16, 16, 56, 56)
                 tensorCompleted = np.zeros((56, 56, 256))
@@ -969,6 +967,9 @@ class pipeline:
             or case == "FEC (Burst) NS"
             or case == "Unprotected (IID) EN"
         ):
+            if case == "Unprotected (IID) EN":
+                case = "Unprotected (IID) EN_" + qualityFactor
+
             if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
                 os.makedirs("Korcan/Plots/" + modelName + "/" + case)
 
@@ -1116,6 +1117,7 @@ if __name__ == "__main__":
     packetCount = 8
     percLoss = int(sys.argv[1])
     case = sys.argv[2]
+    qualityFactor = sys.argv[3]
 
     if case == "1":
         case = "Most important"
@@ -1254,7 +1256,14 @@ if __name__ == "__main__":
         # or case == "FEC (IID)"
         # or case == "FEC (Burst)"
     ):
-        module.packetLossSim(packetCount, 8, percLoss, case, modelName=modelName)
+        module.packetLossSim(
+            packetCount,
+            8,
+            percLoss,
+            case,
+            modelName=modelName,
+            qualityFactor=qualityFactor,
+        )
     elif case == "makeplot":
         # dirs = [
         #     name
@@ -1298,8 +1307,18 @@ if __name__ == "__main__":
         dirNames.append("Unprotected (Burst)")
         dirNames.append("Unprotected (IID) NS")
         dirNames.append("Unprotected (Burst) NS")
-        dirNames.append("Unprotected (IID) EN")
-        
+
+        # set the directory path
+        dir_path = "/path/to/parent/directory"
+        # set the string to search for at the beginning of directory names
+        start_string = "Unprotected (IID) EN"
+        # get the list of directories in the directory path that start with the string
+        dirs = [
+            d
+            for d in os.listdir(dir_path)
+            if os.path.isdir(os.path.join(dir_path, d)) and d.startswith(start_string)
+        ]
+        dirNames = dirNames + dirs
 
         tTestIID = {}
         tTestBurst = {}
@@ -1540,7 +1559,12 @@ if __name__ == "__main__":
         #     bbox_inches="tight",
         #     dpi=300,
         # )
-    elif case == "FEC (IID)" or case == "FEC (Burst)" or case == "FEC (IID) NS" or case == "FEC (Burst) NS":
+    elif (
+        case == "FEC (IID)"
+        or case == "FEC (Burst)"
+        or case == "FEC (IID) NS"
+        or case == "FEC (Burst) NS"
+    ):
         fecPercent = int(sys.argv[3])
         protectPercent = int(sys.argv[4])
         module.packetLossSim(
