@@ -387,11 +387,11 @@ class pipeline:
 
         l = []
         for i in range(0, 10, 100):
-            l.append(
-                "Unprotected (IID) EN_" + str(i),
+            l.extend(
+                ["Unprotected (IID) EN_" + str(i),
                 "k",
                 ".",
-                ":",
+                ":"]
             )
         cases.extend(l)
 
