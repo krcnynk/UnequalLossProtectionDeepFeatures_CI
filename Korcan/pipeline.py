@@ -1276,30 +1276,26 @@ if __name__ == "__main__":
         #     if len(splitted) == 5:
         #         fpPairs.append(splitted[3:])  # FEC_10_50
 
-        dirNames = []
-        dirNames.append("Most important")
-        dirNames.append("Least important")
-        for d in dirNames:
-            listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
-            for fname in listFiles:
-                if fname[:3] == "key":
-                    with open(
-                        "Korcan/Plots/" + modelName + "/" + d + "/" + fname, "rb"
-                    ) as f:
-                        key = pickle.load(f)
-                    with open(
-                        "Korcan/Plots/" + modelName + "/" + d + "/" + "val" + fname[3:],
-                        "rb",
-                    ) as f:
-                        val = pickle.load(f)
-                module.pdict[key] = val
+        # dirNames = []
+        # dirNames.append("Most important")
+        # dirNames.append("Least important")
+        # for d in dirNames:
+        #     listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
+        #     for fname in listFiles:
+        #         if fname[:3] == "key":
+        #             with open(
+        #                 "Korcan/Plots/" + modelName + "/" + d + "/" + fname, "rb"
+        #             ) as f:
+        #                 key = pickle.load(f)
+        #             with open(
+        #                 "Korcan/Plots/" + modelName + "/" + d + "/" + "val" + fname[3:],
+        #                 "rb",
+        #             ) as f:
+        #                 val = pickle.load(f)
+        #         module.pdict[key] = val
 
-        dirNames = []
-        # for fp in fpPairs:
-        # dirNames.append("FEC (IID)" + "_" + fp[0] + "_" + fp[1])
-        # dirNames.append("FEC (Burst)" + "_" + fp[0] + "_" + fp[1])
-        # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
-        dirNames.append("Unprotected (IID)")
+        # dirNames = []
+        # dirNames.append("Unprotected (IID)")
 
         # dirNames.append("FEC (IID)")
         # dirNames.append("FEC (Burst)")
