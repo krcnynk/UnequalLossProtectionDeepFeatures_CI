@@ -11,7 +11,7 @@ mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/
 # sbatch pipelineRIID.sh
 for i in {0..10}
 do
-    echo "KEK"
+    echo "KEKW"
     # sbatch --export=arg1=$i pipelineRIIDEN.sh
 done
 
