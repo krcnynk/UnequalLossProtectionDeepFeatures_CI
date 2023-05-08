@@ -1295,18 +1295,19 @@ if __name__ == "__main__":
                 module.pdict[key] = val
 
         dirNames = []
-        dirNames.append("FEC (IID)")
-        dirNames.append("FEC (Burst)")
-        dirNames.append("FEC (IID) NS")
-        dirNames.append("FEC (Burst) NS")
         # for fp in fpPairs:
         # dirNames.append("FEC (IID)" + "_" + fp[0] + "_" + fp[1])
         # dirNames.append("FEC (Burst)" + "_" + fp[0] + "_" + fp[1])
         # dirNames.append("Random_RSCorrected_"+fp[0]+"_"+fp[1])
         dirNames.append("Unprotected (IID)")
-        dirNames.append("Unprotected (Burst)")
-        dirNames.append("Unprotected (IID) NS")
-        dirNames.append("Unprotected (Burst) NS")
+
+        # dirNames.append("FEC (IID)")
+        # dirNames.append("FEC (Burst)")
+        # dirNames.append("FEC (IID) NS")
+        # dirNames.append("FEC (Burst) NS")
+        # dirNames.append("Unprotected (Burst)")
+        # dirNames.append("Unprotected (IID) NS")
+        # dirNames.append("Unprotected (Burst) NS")
 
         # set the directory path
         dir_path = "/path/to/parent/directory"
