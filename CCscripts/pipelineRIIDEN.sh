@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --time=4:00:00
-#SBATCH --mem=50G
+#SBATCH --time=1:00:00
+#SBATCH --mem=1G
 #SBATCH --account=def-ibajic
 
 module restore uneq
