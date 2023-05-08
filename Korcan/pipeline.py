@@ -1262,7 +1262,7 @@ if __name__ == "__main__":
             percLoss,
             case,
             modelName=modelName,
-            qualityFactor=qualityFactor,
+            qualityFactor=int(qualityFactor),
         )
     elif case == "makeplot":
         # dirs = [
