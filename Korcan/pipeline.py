@@ -1309,6 +1309,7 @@ if __name__ == "__main__":
         # dirNames.append("Unprotected (IID) NS")
         # dirNames.append("Unprotected (Burst) NS")
 
+        dirNames = []
         # set the directory path
         dir_path = "/path/to/parent/directory"
         # set the string to search for at the beginning of directory names
