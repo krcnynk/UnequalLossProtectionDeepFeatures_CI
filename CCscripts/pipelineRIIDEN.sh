@@ -8,5 +8,5 @@ module restore uneq
 # source /project/6008756/foniks/Project_1/uneqENV/bin/activate
 # mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet/Random
 cd ..
-
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 9 0 $arg1
+echo "Argument passed to script: $arg1"
+# python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 9 0 $arg1
