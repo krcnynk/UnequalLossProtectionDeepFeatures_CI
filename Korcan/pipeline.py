@@ -1018,8 +1018,8 @@ class pipeline:
             if case == "Unprotected (IID) EN":
                 case = "Unprotected (IID) EN_" + str(qualityFactor)
 
-            if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
-                os.makedirs("Korcan/Plots/" + modelName + "/" + case)
+            # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
+            os.makedirs("Korcan/Plots/" + modelName + "/" + case,exist_ok=True)
 
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
             pdictVal = {
