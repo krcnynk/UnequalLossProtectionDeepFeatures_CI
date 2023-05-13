@@ -1342,18 +1342,17 @@ if __name__ == "__main__":
         #                 val = pickle.load(f)
         #         module.pdict[key] = val
 
-        # dirNames = []
+        dirNames = []
         dirNames.append("Unprotected (IID)")
+        dirNames.append("FEC (IID)")
+        dirNames.append("FEC (Burst)")
+        dirNames.append("FEC (IID) NS")
+        dirNames.append("FEC (Burst) NS")
+        dirNames.append("Unprotected (Burst)")
+        dirNames.append("Unprotected (IID) NS")
+        dirNames.append("Unprotected (Burst) NS")
 
-        # dirNames.append("FEC (IID)")
-        # dirNames.append("FEC (Burst)")
-        # dirNames.append("FEC (IID) NS")
-        # dirNames.append("FEC (Burst) NS")
-        # dirNames.append("Unprotected (Burst)")
-        # dirNames.append("Unprotected (IID) NS")
-        # dirNames.append("Unprotected (Burst) NS")
-
-        # dirNames = []
+        dirNames = []
         # set the directory path
         dir_path = "Korcan/Plots/" + modelName
         # set the string to search for at the beginning of directory names
