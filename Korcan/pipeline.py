@@ -394,8 +394,8 @@ class pipeline:
                 ":"]
             )
         cases.extend(l)
-
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
+        print("Types",types)
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
         seriesYmin = [[] for _ in range(len(types))]
