@@ -20,7 +20,7 @@ do
     # sbatch pipelineRIID.sh
 
 
-    sbatch pipelineRIIDEN.sh
+    sbatch --export=arg1=80 pipelineRIIDEN.sh
 
 
     # sbatch pipelineRSBUR.sh
