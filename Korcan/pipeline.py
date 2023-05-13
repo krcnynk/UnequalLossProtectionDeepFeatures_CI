@@ -694,25 +694,27 @@ class pipeline:
             OrderedImportanceOfPacketsIndexExcludeFEC = (
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
             )
-            # numOfPacketsToLose = math.floor(
-            #     len(packetizedheatMap) * percOfPacketLoss / 100
-            # )
+            numOfPacketsToLose = math.floor(
+                len(packetizedheatMap) * percOfPacketLoss / 100
+            )
             totalNumPackets = len(packetizedheatMap)
 
-            if percOfPacketLoss != 0:
-                flag = False
-                while not flag:
-                    obj = gbChannel.GBC(percOfPacketLoss / 100, 32)
-                    sim = obj.simulate(totalNumPackets)
-                    numOfPacketsToLose = (~sim).nonzero()[0].size
-                    perc = round(numOfPacketsToLose / totalNumPackets * 100)
-                    if perc == percOfPacketLoss:
-                        flag = True
-            else:
-                sim = np.full((1, totalNumPackets), True)
-                numOfPacketsToLose = 0
 
             if case == "FEC (Burst)" or case == "FEC (Burst) NS":
+
+                if percOfPacketLoss != 0:
+                    flag = False
+                    while not flag:
+                        obj = gbChannel.GBC(percOfPacketLoss / 100, 8)
+                        sim = obj.simulate(totalNumPackets)
+                        numOfPacketsToLose = (~sim).nonzero()[0].size
+                        perc = round(numOfPacketsToLose / totalNumPackets * 100)
+                        if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
+                            flag = True
+                    else:
+                        sim = np.full((1, totalNumPackets), True)
+                        numOfPacketsToLose = 0
+
                 indexOfLossedPackets = (~sim).nonzero()[0]
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
@@ -746,9 +748,24 @@ class pipeline:
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
+                    indexOfRestoredPackets = indexOfLossedPackets
                     pass
 
             elif case == "FEC (IID)" or case == "FEC (IID) NS":
+
+                if percOfPacketLoss != 0:
+                    flag = False
+                    while not flag:
+                        obj = gbChannel.GBC(percOfPacketLoss / 100, 32)
+                        sim = obj.simulate(totalNumPackets)
+                        numOfPacketsToLose = (~sim).nonzero()[0].size
+                        perc = round(numOfPacketsToLose / totalNumPackets * 100)
+                        if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
+                            flag = True
+                    else:
+                        sim = np.full((1, totalNumPackets), True)
+                        numOfPacketsToLose = 0
+
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
@@ -784,9 +801,23 @@ class pipeline:
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
+                    indexOfRestoredPackets = indexOfLossedPackets
                     pass
 
             elif case == "Unprotected (Burst)":
+                if percOfPacketLoss != 0:
+                    flag = False
+                    while not flag:
+                        obj = gbChannel.GBC(percOfPacketLoss / 100, 8)
+                        sim = obj.simulate(totalNumPackets)
+                        numOfPacketsToLose = (~sim).nonzero()[0].size
+                        perc = round(numOfPacketsToLose / totalNumPackets * 100)
+                        if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
+                            flag = True
+                    else:
+                        sim = np.full((1, totalNumPackets), True)
+                        numOfPacketsToLose = 0
+                    
                 packetsSent = packetsSent + totalNumPackets
                 # indexOfLossedPackets = list(range(0, totalNumPackets))
                 indexOfLossedPackets = (~sim).nonzero()[0]
@@ -823,11 +854,25 @@ class pipeline:
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
+                indexOfRestoredPackets = (~sim).nonzero()[0]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Unprotected (Burst) NS":
+                if percOfPacketLoss != 0:
+                    flag = False
+                    while not flag:
+                        obj = gbChannel.GBC(percOfPacketLoss / 100, 8)
+                        sim = obj.simulate(totalNumPackets)
+                        numOfPacketsToLose = (~sim).nonzero()[0].size
+                        perc = round(numOfPacketsToLose / totalNumPackets * 100)
+                        if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
+                            flag = True
+                    else:
+                        sim = np.full((1, totalNumPackets), True)
+                        numOfPacketsToLose = 0
                 packetsSent = packetsSent + totalNumPackets
                 indexOfLossedPackets = (~sim).nonzero()[0]
+                indexOfRestoredPackets = (~sim).nonzero()[0]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Unprotected (IID) EN":
@@ -856,6 +901,8 @@ class pipeline:
 
             for j in indexOfLossedPackets:
                 packetizedfmL[j][...] = 0
+
+            for j in indexOfRestoredPackets:
                 mask[j][...] = 1
 
             channelReconstructed = [
