@@ -699,7 +699,8 @@ class pipeline:
             )
             totalNumPackets = len(packetizedheatMap)
 
-
+            indexOfRestoredPackets = []
+            
             if case == "FEC (Burst)" or case == "FEC (Burst) NS":
 
                 if percOfPacketLoss != 0:
