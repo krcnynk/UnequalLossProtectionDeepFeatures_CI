@@ -8,4 +8,4 @@ module restore uneq
 # mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet/Top
 cd ..
 
-python Korcan/pipeline.py 60 1 0 0
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 1 0 0
