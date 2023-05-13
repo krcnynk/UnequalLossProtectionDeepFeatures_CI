@@ -700,7 +700,7 @@ class pipeline:
             totalNumPackets = len(packetizedheatMap)
 
             indexOfRestoredPackets = []
-            
+
             if case == "FEC (Burst)" or case == "FEC (Burst) NS":
 
                 if percOfPacketLoss != 0:
@@ -855,7 +855,7 @@ class pipeline:
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
-                indexOfRestoredPackets = (~sim).nonzero()[0]
+                indexOfRestoredPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Unprotected (Burst) NS":
