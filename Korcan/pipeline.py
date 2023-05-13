@@ -1327,20 +1327,20 @@ if __name__ == "__main__":
         dirNames = []
         dirNames.append("Most important")
         dirNames.append("Least important")
-        # for d in dirNames:
-        #     listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
-        #     for fname in listFiles:
-        #         if fname[:3] == "key":
-        #             with open(
-        #                 "Korcan/Plots/" + modelName + "/" + d + "/" + fname, "rb"
-        #             ) as f:
-        #                 key = pickle.load(f)
-        #             with open(
-        #                 "Korcan/Plots/" + modelName + "/" + d + "/" + "val" + fname[3:],
-        #                 "rb",
-        #             ) as f:
-        #                 val = pickle.load(f)
-        #         module.pdict[key] = val
+        for d in dirNames:
+            listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
+            for fname in listFiles:
+                if fname[:3] == "key":
+                    with open(
+                        "Korcan/Plots/" + modelName + "/" + d + "/" + fname, "rb"
+                    ) as f:
+                        key = pickle.load(f)
+                    with open(
+                        "Korcan/Plots/" + modelName + "/" + d + "/" + "val" + fname[3:],
+                        "rb",
+                    ) as f:
+                        val = pickle.load(f)
+                module.pdict[key] = val
 
         dirNames = []
         dirNames.append("Unprotected (IID)")
@@ -1365,6 +1365,7 @@ if __name__ == "__main__":
         ]
         dirNames = dirNames + dirs
         print(dirNames)
+        
         tTestIID = {}
         tTestBurst = {}
 
