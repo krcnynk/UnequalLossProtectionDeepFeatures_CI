@@ -1351,7 +1351,6 @@ if __name__ == "__main__":
         dirNames.append("Unprotected (Burst)")
         dirNames.append("Unprotected (IID) NS")
         dirNames.append("Unprotected (Burst) NS")
-
         # dirNames = []
         # set the directory path
         dir_path = "Korcan/Plots/" + modelName
