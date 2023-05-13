@@ -1,11 +1,11 @@
 #!/bin/bash
 
 git pull
-rm -r /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots
+# rm -r /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots
 # mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet
 
-sbatch pipelineT.sh
-sbatch pipelineB.sh
+# sbatch pipelineT.sh
+# sbatch pipelineB.sh
 
 # sbatch pipelineRIID.sh
 # for i in $(seq 0 10 100)
@@ -16,18 +16,18 @@ sbatch pipelineB.sh
 
 for i in {1..1}
 do
-    sbatch pipelineRBUR.sh
-    sbatch pipelineRIID.sh
+    # sbatch pipelineRBUR.sh
+    # sbatch pipelineRIID.sh
 
 
     sbatch pipelineRIIDEN.sh
 
 
-    sbatch pipelineRSBUR.sh
-    sbatch pipelineRSIID.sh
+    # sbatch pipelineRSBUR.sh
+    # sbatch pipelineRSIID.sh
 
-    sbatch pipelineRBURNS.sh
+    # sbatch pipelineRBURNS.sh
     sbatch pipelineRIIDNS.sh
-    sbatch pipelineRSBURNS.sh
-    sbatch pipelineRSIIDNS.sh
+    # sbatch pipelineRSBURNS.sh
+    # sbatch pipelineRSIIDNS.sh
 done
