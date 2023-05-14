@@ -1325,8 +1325,8 @@ if __name__ == "__main__":
         #         fpPairs.append(splitted[3:])  # FEC_10_50
 
         dirNames = []
-        dirNames.append("Most important")
-        dirNames.append("Least important")
+        # dirNames.append("Most important")
+        # dirNames.append("Least important")
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             for fname in listFiles:
@@ -1352,18 +1352,19 @@ if __name__ == "__main__":
         # dirNames.append("Unprotected (IID) NS")
         # dirNames.append("Unprotected (Burst) NS")
         # dirNames = []
+
         # set the directory path
-        dir_path = "Korcan/Plots/" + modelName
-        # set the string to search for at the beginning of directory names
-        start_string = "Unprotected (IID) EN"
-        # get the list of directories in the directory path that start with the string
-        dirs = [
-            d
-            for d in os.listdir(dir_path)
-            if os.path.isdir(os.path.join(dir_path, d)) and d.startswith(start_string)
-        ]
-        dirNames = dirNames + dirs
-        print(dirNames)
+        # dir_path = "Korcan/Plots/" + modelName
+        # # set the string to search for at the beginning of directory names
+        # start_string = "Unprotected (IID) EN"
+        # # get the list of directories in the directory path that start with the string
+        # dirs = [
+        #     d
+        #     for d in os.listdir(dir_path)
+        #     if os.path.isdir(os.path.join(dir_path, d)) and d.startswith(start_string)
+        # ]
+        # dirNames = dirNames + dirs
+        # print(dirNames)
         
         tTestIID = {}
         tTestBurst = {}
