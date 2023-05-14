@@ -1377,9 +1377,8 @@ if __name__ == "__main__":
                     keyIndexes.append(i)
 
             blacklist = []
-            for i in range(len(keyIndexes)):
+            for i in keyIndexes:
                 lossPercInfo = listFiles[i].split("_")[1] #90.000
-                print(listFiles[i],lossPercInfo)
                 if float(lossPercInfo) not in blacklist:
                     allRunsWithSamePercentage = glob.glob(
                         "Korcan/Plots/"
