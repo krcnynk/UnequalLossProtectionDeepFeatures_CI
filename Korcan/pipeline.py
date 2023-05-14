@@ -1331,6 +1331,7 @@ if __name__ == "__main__":
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             for fname in listFiles:
                 if fname[:3] == "key":
+                    print("Korcan/Plots/" + modelName + "/" + d + "/" + "val" + fname[3:])
                     with open(
                         "Korcan/Plots/" + modelName + "/" + d + "/" + fname, "rb"
                     ) as f:
