@@ -431,7 +431,7 @@ class pipeline:
                 seriesX[s],
                 seriesY[s],
                 s=25,
-                label="_nolegend_",
+                # label="_nolegend_",
                 marker=cases[mapping + 2],
                 color=cases[mapping + 1],
             )
