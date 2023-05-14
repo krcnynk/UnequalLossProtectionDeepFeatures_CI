@@ -763,9 +763,9 @@ class pipeline:
                         perc = round(numOfPacketsToLose / totalNumPackets * 100)
                         if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
                             flag = True
-                    else:
-                        sim = np.full((1, totalNumPackets), True)
-                        numOfPacketsToLose = 0
+                else:
+                    sim = np.full((1, totalNumPackets), True)
+                    numOfPacketsToLose = 0
 
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
@@ -1344,13 +1344,13 @@ if __name__ == "__main__":
 
         dirNames = []
         dirNames.append("Unprotected (IID)")
-        dirNames.append("FEC (IID)")
-        dirNames.append("FEC (Burst)")
-        dirNames.append("FEC (IID) NS")
-        dirNames.append("FEC (Burst) NS")
-        dirNames.append("Unprotected (Burst)")
-        dirNames.append("Unprotected (IID) NS")
-        dirNames.append("Unprotected (Burst) NS")
+        # dirNames.append("FEC (IID)")
+        # dirNames.append("FEC (Burst)")
+        # dirNames.append("FEC (IID) NS")
+        # dirNames.append("FEC (Burst) NS")
+        # dirNames.append("Unprotected (Burst)")
+        # dirNames.append("Unprotected (IID) NS")
+        # dirNames.append("Unprotected (Burst) NS")
         # dirNames = []
         # set the directory path
         dir_path = "Korcan/Plots/" + modelName
