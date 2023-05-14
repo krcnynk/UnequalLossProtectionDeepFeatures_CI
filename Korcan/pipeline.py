@@ -427,22 +427,23 @@ class pipeline:
             #     or types[s] == "FEC (IID)"
             #     or types[s] == "FEC (Burst)"
             # ):
-            plt.scatter(
-                seriesX[s],
-                seriesY[s],
-                s=25,
-                # label="_nolegend_",
-                marker=cases[mapping + 2],
-                color=cases[mapping + 1],
-            )
-            plt.plot(
-                seriesX[s],
-                seriesY[s],
-                label=cases[mapping],
-                linestyle=cases[mapping + 3],
-                linewidth=1.2,
-                color=cases[mapping + 1],
-            )
+            if types[s] == "FEC (IID)":
+                plt.scatter(
+                    seriesX[s],
+                    seriesY[s],
+                    s=25,
+                    # label="_nolegend_",
+                    marker=cases[mapping + 2],
+                    color=cases[mapping + 1],
+                )
+                plt.plot(
+                    seriesX[s],
+                    seriesY[s],
+                    label=cases[mapping],
+                    linestyle=cases[mapping + 3],
+                    linewidth=1.2,
+                    color=cases[mapping + 1],
+                )
         # else:
         #     print(types[s])
         #     plt.scatter(
@@ -460,14 +461,14 @@ class pipeline:
         #         linewidth=1.2,
         #         color=cases[mapping + 1],
             # )
-            # if types[s] == "Unprotected (IID)":
-            #     plt.fill_between(
-            #         seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.3, facecolor="r"
-            #     )
-            # elif types[s] == "Unprotected (Burst)":
-            #     plt.fill_between(
-            #         seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.4, facecolor="c"
-            #     )
+            if types[s] == "Unprotected (IID)":
+                plt.fill_between(
+                    seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.3, facecolor="r"
+                )
+            elif types[s] == "Unprotected (Burst)":
+                plt.fill_between(
+                    seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.4, facecolor="c"
+                )
 
         # reordering the labels
         handles, labels = plt.gca().get_legend_handles_labels()
