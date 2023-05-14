@@ -1376,7 +1376,7 @@ if __name__ == "__main__":
                 if listFiles[i][:3] == "key":
                     keyIndexes.append(i)
 
-            print(listFiles)
+            print(keyIndexes)
             blacklist = []
             for i in range(len(keyIndexes)):
                 lossPercInfo = listFiles[i].split("_")[1] #90.000
