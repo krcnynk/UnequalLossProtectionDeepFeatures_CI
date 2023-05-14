@@ -427,24 +427,22 @@ class pipeline:
             #     or types[s] == "FEC (IID)"
             #     or types[s] == "FEC (Burst)"
             # ):
-            if types[s] == "FEC (IID)":
-                print(seriesX[s],seriesY[s])
-                plt.scatter(
-                    seriesX[s],
-                    seriesY[s],
-                    s=25,
-                    # label="_nolegend_",
-                    marker=cases[mapping + 2],
-                    color=cases[mapping + 1],
-                )
-                plt.plot(
-                    seriesX[s],
-                    seriesY[s],
-                    label=cases[mapping],
-                    linestyle=cases[mapping + 3],
-                    linewidth=1.2,
-                    color=cases[mapping + 1],
-                )
+            plt.scatter(
+                seriesX[s],
+                seriesY[s],
+                s=25,
+                # label="_nolegend_",
+                marker=cases[mapping + 2],
+                color=cases[mapping + 1],
+            )
+            plt.plot(
+                seriesX[s],
+                seriesY[s],
+                label=cases[mapping],
+                linestyle=cases[mapping + 3],
+                linewidth=1.2,
+                color=cases[mapping + 1],
+            )
         # else:
         #     print(types[s])
         #     plt.scatter(
@@ -714,9 +712,9 @@ class pipeline:
                         perc = round(numOfPacketsToLose / totalNumPackets * 100)
                         if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
                             flag = True
-                    else:
-                        sim = np.full((1, totalNumPackets), True)
-                        numOfPacketsToLose = 0
+                else:
+                    sim = np.full((1, totalNumPackets), True)
+                    numOfPacketsToLose = 0
 
                 indexOfLossedPackets = (~sim).nonzero()[0]
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
@@ -817,9 +815,9 @@ class pipeline:
                         perc = round(numOfPacketsToLose / totalNumPackets * 100)
                         if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
                             flag = True
-                    else:
-                        sim = np.full((1, totalNumPackets), True)
-                        numOfPacketsToLose = 0
+                else:
+                    sim = np.full((1, totalNumPackets), True)
+                    numOfPacketsToLose = 0
                     
                 packetsSent = packetsSent + totalNumPackets
                 # indexOfLossedPackets = list(range(0, totalNumPackets))
@@ -870,9 +868,9 @@ class pipeline:
                         perc = round(numOfPacketsToLose / totalNumPackets * 100)
                         if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
                             flag = True
-                    else:
-                        sim = np.full((1, totalNumPackets), True)
-                        numOfPacketsToLose = 0
+                else:
+                    sim = np.full((1, totalNumPackets), True)
+                    numOfPacketsToLose = 0
                 packetsSent = packetsSent + totalNumPackets
                 indexOfLossedPackets = (~sim).nonzero()[0]
                 indexOfRestoredPackets = (~sim).nonzero()[0]
