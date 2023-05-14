@@ -1330,9 +1330,7 @@ if __name__ == "__main__":
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             for fname in listFiles:
-                print(fname)
                 if fname[:3] == "key":
-                    print("Korcan/Plots/" + modelName + "/" + d + "/" + "val" + fname[3:])
                     with open(
                         "Korcan/Plots/" + modelName + "/" + d + "/" + fname, "rb"
                     ) as f:
@@ -1342,7 +1340,7 @@ if __name__ == "__main__":
                         "rb",
                     ) as f:
                         val = pickle.load(f)
-                module.pdict[key] = val
+                    module.pdict[key] = val
 
         dirNames = []
         dirNames.append("Unprotected (IID)")
