@@ -459,7 +459,7 @@ class pipeline:
         #         linestyle=cases[mapping + 3],
         #         linewidth=1.2,
         #         color=cases[mapping + 1],
-            )
+            # )
             if types[s] == "Unprotected (IID)":
                 plt.fill_between(
                     seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.3, facecolor="r"
