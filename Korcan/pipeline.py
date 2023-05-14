@@ -1390,6 +1390,7 @@ if __name__ == "__main__":
                         + "*"
                     )
                     print(allRunsWithSamePercentage)
+                    print(blacklist)
                     blacklist.extend(allRunsWithSamePercentage)
                     val = []
                     for fname in allRunsWithSamePercentage:
