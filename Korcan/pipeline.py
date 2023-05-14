@@ -1379,7 +1379,7 @@ if __name__ == "__main__":
             blacklist = []
             for i in range(len(keyIndexes)):
                 lossPercInfo = listFiles[i].split("_")[1] #90.000
-                if round(float(lossPercInfo)) not in blacklist:
+                if float(lossPercInfo) not in blacklist:
                     allRunsWithSamePercentage = glob.glob(
                         "Korcan/Plots/"
                         + modelName
@@ -1391,7 +1391,7 @@ if __name__ == "__main__":
                     )
                     print(allRunsWithSamePercentage)
                     print(blacklist)
-                    blacklist.extend(round(float(lossPercInfo)))
+                    blacklist.extend([float(lossPercInfo)])
                     val = []
                     for fname in allRunsWithSamePercentage:
                         with open(
