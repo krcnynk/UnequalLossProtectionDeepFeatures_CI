@@ -443,22 +443,22 @@ class pipeline:
                 linewidth=1.2,
                 color=cases[mapping + 1],
             )
-        else:
-            print(types[s])
-            plt.scatter(
-                seriesX[s],
-                seriesY[s],
-                s=25,
-                marker=cases[mapping + 2],
-                color=cases[mapping + 1],
-            )
-            plt.plot(
-                seriesX[s],
-                seriesY[s],
-                label=cases[mapping],
-                linestyle=cases[mapping + 3],
-                linewidth=1.2,
-                color=cases[mapping + 1],
+        # else:
+        #     print(types[s])
+        #     plt.scatter(
+        #         seriesX[s],
+        #         seriesY[s],
+        #         s=25,
+        #         marker=cases[mapping + 2],
+        #         color=cases[mapping + 1],
+        #     )
+        #     plt.plot(
+        #         seriesX[s],
+        #         seriesY[s],
+        #         label=cases[mapping],
+        #         linestyle=cases[mapping + 3],
+        #         linewidth=1.2,
+        #         color=cases[mapping + 1],
             )
             if types[s] == "Unprotected (IID)":
                 plt.fill_between(
@@ -484,7 +484,7 @@ class pipeline:
             # ncol=2,
             fancybox=True,
             # shadow=True,
-            prop={"size": 8},
+            prop={"size": 5},
         )
 
         # plt.axis('off')
