@@ -1330,6 +1330,7 @@ if __name__ == "__main__":
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             for fname in listFiles:
+                print(fname)
                 if fname[:3] == "key":
                     print("Korcan/Plots/" + modelName + "/" + d + "/" + "val" + fname[3:])
                     with open(
