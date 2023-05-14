@@ -428,6 +428,7 @@ class pipeline:
             #     or types[s] == "FEC (Burst)"
             # ):
             if types[s] == "FEC (IID)":
+                print(seriesX[s],seriesY[s])
                 plt.scatter(
                     seriesX[s],
                     seriesY[s],
