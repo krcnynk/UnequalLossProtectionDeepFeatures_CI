@@ -1391,7 +1391,7 @@ if __name__ == "__main__":
                     )
                     print(allRunsWithSamePercentage)
                     print(blacklist)
-                    blacklist.extend(allRunsWithSamePercentage)
+                    blacklist.extend(lossPercInfo)
                     val = []
                     for fname in allRunsWithSamePercentage:
                         with open(
