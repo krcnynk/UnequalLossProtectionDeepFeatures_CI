@@ -1056,71 +1056,71 @@ class pipeline:
                 "wb",
             ) as f:
                 pickle.dump(pdictVal, f)
-        else:
-            if not os.path.exists(
-                "Korcan/Plots/"
-                + modelName
-                + "/"
-                + case
-                + "_"
-                + str(fecPerc)
-                + "_"
-                + str(protectedPerc)
-            ):
-                os.makedirs(
-                    "Korcan/Plots/"
-                    + modelName
-                    + "/"
-                    + case
-                    + "_"
-                    + str(fecPerc)
-                    + "_"
-                    + str(protectedPerc)
-                )
+        # else:
+        #     if not os.path.exists(
+        #         "Korcan/Plots/"
+        #         + modelName
+        #         + "/"
+        #         + case
+        #         + "_"
+        #         + str(fecPerc)
+        #         + "_"
+        #         + str(protectedPerc)
+        #     ):
+        #         os.makedirs(
+        #             "Korcan/Plots/"
+        #             + modelName
+        #             + "/"
+        #             + case
+        #             + "_"
+        #             + str(fecPerc)
+        #             + "_"
+        #             + str(protectedPerc)
+        #         )
 
-            pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
-            pdictVal = {
-                "acc": metrics["acc"],
-                "loss": metrics["loss"],
-                "min": 0,
-                "max": 0,
-            }
+        #     pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
+        #     pdictVal = {
+        #         "acc": metrics["acc"],
+        #         "loss": metrics["loss"],
+        #         "min": 0,
+        #         "max": 0,
+        #     }
 
-            rand = int(random.randint(1, sys.maxsize))
-            with open(
-                "Korcan/Plots/"
-                + modelName
-                + "/"
-                + case
-                + "_"
-                + str(fecPerc)
-                + "_"
-                + str(protectedPerc)
-                + "/key_"
-                + "{:.3f}".format(100 * packetsLost / packetsSent)
-                + "_"
-                + str(rand)
-                + "_.pkl",
-                "wb",
-            ) as f:
-                pickle.dump(pdictKey, f)
-            with open(
-                "Korcan/Plots/"
-                + modelName
-                + "/"
-                + case
-                + "_"
-                + str(fecPerc)
-                + "_"
-                + str(protectedPerc)
-                + "/val_"
-                + "{:.3f}".format(100 * packetsLost / packetsSent)
-                + "_"
-                + str(rand)
-                + "_.pkl",
-                "wb",
-            ) as f:
-                pickle.dump(pdictVal, f)
+        #     rand = int(random.randint(1, sys.maxsize))
+        #     with open(
+        #         "Korcan/Plots/"
+        #         + modelName
+        #         + "/"
+        #         + case
+        #         + "_"
+        #         + str(fecPerc)
+        #         + "_"
+        #         + str(protectedPerc)
+        #         + "/key_"
+        #         + "{:.3f}".format(100 * packetsLost / packetsSent)
+        #         + "_"
+        #         + str(rand)
+        #         + "_.pkl",
+        #         "wb",
+        #     ) as f:
+        #         pickle.dump(pdictKey, f)
+        #     with open(
+        #         "Korcan/Plots/"
+        #         + modelName
+        #         + "/"
+        #         + case
+        #         + "_"
+        #         + str(fecPerc)
+        #         + "_"
+        #         + str(protectedPerc)
+        #         + "/val_"
+        #         + "{:.3f}".format(100 * packetsLost / packetsSent)
+        #         + "_"
+        #         + str(rand)
+        #         + "_.pkl",
+        #         "wb",
+        #     ) as f:
+        #         pickle.dump(pdictVal, f)
         # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
 
@@ -1143,10 +1143,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     # # CREATE FOLDERS
