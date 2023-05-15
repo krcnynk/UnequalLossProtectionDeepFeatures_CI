@@ -882,9 +882,9 @@ class pipeline:
 
                 tensorEncodedBufferSize = 0
                 encode_param = [int(cv.IMWRITE_JPEG_QUALITY), qualityFactor]
-                if qualityFactor == 105:
-                    OrderedImportanceOfPacketsIndexExcludeFEC =
-                    encode_param = [i for i in range(101)]
+                # if qualityFactor == 105:
+                #     OrderedImportanceOfPacketsIndexExcludeFEC =
+                #     encode_param = [i for i in range(101)]
                 
                 for j in range(len(packetizedfmL)):
                     # print(len(packetizedfmL))
