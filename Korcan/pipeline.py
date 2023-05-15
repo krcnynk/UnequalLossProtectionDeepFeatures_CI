@@ -1415,8 +1415,8 @@ if __name__ == "__main__":
                             "rb",
                         ) as f:
                             val.append(pickle.load(f))
-                        print(fname)
-                        print(key, val)
+                        # print(fname)
+                        # print(key, val)
                     acc = 0
                     loss = 0
                     count = 0
