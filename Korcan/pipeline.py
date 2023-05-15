@@ -1017,7 +1017,7 @@ class pipeline:
         ):
             if case == "Unprotected (IID) EN":
                 case = "Unprotected (IID) EN_" + str(qualityFactor)
-                percOfPacketLoss = sum(batchBpp)
+                percOfPacketLoss = sum(batchBpp) / float(len(batchBpp))
 
             # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
             os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)

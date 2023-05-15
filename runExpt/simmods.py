@@ -78,4 +78,4 @@ def fn_Data_PreProcessing_ImgClass(path_base,reshapeDims,normalize):
             dataset_x_files_sizes.append(im_array.nbytes)
             dataset_y_labels.append(classes_list[i])
             file_names.append(examples[k])
-    return dataset_x_files,dataset_y_labels,file_names
+    return dataset_x_files,dataset_x_files_sizes,dataset_y_labels,file_names
