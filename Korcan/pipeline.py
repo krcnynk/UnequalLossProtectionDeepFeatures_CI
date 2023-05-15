@@ -882,6 +882,9 @@ class pipeline:
 
                 tensorEncodedBufferSize = 0
                 encode_param = [int(cv.IMWRITE_JPEG_QUALITY), qualityFactor]
+                # if qualityFactor == 105:
+                #     encode_param = [i for i in range(101)]
+                
                 for j in range(len(packetizedfmL)):
                     # print(len(packetizedfmL))
                     result, encimg = cv.imencode(
@@ -1143,10 +1146,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     # # CREATE FOLDERS

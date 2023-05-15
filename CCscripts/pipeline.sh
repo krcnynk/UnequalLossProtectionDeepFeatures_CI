@@ -13,9 +13,11 @@ mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/
 #     # echo "$i"
 #     sbatch --export=arg1=$i pipelineRIIDEN.sh
 # done
-for i in {0..100..5}
+
+for i in {0..105..5}
 do
-    sbatch --export=arg1=$i pipelineRIIDEN.sh
+    # sbatch --export=arg1=$i pipelineRIIDEN.sh
+    sbatch --export=arg1=$i pipelineNLEN.sh
 done
 
 for i in {1..1}
