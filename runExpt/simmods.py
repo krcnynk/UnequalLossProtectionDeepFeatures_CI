@@ -67,16 +67,17 @@ def fn_Data_PreProcessing_ImgClass(path_base,reshapeDims,normalize):
 
         for k in range(len(examples)):
             I = tf.keras.preprocessing.image.load_img(os.path.join(path_base,classes_list[i],examples[k]))
-            I = I.resize(reshapeDims)
-            im_array = tf.keras.preprocessing.image.img_to_array(I)
-
+            S = I.resize(reshapeDims)
+            im_array = tf.keras.preprocessing.image.img_to_array(S)
+            I = tf.keras.preprocessing.image.img_to_array(I)
+            
             if normalize == True:
                 im_array /= 127.5
                 im_array -= 1.
 
             dataset_x_files.append(im_array)
-            height, width, channel = im_array.shape
-            print("S",im_array.shape)
+            height, width, channel = I.shape
+            print("I",I.shape)
             # Calculate the number of pixels
             pixel_count = width * height * channel
             dataset_x_files_sizes.append(pixel_count)
