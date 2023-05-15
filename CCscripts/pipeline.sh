@@ -20,14 +20,14 @@ do
     # sbatch pipelineRIID.sh
 
 
-    # sbatch --export=arg1=95 pipelineRIIDEN.sh
-
+    sbatch --export=arg1=80 pipelineRIIDEN.sh
+    # sbatch --export=arg1=80 pipelineRIIDEN.sh
 
     # sbatch pipelineRSBUR.sh
-    sbatch pipelineRSIID.sh
+    # sbatch pipelineRSIID.sh
 
     # sbatch pipelineRBURNS.sh
     # sbatch pipelineRIIDNS.sh
     # sbatch pipelineRSBURNS.sh
-    sbatch pipelineRSIIDNS.sh
+    # sbatch pipelineRSIIDNS.sh
 done
