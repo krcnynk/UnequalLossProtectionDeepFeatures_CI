@@ -218,7 +218,6 @@ class pipeline:
         # self.mobile_model.summary()
 
         # self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files))
-        self.latentOutputBatch
         self.latentOutputBatch = self.mobile_model.predict(
             tf.keras.applications.resnet50.preprocess_input(
                 np.array(self.dataset_x_files)
