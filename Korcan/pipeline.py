@@ -387,7 +387,7 @@ class pipeline:
         ]
 
         l = []
-        for i in range(0, 110, 10):
+        for i in range(0, 100, 5):
             l.extend(["Unprotected (IID) EN_" + str(i), "k", ".", ":"])
         cases.extend(l)
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
