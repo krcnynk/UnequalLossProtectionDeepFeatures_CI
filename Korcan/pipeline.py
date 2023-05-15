@@ -360,11 +360,11 @@ class pipeline:
             ".",
             "-",
             "Unprotected (IID) NS",
-            "b",
+            "r",
             ".",
             ":",
             "Unprotected (Burst) NS",
-            "g",
+            "c",
             ".",
             ":",
             "FEC (IID)",
@@ -386,16 +386,11 @@ class pipeline:
         ]
 
         l = []
-        for i in range(0, 110,10):
-            l.extend(
-                ["Unprotected (IID) EN_" + str(i),
-                "k",
-                ".",
-                ":"]
-            )
+        for i in range(0, 110, 10):
+            l.extend(["Unprotected (IID) EN_" + str(i), "k", ".", ":"])
         cases.extend(l)
         types = sorted(list(set([i[1] for i in self.pdict.keys()])))
-        print("Types",types)
+        print("Types", types)
         seriesX = [[] for _ in range(len(types))]
         seriesY = [[] for _ in range(len(types))]
         seriesYmin = [[] for _ in range(len(types))]
@@ -443,22 +438,22 @@ class pipeline:
                 linewidth=1.2,
                 color=cases[mapping + 1],
             )
-        # else:
-        #     print(types[s])
-        #     plt.scatter(
-        #         seriesX[s],
-        #         seriesY[s],
-        #         s=25,
-        #         marker=cases[mapping + 2],
-        #         color=cases[mapping + 1],
-        #     )
-        #     plt.plot(
-        #         seriesX[s],
-        #         seriesY[s],
-        #         label=cases[mapping],
-        #         linestyle=cases[mapping + 3],
-        #         linewidth=1.2,
-        #         color=cases[mapping + 1],
+            # else:
+            #     print(types[s])
+            #     plt.scatter(
+            #         seriesX[s],
+            #         seriesY[s],
+            #         s=25,
+            #         marker=cases[mapping + 2],
+            #         color=cases[mapping + 1],
+            #     )
+            #     plt.plot(
+            #         seriesX[s],
+            #         seriesY[s],
+            #         label=cases[mapping],
+            #         linestyle=cases[mapping + 3],
+            #         linewidth=1.2,
+            #         color=cases[mapping + 1],
             # )
             if types[s] == "Unprotected (IID)":
                 plt.fill_between(
@@ -702,7 +697,6 @@ class pipeline:
             indexOfRestoredPackets = []
 
             if case == "FEC (Burst)" or case == "FEC (Burst) NS":
-
                 if percOfPacketLoss != 0:
                     flag = False
                     while not flag:
@@ -710,7 +704,11 @@ class pipeline:
                         sim = obj.simulate(totalNumPackets)
                         numOfPacketsToLose = (~sim).nonzero()[0].size
                         perc = round(numOfPacketsToLose / totalNumPackets * 100)
-                        if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
+                        if (
+                            perc == percOfPacketLoss
+                            or (perc - 1) == percOfPacketLoss
+                            or (perc + 1) == percOfPacketLoss
+                        ):
                             flag = True
                 else:
                     sim = np.full((1, totalNumPackets), True)
@@ -753,20 +751,6 @@ class pipeline:
                     pass
 
             elif case == "FEC (IID)" or case == "FEC (IID) NS":
-
-                if percOfPacketLoss != 0:
-                    flag = False
-                    while not flag:
-                        obj = gbChannel.GBC(percOfPacketLoss / 100, 32)
-                        sim = obj.simulate(totalNumPackets)
-                        numOfPacketsToLose = (~sim).nonzero()[0].size
-                        perc = round(numOfPacketsToLose / totalNumPackets * 100)
-                        if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
-                            flag = True
-                else:
-                    sim = np.full((1, totalNumPackets), True)
-                    numOfPacketsToLose = 0
-
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
@@ -813,12 +797,16 @@ class pipeline:
                         sim = obj.simulate(totalNumPackets)
                         numOfPacketsToLose = (~sim).nonzero()[0].size
                         perc = round(numOfPacketsToLose / totalNumPackets * 100)
-                        if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
+                        if (
+                            perc == percOfPacketLoss
+                            or (perc - 1) == percOfPacketLoss
+                            or (perc + 1) == percOfPacketLoss
+                        ):
                             flag = True
                 else:
                     sim = np.full((1, totalNumPackets), True)
                     numOfPacketsToLose = 0
-                    
+
                 packetsSent = packetsSent + totalNumPackets
                 # indexOfLossedPackets = list(range(0, totalNumPackets))
                 indexOfLossedPackets = (~sim).nonzero()[0]
@@ -866,7 +854,11 @@ class pipeline:
                         sim = obj.simulate(totalNumPackets)
                         numOfPacketsToLose = (~sim).nonzero()[0].size
                         perc = round(numOfPacketsToLose / totalNumPackets * 100)
-                        if perc == percOfPacketLoss or (perc-1) == percOfPacketLoss or (perc+1) == percOfPacketLoss:
+                        if (
+                            perc == percOfPacketLoss
+                            or (perc - 1) == percOfPacketLoss
+                            or (perc + 1) == percOfPacketLoss
+                        ):
                             flag = True
                 else:
                     sim = np.full((1, totalNumPackets), True)
@@ -1019,7 +1011,7 @@ class pipeline:
                 case = "Unprotected (IID) EN_" + str(qualityFactor)
 
             # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
-            os.makedirs("Korcan/Plots/" + modelName + "/" + case,exist_ok=True)
+            os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
 
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
             pdictVal = {
@@ -1143,10 +1135,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     # # CREATE FOLDERS
@@ -1365,7 +1357,7 @@ if __name__ == "__main__":
         ]
         dirNames = dirNames + dirs
         # print(dirNames)
-        
+
         tTestIID = {}
         tTestBurst = {}
 
@@ -1378,7 +1370,7 @@ if __name__ == "__main__":
 
             blacklist = []
             for i in keyIndexes:
-                lossPercInfo = listFiles[i].split("_")[1] #90.000
+                lossPercInfo = listFiles[i].split("_")[1]  # 90.000
                 if float(lossPercInfo) not in blacklist:
                     allRunsWithSamePercentage = glob.glob(
                         "Korcan/Plots/"
@@ -1416,7 +1408,7 @@ if __name__ == "__main__":
                         ) as f:
                             val.append(pickle.load(f))
                         print(fname)
-                        print(key,val)
+                        print(key, val)
                     acc = 0
                     loss = 0
                     count = 0
