@@ -56,6 +56,7 @@ def fn_Data_PreProcessing_ImgClass(path_base,reshapeDims,normalize):
     dataset_x_files = []
     dataset_y_labels = []
     file_names = []
+    dataset_x_files_sizes = []
     # count how many examples there are for each class
     for i in range(len(classes_list)):
         examples = glob.glob1(os.path.join(path_base,classes_list[i]),"*."+"jpg")
@@ -74,6 +75,7 @@ def fn_Data_PreProcessing_ImgClass(path_base,reshapeDims,normalize):
                 im_array -= 1.
 
             dataset_x_files.append(im_array)
+            dataset_x_files_sizes.append(im_array.nbytes)
             dataset_y_labels.append(classes_list[i])
             file_names.append(examples[k])
     return dataset_x_files,dataset_y_labels,file_names

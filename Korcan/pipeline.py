@@ -210,6 +210,7 @@ class pipeline:
     def loadData(self, path, reshapeDims, normalize):
         (
             self.dataset_x_files,
+            self.dataset_x_files_sizes,
             self.dataset_y_labels,
             self.file_names,
         ) = fn_Data_PreProcessing_ImgClass(path, reshapeDims, normalize)
@@ -217,6 +218,7 @@ class pipeline:
         # self.mobile_model.summary()
 
         # self.latentOutputBatch = self.mobile_model.predict(np.array(self.dataset_x_files))
+        self.latentOutputBatch
         self.latentOutputBatch = self.mobile_model.predict(
             tf.keras.applications.resnet50.preprocess_input(
                 np.array(self.dataset_x_files)
@@ -403,10 +405,13 @@ class pipeline:
             seriesYmin[index].append(float(value["min"]))
             seriesYmax[index].append(float(value["max"]))
         # plt.title("Top1 Accuracy")
+
         plt.xlabel("Percent Lost")
         plt.ylabel("Top-1 Accuracy")
+
         for s in range(len(seriesX)):
-            print(types[s])
+            if types[s] in l:
+                plt.xlabel("BPP")
             mapping = cases.index(types[s])
             _, seriesYmax[s] = zip(*sorted(zip(seriesX[s], seriesYmax[s])))
             _, seriesYmin[s] = zip(*sorted(zip(seriesX[s], seriesYmin[s])))
@@ -652,6 +657,7 @@ class pipeline:
         packetsLost = 0
         packetsSent = 0
 
+        batchBpp = []
         for i_b in range(self.batchSize):
             quantizedData, minVal, maxVal = self.__quantize(
                 self.latentOutputBatch[i_b], qBits
@@ -875,16 +881,18 @@ class pipeline:
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
+                tensorEncodedBufferSize = 0
                 encode_param = [int(cv.IMWRITE_JPEG_QUALITY), qualityFactor]
                 for j in range(len(packetizedfmL)):
                     # print(len(packetizedfmL))
                     result, encimg = cv.imencode(
                         ".jpg", packetizedfmL[j].astype("uint8"), encode_param
                     )
+                    tensorEncodedBufferSize = tensorEncodedBufferSize + len(encimg)
                     decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
                     # print(np.array(decimg).shape)
                     packetizedfmL[j] = np.array(decimg)
-
+                batchBpp.append(tensorEncodedBufferSize / self.dataset_x_files_sizes[i_b])
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
@@ -1009,10 +1017,11 @@ class pipeline:
         ):
             if case == "Unprotected (IID) EN":
                 case = "Unprotected (IID) EN_" + str(qualityFactor)
+                percOfPacketLoss = sum(batchBpp)
 
             # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
             os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
-
+            
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
             pdictVal = {
                 "acc": metrics["acc"],
