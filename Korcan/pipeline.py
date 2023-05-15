@@ -890,7 +890,11 @@ class pipeline:
                     result, encimg = cv.imencode(
                         ".jpg", packetizedfmL[j].astype("uint8"), encode_param
                     )
-                    tensorEncodedBufferSize = tensorEncodedBufferSize + len(encimg)*8
+                    # Converting the image into numpy array
+                    data_encode = np.array(encimg)
+                    # Converting the array to bytes.
+                    byte_encode = data_encode.tobytes()
+                    tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
                     decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
                     # print(np.array(decimg).shape)
                     packetizedfmL[j] = np.array(decimg)
