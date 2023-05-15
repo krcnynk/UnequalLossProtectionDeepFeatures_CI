@@ -75,9 +75,9 @@ def fn_Data_PreProcessing_ImgClass(path_base,reshapeDims,normalize):
                 im_array -= 1.
 
             dataset_x_files.append(im_array)
-            height, width, _ = im_array.shape
+            height, width, channel = im_array.shape
             # Calculate the number of pixels
-            pixel_count = width * height
+            pixel_count = width * height * channel
             dataset_x_files_sizes.append(pixel_count)
             dataset_y_labels.append(classes_list[i])
             file_names.append(examples[k])

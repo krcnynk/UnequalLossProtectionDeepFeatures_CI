@@ -891,7 +891,7 @@ class pipeline:
                     decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
                     # print(np.array(decimg).shape)
                     packetizedfmL[j] = np.array(decimg)
-                batchBpp.append(tensorEncodedBufferSize / self.dataset_x_files_sizes[i_b])
+                batchBpp.append(tensorEncodedBufferSize / float(self.dataset_x_files_sizes[i_b]))
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
