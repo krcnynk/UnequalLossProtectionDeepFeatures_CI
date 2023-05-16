@@ -417,7 +417,7 @@ class pipeline:
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             print(l[-4:])
             if types[s] == l[-4:][0]:
-
+                l[-4:][1] = "r"
                 plt.axhline(y=seriesY[s], color='red', linestyle='--')
             # if (
             #     types[s] == "Least important"
