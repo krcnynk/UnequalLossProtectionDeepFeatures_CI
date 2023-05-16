@@ -417,7 +417,7 @@ class pipeline:
             seriesX[s], seriesY[s] = zip(*sorted(zip(seriesX[s], seriesY[s])))
             if types[s] in l[-4:]:
                 print(l[-4:])
-                l[-3:-3:] = "r"
+                l[-4:][1] = "r"
                 print(l[-4:])
                 plt.axhline(y=seriesY[s], color='red', linestyle='--')
             # if (
