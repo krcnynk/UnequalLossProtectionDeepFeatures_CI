@@ -885,20 +885,27 @@ class pipeline:
                 # if qualityFactor == 105:
                 #     OrderedImportanceOfPacketsIndexExcludeFEC =
                 #     encode_param = [i for i in range(101)]
+
                 
                 for j in range(len(packetizedfmL)):
                     # print(len(packetizedfmL))
                     result, encimg = cv.imencode(
                         ".jpg", packetizedfmL[j].astype("uint8"), encode_param
                     )
-                    # Converting the image into numpy array
-                    data_encode = np.array(encimg)
-                    # Converting the array to bytes.
-                    byte_encode = data_encode.tobytes()
-                    tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
-                    decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
-                    # print(np.array(decimg).shape)
-                    packetizedfmL[j] = np.array(decimg)
+                    if qualityFactor == 110:
+                        encimg = packetizedfmL[j].astype("uint8")
+                        data_encode = np.array(encimg)
+                        byte_encode = data_encode.tobytes()
+                        tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
+                    else:
+                        # Converting the image into numpy array
+                        data_encode = np.array(encimg)
+                        # Converting the array to bytes.
+                        byte_encode = data_encode.tobytes()
+                        tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
+                        decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
+                        packetizedfmL[j] = np.array(decimg)
+
                 batchBpp.append(tensorEncodedBufferSize / float(self.dataset_x_files_sizes[i_b]))
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
