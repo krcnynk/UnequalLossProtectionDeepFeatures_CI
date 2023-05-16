@@ -1,6 +1,5 @@
 #!/bin/bash
 #SBATCH --time=4:00:00
-#SBATCH --array=1-11
 #SBATCH --mem=50G
 #SBATCH --account=def-ibajic
 
@@ -9,4 +8,4 @@ module restore uneq
 # mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet/Random
 cd ..
 
-python Korcan/pipeline.py 0 9 0 $(($(($SLURM_ARRAY_TASK_ID-1))*10))
+python Korcan/pipeline.py 0 9 0 110
