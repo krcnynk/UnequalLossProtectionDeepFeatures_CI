@@ -421,7 +421,7 @@ class pipeline:
                 print(l[-4:])
                 plt.axhline(y=seriesY[s], color="red", linestyle="--")
             if types[s] in l[-8:-4]:
-                cases[-7:-6] = "r"
+                cases[-7:-6] = "b"
                 plt.axhline(y=seriesY[s], color="blue", linestyle="--")
             # if (
             #     types[s] == "Least important"
