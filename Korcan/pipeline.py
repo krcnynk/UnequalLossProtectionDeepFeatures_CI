@@ -886,23 +886,41 @@ class pipeline:
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
                 tensorEncodedBufferSize = 0
-                encode_param = [int(cv.IMWRITE_JPEG_QUALITY), qualityFactor]
-                # if qualityFactor == 105:
-                #     OrderedImportanceOfPacketsIndexExcludeFEC =
-                #     encode_param = [i for i in range(101)]
 
-                
                 for j in range(len(packetizedfmL)):
                     # print(len(packetizedfmL))
-                    result, encimg = cv.imencode(
-                        ".jpg", packetizedfmL[j].astype("uint8"), encode_param
-                    )
                     if qualityFactor == 110:
                         encimg = packetizedfmL[j].astype("uint8")
                         data_encode = np.array(encimg)
                         byte_encode = data_encode.tobytes()
                         tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
+                    if qualityFactor == 105:
+                        #High to Low index 33,1,21,199,6,512 etc to 100,99,98
+                        division_length = len(OrderedImportanceOfPacketsIndexExcludeFEC) // 100
+                        # Divide the array into equal divisions
+                        divided_array = [OrderedImportanceOfPacketsIndexExcludeFEC[i:i + division_length] for i in range(0, len(OrderedImportanceOfPacketsIndexExcludeFEC), division_length)]
+                        index = None
+                        for i, division in enumerate(divided_array):
+                            if j in division:
+                                index = i
+                                index = abs(index - 100)
+                                break
+                        encode_param = [int(cv.IMWRITE_JPEG_QUALITY), index]
+                        result, encimg = cv.imencode(
+                        ".jpg", packetizedfmL[j].astype("uint8"), encode_param
+                        )
+                        data_encode = np.array(encimg)
+                        # Converting the array to bytes.
+                        byte_encode = data_encode.tobytes()
+                        tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
+                        decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
+                        packetizedfmL[j] = np.array(decimg)
+                        
                     else:
+                        encode_param = [int(cv.IMWRITE_JPEG_QUALITY), qualityFactor]
+                        result, encimg = cv.imencode(
+                        ".jpg", packetizedfmL[j].astype("uint8"), encode_param
+                        )
                         # Converting the image into numpy array
                         data_encode = np.array(encimg)
                         # Converting the array to bytes.
