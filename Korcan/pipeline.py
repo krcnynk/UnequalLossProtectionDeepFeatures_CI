@@ -419,7 +419,10 @@ class pipeline:
                 print(l[-4:])
                 cases[-3:-2] = "r"
                 print(l[-4:])
-                plt.axhline(y=seriesY[s], color='red', linestyle='--')
+                plt.axhline(y=seriesY[s], color="red", linestyle="--")
+            if types[s] in l[-8:-4]:
+                cases[-7:-6] = "r"
+                plt.axhline(y=seriesY[s], color="red", linestyle="--")
             # if (
             #     types[s] == "Least important"
             #     or types[s] == "Most important"
@@ -893,12 +896,25 @@ class pipeline:
                         encimg = packetizedfmL[j].astype("uint8")
                         data_encode = np.array(encimg)
                         byte_encode = data_encode.tobytes()
-                        tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
+                        tensorEncodedBufferSize = (
+                            tensorEncodedBufferSize + len(byte_encode) * 8
+                        )
                     if qualityFactor == 105:
-                        #High to Low index 33,1,21,199,6,512 etc to 100,99,98
-                        division_length = len(OrderedImportanceOfPacketsIndexExcludeFEC) // 100
+                        # High to Low index 33,1,21,199,6,512 etc to 100,99,98
+                        division_length = (
+                            len(OrderedImportanceOfPacketsIndexExcludeFEC) // 100
+                        )
                         # Divide the array into equal divisions
-                        divided_array = [OrderedImportanceOfPacketsIndexExcludeFEC[i:i + division_length] for i in range(0, len(OrderedImportanceOfPacketsIndexExcludeFEC), division_length)]
+                        divided_array = [
+                            OrderedImportanceOfPacketsIndexExcludeFEC[
+                                i : i + division_length
+                            ]
+                            for i in range(
+                                0,
+                                len(OrderedImportanceOfPacketsIndexExcludeFEC),
+                                division_length,
+                            )
+                        ]
                         index = None
                         for i, division in enumerate(divided_array):
                             if j in division:
@@ -907,29 +923,35 @@ class pipeline:
                                 break
                         encode_param = [int(cv.IMWRITE_JPEG_QUALITY), index]
                         result, encimg = cv.imencode(
-                        ".jpg", packetizedfmL[j].astype("uint8"), encode_param
+                            ".jpg", packetizedfmL[j].astype("uint8"), encode_param
                         )
                         data_encode = np.array(encimg)
                         # Converting the array to bytes.
                         byte_encode = data_encode.tobytes()
-                        tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
+                        tensorEncodedBufferSize = (
+                            tensorEncodedBufferSize + len(byte_encode) * 8
+                        )
                         decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
                         packetizedfmL[j] = np.array(decimg)
-                        
+
                     else:
                         encode_param = [int(cv.IMWRITE_JPEG_QUALITY), qualityFactor]
                         result, encimg = cv.imencode(
-                        ".jpg", packetizedfmL[j].astype("uint8"), encode_param
+                            ".jpg", packetizedfmL[j].astype("uint8"), encode_param
                         )
                         # Converting the image into numpy array
                         data_encode = np.array(encimg)
                         # Converting the array to bytes.
                         byte_encode = data_encode.tobytes()
-                        tensorEncodedBufferSize = tensorEncodedBufferSize + len(byte_encode)*8
+                        tensorEncodedBufferSize = (
+                            tensorEncodedBufferSize + len(byte_encode) * 8
+                        )
                         decimg = cv.imdecode(encimg, cv.IMREAD_GRAYSCALE)
                         packetizedfmL[j] = np.array(decimg)
 
-                batchBpp.append(tensorEncodedBufferSize / float(self.dataset_x_files_sizes[i_b]))
+                batchBpp.append(
+                    tensorEncodedBufferSize / float(self.dataset_x_files_sizes[i_b])
+                )
             else:
                 raise Exception("Case can only be Random,Top or Random_RSCorrected.")
 
@@ -1058,7 +1080,7 @@ class pipeline:
 
             # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
             os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
-            
+
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
             pdictVal = {
                 "acc": metrics["acc"],
@@ -1495,7 +1517,7 @@ if __name__ == "__main__":
                     #     key = list(key)
                     #     key[1] = "Unprotected"
                     #     key = tuple(key)
-                    print(key,acc / count,count)
+                    print(key, acc / count, count)
                     module.pdict[key] = {
                         "acc": acc / count,
                         "loss": loss / count,
