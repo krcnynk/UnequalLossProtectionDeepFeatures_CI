@@ -8,4 +8,4 @@ module restore uneq
 # mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet/Random
 cd ..
 
-python Korcan/pipeline.py 0 9 0 110
+python Korcan/pipeline.py 0 9 0 105
