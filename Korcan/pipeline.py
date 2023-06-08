@@ -705,7 +705,7 @@ class pipeline:
                 grad_magnitude = np.sqrt(dx ** 2 + dy ** 2)
                 #grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
                 avg_grad_magnitude = np.mean(grad_magnitude)
-                importanceOfPackets.append(p)
+                importanceOfPackets.append(avg_grad_magnitude)
 
 
             # importanceOfPackets = [
