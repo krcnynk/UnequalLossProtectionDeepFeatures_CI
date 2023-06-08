@@ -696,9 +696,22 @@ class pipeline:
                     ),
                     packetNum,
                 )
-            importanceOfPackets = [
-                np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
-            ]
+
+
+            importanceOfPackets = []
+            for p in packetizedfmL:
+                dx = scipy.ndimage.sobel(p, 1)
+                dy = scipy.ndimage.sobel(p, 0)
+                grad_magnitude = np.sqrt(dx ** 2 + dy ** 2)
+                #grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                avg_grad_magnitude = np.mean(grad_magnitude)
+                importanceOfPackets.append(p)
+
+
+            # importanceOfPackets = [
+            #     np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
+            # ]
+
             OrderedImportanceOfPacketsIndexExcludeFEC = (
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
             )
