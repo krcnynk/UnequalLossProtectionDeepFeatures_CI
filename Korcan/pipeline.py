@@ -483,16 +483,16 @@ class pipeline:
         # order=[0,2,1,3]
         # order=[3,5,6, 2,0,1,7,4]
 
-        # plt.legend(
-        #     # [handles[i] for i in order], [labels[i] for i in order],
-        #     loc="upper right",
-        #     fontsize="xx-small",
-        #     markerscale=0.7,
-        #     # ncol=2,
-        #     fancybox=True,
-        #     # shadow=True,
-        #     prop={"size": 5},
-        # )
+        plt.legend(
+            # [handles[i] for i in order], [labels[i] for i in order],
+            loc="upper right",
+            fontsize="xx-small",
+            markerscale=0.7,
+            # ncol=2,
+            fancybox=True,
+            # shadow=True,
+            prop={"size": 5},
+        )
 
         # plt.axis('off')
         plt.savefig(
