@@ -708,9 +708,9 @@ class pipeline:
                 importanceOfPackets.append(avg_grad_magnitude)
 
 
-            # importanceOfPackets = [
-            #     np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
-            # ]
+            importanceOfPackets = [
+                np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
+            ]
 
             OrderedImportanceOfPacketsIndexExcludeFEC = (
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
