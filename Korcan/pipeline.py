@@ -706,19 +706,19 @@ class pipeline:
                 )
 
 
-            importanceOfPackets = []
-            for p in packetizedfmL:
-                dx = scipy.ndimage.sobel(p, 1)
-                dy = scipy.ndimage.sobel(p, 0)
-                grad_magnitude = np.sqrt(dx ** 2 + dy ** 2)
-                #grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                avg_grad_magnitude = np.mean(grad_magnitude)
-                importanceOfPackets.append(avg_grad_magnitude)
+            # importanceOfPackets = []
+            # for p in packetizedfmL:
+            #     dx = scipy.ndimage.sobel(p, 1)
+            #     dy = scipy.ndimage.sobel(p, 0)
+            #     grad_magnitude = np.sqrt(dx ** 2 + dy ** 2)
+            #     #grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+            #     avg_grad_magnitude = np.mean(grad_magnitude)
+            #     importanceOfPackets.append(avg_grad_magnitude)
 
 
-            # importanceOfPackets = [
-            #     np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
-            # ]
+            importanceOfPackets = [
+                np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
+            ]
 
             OrderedImportanceOfPacketsIndexExcludeFEC = (
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
@@ -1247,10 +1247,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     # # CREATE FOLDERS
