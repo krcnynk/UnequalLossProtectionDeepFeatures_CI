@@ -867,6 +867,7 @@ class pipeline:
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
                     0:numOfPacketsToLose
                 ]
+                indexOfRestoredPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important":
@@ -887,6 +888,7 @@ class pipeline:
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
                     0:numOfPacketsToLose
                 ]
+                indexOfRestoredPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Unprotected (IID) NS":
@@ -1435,7 +1437,7 @@ if __name__ == "__main__":
         dirNames = []
         dirNames.append("Most important")
         dirNames.append("Most important NS")
-        # dirNames.append("Least important")
+        dirNames.append("Least important")
         dirNames.append("Least important NS")
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
