@@ -1453,13 +1453,13 @@ if __name__ == "__main__":
                     module.pdict[key] = val
 
         dirNames = []
-        dirNames.append("Unprotected (IID)")
-        dirNames.append("FEC (IID)")
+        # dirNames.append("Unprotected (IID)")
+        # dirNames.append("FEC (IID)")
         # dirNames.append("FEC (Burst)")
-        dirNames.append("FEC (IID) NS")
+        # dirNames.append("FEC (IID) NS")
         # dirNames.append("FEC (Burst) NS")
         # dirNames.append("Unprotected (Burst)")
-        dirNames.append("Unprotected (IID) NS")
+        # dirNames.append("Unprotected (IID) NS")
         # dirNames.append("Unprotected (Burst) NS")
         # dirNames = []
 
