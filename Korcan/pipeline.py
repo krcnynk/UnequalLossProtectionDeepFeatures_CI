@@ -352,6 +352,14 @@ class pipeline:
             "g",
             ".",
             "-",
+            "Most important NS",
+            "b",
+            ".",
+            ":",
+            "Least important NS",
+            "g",
+            ".",
+            ":",
             "Unprotected (IID)",
             "r",
             ".",
@@ -854,7 +862,24 @@ class pipeline:
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
+            elif case == "Most important NS":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                    0:numOfPacketsToLose
+                ]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
             elif case == "Least important":
+                packetsSent = packetsSent + totalNumPackets
+                OrderedImportanceOfPacketsIndexExcludeFEC = (
+                    OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                )
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                    0:numOfPacketsToLose
+                ]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
+            elif case == "Least important NS":
                 packetsSent = packetsSent + totalNumPackets
                 OrderedImportanceOfPacketsIndexExcludeFEC = (
                     OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
@@ -1017,6 +1042,8 @@ class pipeline:
                 or case == "Unprotected (Burst) NS"
                 or case == "FEC (Burst) NS"
                 or case == "FEC (IID) NS"
+                or case == "Most important NS"
+                or case == "Least important NS"
             ):
                 shape = tensorCompleted.shape
                 arr = np.empty((shape[0] * 16, shape[1] * 16))
@@ -1077,6 +1104,8 @@ class pipeline:
         if (
             case == "Most important"
             or case == "Least important"
+            or case == "Most important NS"
+            or case == "Least important NS"
             or case == "Unprotected (IID)"
             or case == "Unprotected (Burst)"
             or case == "Unprotected (IID) NS"
@@ -1262,6 +1291,10 @@ if __name__ == "__main__":
         case = "FEC (IID) NS"
     elif case == "12":
         case = "FEC (Burst) NS"
+    elif case == "13":
+        case = "Most important NS"
+    elif case == "14":
+        case = "Least important NS"
 
     # module.saveSuperImposedChannels(modelName)
 
@@ -1369,6 +1402,8 @@ if __name__ == "__main__":
     if (
         case == "Most important"
         or case == "Least important"
+        or case == "Most important NS"
+        or case == "Least important NS"
         or case == "Unprotected (IID)"
         or case == "Unprotected (Burst)"
         or case == "Unprotected (IID) NS"
@@ -1399,7 +1434,9 @@ if __name__ == "__main__":
 
         dirNames = []
         dirNames.append("Most important")
+        dirNames.append("Most important NS")
         dirNames.append("Least important")
+        dirNames.append("Least important NS")
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             for fname in listFiles:
