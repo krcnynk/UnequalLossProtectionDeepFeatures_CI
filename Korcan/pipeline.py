@@ -1046,33 +1046,40 @@ class pipeline:
                 or case == "Most important NS"
                 or case == "Least important NS"
             ):
-                shape = tensorCompleted.shape
-                arr = np.empty((shape[0] * 16, shape[1] * 16))
-                mask = np.empty((shape[0] * 16, shape[1] * 16))
-                ind = 0
-                for i_cx in range(16):
-                    for i_cy in range(16):
-                        arr[
-                            i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
-                        ] = tensorCompleted[:, :, ind]
-                        mask[
-                            i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
-                        ] = maskCompleted[:, :, ind]
-                        ind = ind + 1
-                img_gray_cv2 = cv.cvtColor(arr.astype("uint8"), cv.COLOR_GRAY2BGR)
-                dst = cv.inpaint(img_gray_cv2, mask.astype("uint8"), 7, cv.INPAINT_NS)
-                dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
-                # Initialize an empty 3D tensor with shape (16, 16, 56, 56)
-                tensorCompleted = np.zeros((56, 56, 256))
-                # Initialize an index variable
-                ind = 0
-                # Iterate over 16 x 16 blocks in arr and fill tensorCompleted with corresponding blocks
-                for i_cx in range(16):
-                    for i_cy in range(16):
-                        tensorCompleted[:, :, ind] = dst[
-                            i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
-                        ]
-                        ind = ind + 1
+                # shape = tensorCompleted.shape
+                # arr = np.empty((shape[0] * 16, shape[1] * 16))
+                # mask = np.empty((shape[0] * 16, shape[1] * 16))
+                # ind = 0
+                # for i_cx in range(16):
+                #     for i_cy in range(16):
+                        # arr[
+                        #     i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                        # ] = tensorCompleted[:, :, ind]
+                        # mask[
+                        #     i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                        # ] = maskCompleted[:, :, ind]
+                        # ind = ind + 1
+                for ind in range(tensorCompleted.shape[2]):
+                    img_gray_cv2 = cv.cvtColor(tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR)
+                    dst = cv.inpaint(img_gray_cv2, maskCompleted[:, :, ind].astype("uint8"), 7, cv.INPAINT_NS)
+                    dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
+                    tensorCompleted[:, :, ind]= dst
+
+                # img_gray_cv2 = cv.cvtColor(arr.astype("uint8"), cv.COLOR_GRAY2BGR)
+                # dst = cv.inpaint(img_gray_cv2, mask.astype("uint8"), 7, cv.INPAINT_NS)
+                # dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
+
+                # # Initialize an empty 3D tensor with shape (16, 16, 56, 56)
+                # tensorCompleted = np.zeros((56, 56, 256))
+                # # Initialize an index variable
+                # ind = 0
+                # # Iterate over 16 x 16 blocks in arr and fill tensorCompleted with corresponding blocks
+                # for i_cx in range(16):
+                #     for i_cy in range(16):
+                #         tensorCompleted[:, :, ind] = dst[
+                #             i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                #         ]
+                #         ind = ind + 1
 
                 # img_gray_np = np.array(dst).astype(np.uint8)
 
