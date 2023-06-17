@@ -667,6 +667,7 @@ class pipeline:
         else:
             pad = 0
         fmLPacketizedLoss = []
+        mseList = []
         importancePacketsTensor = []
         rng = np.random.default_rng()
         packetsLost = 0
@@ -1095,6 +1096,7 @@ class pipeline:
                 # img_gray_np = np.array(dst).astype(np.uint8)
 
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
+            mseList.append(mse)
 
             fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
             fmLPacketizedLoss.append(fmL)
@@ -1109,9 +1111,6 @@ class pipeline:
             )
             return
 
-        # scores.append(self.getMetrics(fmLPacketizedLoss))
-        metrics = self.getMetrics(fmLPacketizedLoss)
-
         # with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(packetNum)+"_"+str(percOfPacketLoss)+".npy", 'wb') as f:
         #         np.save(f, np.array(scores))
 
@@ -1122,6 +1121,7 @@ class pipeline:
         #     count = count + 1
         #     acc = acc + s["acc"]
         #     loss = loss + s["loss"]
+
         if (
             case == "Most important"
             or case == "Least important"
@@ -1137,6 +1137,7 @@ class pipeline:
             or case == "FEC (Burst) NS"
             or case == "Unprotected (IID) EN"
         ):
+            
             if case == "Unprotected (IID) EN":
                 case = "Unprotected (IID) EN_" + str(qualityFactor)
                 percOfPacketLoss = sum(batchBpp) / float(len(batchBpp))
@@ -1145,9 +1146,16 @@ class pipeline:
             os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
 
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
+            # metrics = self.getMetrics(fmLPacketizedLoss)
+            # pdictVal = {
+            #     "acc": metrics["acc"],
+            #     "loss": metrics["loss"],
+            #     "min": 0,
+            #     "max": 0,
+            # }
             pdictVal = {
-                "acc": metrics["acc"],
-                "loss": metrics["loss"],
+                "acc": sum(mseList) / len(mseList),
+                "loss": 0,
                 "min": 0,
                 "max": 0,
             }
