@@ -756,8 +756,6 @@ class pipeline:
                 OrderedImportanceOfPacketsIndexExcludeFEC = (
                     OrderedImportanceOfPacketsIndexExcludeFEC[:-FECPacketCount]
                 )
-                # for j in lowestImportanceIndex:
-                #     packetizedfmL[j][...] = 0
 
                 packetsSent = packetsSent + totalNumPackets
                 packetsLost = packetsLost + numOfPacketsToLose
@@ -796,8 +794,7 @@ class pipeline:
                 OrderedImportanceOfPacketsIndexExcludeFEC = (
                     OrderedImportanceOfPacketsIndexExcludeFEC[:-FECPacketCount]
                 )
-                # for j in lowestImportanceIndex:
-                #     packetizedfmL[j][...] = 0
+
                 packetsSent = packetsSent + totalNumPackets
                 packetsLost = packetsLost + numOfPacketsToLose
 
@@ -998,6 +995,8 @@ class pipeline:
             for j in range(len(packetizedfmL)):
                 mask.append(np.zeros_like(packetizedfmL[j]))
 
+            packetsWithoutLoss = list(packetizedfmL)
+
             for j in indexOfLossedPackets:
                 packetizedfmL[j][...] = 0
 
@@ -1007,6 +1006,11 @@ class pipeline:
             channelReconstructed = [
                 np.vstack(packetizedfmL[i : i + packetNum])
                 for i in range(0, len(packetizedfmL), packetNum)
+            ]
+
+            channelReconstructedNoLoss = [
+                np.vstack(packetsWithoutLoss[i : i + packetNum])
+                for i in range(0, len(packetsWithoutLoss), packetNum)
             ]
 
             maskR = [
@@ -1019,7 +1023,12 @@ class pipeline:
                     channelReconstructed[i][0:-pad, ...]
                     for i in range(0, len(channelReconstructed))
                 ]
+                channelReconstructedNoLoss = [
+                    channelReconstructedNoLoss[i][0:-pad, ...]
+                    for i in range(0, len(channelReconstructedNoLoss))
+                ]
                 maskR = [maskR[i][0:-pad, ...] for i in range(0, len(maskR))]
+
 
             packetizedImportanceMap = [
                 np.ones_like(packetizedheatMap[i_p]) * np.sum(packetizedheatMap[i_p])
@@ -1034,8 +1043,10 @@ class pipeline:
                     channelReconstructedImportance[i][0:-pad, ...]
                     for i in range(0, len(channelReconstructedImportance))
                 ]
+
             tensorImportanceCompleted = np.dstack(channelReconstructedImportance)
             tensorCompleted = np.dstack(channelReconstructed)
+            tensorCompletedNoLoss = np.dstack(channelReconstructedNoLoss)
             maskCompleted = np.dstack(maskR)
 
             if (
@@ -1082,6 +1093,8 @@ class pipeline:
                 #         ind = ind + 1
 
                 # img_gray_np = np.array(dst).astype(np.uint8)
+
+            mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
 
             fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
             fmLPacketizedLoss.append(fmL)
@@ -1258,12 +1271,6 @@ if __name__ == "__main__":
     trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
     dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
-
-    # # CREATE FOLDERS
-    # if not os.path.exists("Korcan/Plots"):
-    #     os.makedirs("Korcan/Plots")
-    # if not os.path.exists("Korcan/Plots/" + modelName):
-    #     os.makedirs("Korcan/Plots/" + modelName)
 
     module = pipeline()
     module.loadModel(
