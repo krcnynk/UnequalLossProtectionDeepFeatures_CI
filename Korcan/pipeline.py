@@ -1095,6 +1095,12 @@ class pipeline:
 
                 # img_gray_np = np.array(dst).astype(np.uint8)
 
+            if (case == "Most important"
+                or case == "Least important"
+            ):
+                mse = np.mean((0 - tensorCompletedNoLoss) ** 2)
+                mseList.append(mse)
+                
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
             mseList.append(mse)
 
