@@ -999,7 +999,7 @@ class pipeline:
             packetsWithoutLoss = packetizedfmL.copy()
 
             for j in indexOfLossedPackets:
-                packetizedfmL[j][...] = 0
+                # packetizedfmL[j][...] = 0
 
             for j in indexOfRestoredPackets:
                 mask[j][...] = 1
