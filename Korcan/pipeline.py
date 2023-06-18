@@ -1105,7 +1105,7 @@ class pipeline:
                 mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
                 mseList.append(mse)
 
-            fmL = self.__inverseQuantize(tensorCompletedNoLoss, qBits, minVal, maxVal)
+            fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
             fmLPacketizedLoss.append(fmL)
             importancePacketsTensor.append(tensorImportanceCompleted)
 
@@ -1281,10 +1281,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     module = pipeline()
