@@ -707,9 +707,9 @@ class pipeline:
                     packetNum,
                 )
 
-            importanceOfPackets = [
-                np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
-            ]
+            # importanceOfPackets = [
+            #     np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
+            # ]
 
             importanceOfPackets = []
             for p in packetizedfmL:
