@@ -5,6 +5,7 @@ import matplotlib as mpl
 import pickle
 import scipy
 import cv2 as cv
+import copy
 
 mpl.use("Agg")
 import matplotlib.pyplot as plt
@@ -996,7 +997,7 @@ class pipeline:
             for j in range(len(packetizedfmL)):
                 mask.append(np.zeros_like(packetizedfmL[j]))
 
-            packetsWithoutLoss = packetizedfmL[:]
+            packetsWithoutLoss = copy.deepcopy(packetizedfmL)
 
             for j in indexOfLossedPackets:
                 packetizedfmL[j][...] = 0
