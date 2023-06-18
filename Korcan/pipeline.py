@@ -996,7 +996,7 @@ class pipeline:
             for j in range(len(packetizedfmL)):
                 mask.append(np.zeros_like(packetizedfmL[j]))
 
-            packetsWithoutLoss = list(packetizedfmL)
+            packetsWithoutLoss = packetizedfmL.copy()
 
             for j in indexOfLossedPackets:
                 packetizedfmL[j][...] = 0
