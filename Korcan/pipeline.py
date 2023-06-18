@@ -1280,10 +1280,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     module = pipeline()
@@ -1341,91 +1341,107 @@ if __name__ == "__main__":
             packetCount,
             quantizationBits,
             saveImageLossPercent,
+            "Most important NS",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Least important NS",
+            saveImages=True,
+            modelName=modelName,
+        )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
             "Least important",
             saveImages=True,
             modelName=modelName,
         )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (IID)",
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (Burst)",
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (IID) NS",
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (Burst) NS",
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (IID) EN",
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (IID)",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (Burst)",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (IID) NS",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (Burst) NS",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (IID) EN",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
 
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "FEC (IID) NS",
-            5,
-            95,
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "FEC (Burst) NS",
-            5,
-            95,
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "FEC (IID)",
-            5,
-            95,
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "FEC (Burst)",
-            5,
-            95,
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "FEC (IID) NS",
+        #     5,
+        #     95,
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "FEC (Burst) NS",
+        #     5,
+        #     95,
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "FEC (IID)",
+        #     5,
+        #     95,
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "FEC (Burst)",
+        #     5,
+        #     95,
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
         sys.exit()
 
     if (
