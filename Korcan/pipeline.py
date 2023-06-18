@@ -707,19 +707,18 @@ class pipeline:
                     packetNum,
                 )
 
+            importanceOfPackets = [
+                np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
+            ]
 
             importanceOfPackets = []
             for p in packetizedfmL:
                 dx = scipy.ndimage.sobel(p, 1)
                 dy = scipy.ndimage.sobel(p, 0)
-                grad_magnitude = np.sqrt(dx ** 2 + dy ** 2)
-                #grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                grad_magnitude = np.sqrt(dx**2 + dy**2)
+                # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
                 avg_grad_magnitude = np.mean(grad_magnitude)
                 importanceOfPackets.append(avg_grad_magnitude)
-
-            # importanceOfPackets = [
-            #     np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
-            # ]
 
             OrderedImportanceOfPacketsIndexExcludeFEC = (
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
@@ -729,7 +728,7 @@ class pipeline:
             )
             totalNumPackets = len(packetizedheatMap)
 
-            indexOfRestoredPackets = []
+            indexOfInterpolatedPackets = []
 
             if case == "FEC (Burst)" or case == "FEC (Burst) NS":
                 if percOfPacketLoss != 0:
@@ -780,7 +779,7 @@ class pipeline:
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
-                    indexOfRestoredPackets = indexOfLossedPackets
+                    indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
 
             elif case == "FEC (IID)" or case == "FEC (IID) NS":
@@ -818,7 +817,7 @@ class pipeline:
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
-                    indexOfRestoredPackets = indexOfLossedPackets
+                    indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
 
             elif case == "Unprotected (Burst)":
@@ -865,7 +864,7 @@ class pipeline:
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
                     0:numOfPacketsToLose
                 ]
-                indexOfRestoredPackets = indexOfLossedPackets
+                indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important":
@@ -886,7 +885,43 @@ class pipeline:
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
                     0:numOfPacketsToLose
                 ]
-                indexOfRestoredPackets = indexOfLossedPackets
+                indexOfInterpolatedPackets = indexOfLossedPackets
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
+            elif case == "Most important Weighted":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                    0:numOfPacketsToLose
+                ]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
+            elif case == "Most important NS Weighted":
+                packetsSent = packetsSent + totalNumPackets
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                    0:numOfPacketsToLose
+                ]
+                indexOfInterpolatedPackets = indexOfLossedPackets
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
+            elif case == "Least importan Weighted":
+                packetsSent = packetsSent + totalNumPackets
+                OrderedImportanceOfPacketsIndexExcludeFEC = (
+                    OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                )
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                    0:numOfPacketsToLose
+                ]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
+
+            elif case == "Least important NS Weighted":
+                packetsSent = packetsSent + totalNumPackets
+                OrderedImportanceOfPacketsIndexExcludeFEC = (
+                    OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                )
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                    0:numOfPacketsToLose
+                ]
+                indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Unprotected (IID) NS":
@@ -894,7 +929,7 @@ class pipeline:
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
-                indexOfRestoredPackets = indexOfLossedPackets
+                indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Unprotected (Burst) NS":
@@ -916,7 +951,7 @@ class pipeline:
                     numOfPacketsToLose = 0
                 packetsSent = packetsSent + totalNumPackets
                 indexOfLossedPackets = (~sim).nonzero()[0]
-                indexOfRestoredPackets = (~sim).nonzero()[0]
+                indexOfInterpolatedPackets = (~sim).nonzero()[0]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Unprotected (IID) EN":
@@ -1002,7 +1037,7 @@ class pipeline:
             for j in indexOfLossedPackets:
                 packetizedfmL[j][...] = 0
 
-            for j in indexOfRestoredPackets:
+            for j in indexOfInterpolatedPackets:
                 mask[j][...] = 1
 
             channelReconstructed = [
@@ -1020,17 +1055,16 @@ class pipeline:
                 for i in range(0, len(mask), packetNum)
             ]
 
-            if pad != 0:
-                channelReconstructed = [
-                    channelReconstructed[i][0:-pad, ...]
-                    for i in range(0, len(channelReconstructed))
-                ]
-                channelReconstructedNoLoss = [
-                    channelReconstructedNoLoss[i][0:-pad, ...]
-                    for i in range(0, len(channelReconstructedNoLoss))
-                ]
-                maskR = [maskR[i][0:-pad, ...] for i in range(0, len(maskR))]
-
+            # if pad != 0:
+            #     channelReconstructed = [
+            #         channelReconstructed[i][0:-pad, ...]
+            #         for i in range(0, len(channelReconstructed))
+            #     ]
+            #     channelReconstructedNoLoss = [
+            #         channelReconstructedNoLoss[i][0:-pad, ...]
+            #         for i in range(0, len(channelReconstructedNoLoss))
+            #     ]
+            #     maskR = [maskR[i][0:-pad, ...] for i in range(0, len(maskR))]
 
             packetizedImportanceMap = [
                 np.ones_like(packetizedheatMap[i_p]) * np.sum(packetizedheatMap[i_p])
@@ -1045,6 +1079,15 @@ class pipeline:
                     channelReconstructedImportance[i][0:-pad, ...]
                     for i in range(0, len(channelReconstructedImportance))
                 ]
+                channelReconstructed = [
+                    channelReconstructed[i][0:-pad, ...]
+                    for i in range(0, len(channelReconstructed))
+                ]
+                channelReconstructedNoLoss = [
+                    channelReconstructedNoLoss[i][0:-pad, ...]
+                    for i in range(0, len(channelReconstructedNoLoss))
+                ]
+                maskR = [maskR[i][0:-pad, ...] for i in range(0, len(maskR))]
 
             tensorImportanceCompleted = np.dstack(channelReconstructedImportance)
             tensorCompleted = np.dstack(channelReconstructed)
@@ -1065,18 +1108,25 @@ class pipeline:
                 # ind = 0
                 # for i_cx in range(16):
                 #     for i_cy in range(16):
-                        # arr[
-                        #     i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
-                        # ] = tensorCompleted[:, :, ind]
-                        # mask[
-                        #     i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
-                        # ] = maskCompleted[:, :, ind]
-                        # ind = ind + 1
+                # arr[
+                #     i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                # ] = tensorCompleted[:, :, ind]
+                # mask[
+                #     i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                # ] = maskCompleted[:, :, ind]
+                # ind = ind + 1
                 for ind in range(tensorCompleted.shape[2]):
-                    img_gray_cv2 = cv.cvtColor(tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR)
-                    dst = cv.inpaint(img_gray_cv2, maskCompleted[:, :, ind].astype("uint8"), 7, cv.INPAINT_NS)
+                    img_gray_cv2 = cv.cvtColor(
+                        tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR
+                    )
+                    dst = cv.inpaint(
+                        img_gray_cv2,
+                        maskCompleted[:, :, ind].astype("uint8"),
+                        7,
+                        cv.INPAINT_NS,
+                    )
                     dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
-                    tensorCompleted[:, :, ind]= dst
+                    tensorCompleted[:, :, ind] = dst
 
                 # img_gray_cv2 = cv.cvtColor(arr.astype("uint8"), cv.COLOR_GRAY2BGR)
                 # dst = cv.inpaint(img_gray_cv2, mask.astype("uint8"), 7, cv.INPAINT_NS)
@@ -1096,14 +1146,8 @@ class pipeline:
 
                 # img_gray_np = np.array(dst).astype(np.uint8)
 
-            if (case == "Most important"
-                or case == "Least important"
-            ):
-                mse = np.mean((0 - tensorCompletedNoLoss) ** 2)
-                mseList.append(mse)
-            else:
-                mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
-                mseList.append(mse)
+            mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
+            mseList.append(mse)
 
             fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
             fmLPacketizedLoss.append(fmL)
@@ -1144,7 +1188,6 @@ class pipeline:
             or case == "FEC (Burst) NS"
             or case == "Unprotected (IID) EN"
         ):
-            
             if case == "Unprotected (IID) EN":
                 case = "Unprotected (IID) EN_" + str(qualityFactor)
                 percOfPacketLoss = sum(batchBpp) / float(len(batchBpp))
