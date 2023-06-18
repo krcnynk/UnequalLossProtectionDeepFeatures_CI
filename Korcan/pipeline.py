@@ -1104,7 +1104,7 @@ class pipeline:
                 mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
                 mseList.append(mse)
 
-            fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
+            fmL = self.__inverseQuantize(tensorCompletedNoLoss, qBits, minVal, maxVal)
             fmLPacketizedLoss.append(fmL)
             importancePacketsTensor.append(tensorImportanceCompleted)
 
