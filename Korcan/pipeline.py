@@ -1164,10 +1164,10 @@ class pipeline:
                         img_gray_cv2,
                         maskCompleted[:, :, ind].astype("uint8"),
                         7,
-                        cv.INPAINT_NS,
+                        cv.INPAINT_TELEA,
                     )
                     dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
-                    tensorCompleted[:, :, ind] = maskCompleted[:, :, ind]
+                    tensorCompleted[:, :, ind] = dst
 
                 # img_gray_cv2 = cv.cvtColor(arr.astype("uint8"), cv.COLOR_GRAY2BGR)
                 # dst = cv.inpaint(img_gray_cv2, mask.astype("uint8"), 7, cv.INPAINT_NS)
