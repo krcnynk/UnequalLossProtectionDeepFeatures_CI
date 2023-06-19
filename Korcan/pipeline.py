@@ -743,19 +743,22 @@ class pipeline:
                 avg_grad_magnitude = np.mean(grad_magnitude)
                 importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-            importanceOfPacketsWeighted = (
-                np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
-            ) / (
-                np.max(np.array(importanceOfPackets))
-                - np.min(np.array(importanceOfPackets))
-            )
-            +(
-                np.array(importanceOfPacketsSobel)
-                - np.min(np.array(importanceOfPacketsSobel))
-            ) / (
-                np.max(np.array(importanceOfPacketsSobel))
-                - np.min(np.array(importanceOfPacketsSobel))
-            )
+            importanceOfPacketsWeighted = importanceOfPacketsSobel
+
+            # importanceOfPacketsWeighted = (
+            #     np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
+            # ) / (
+            #     np.max(np.array(importanceOfPackets))
+            #     - np.min(np.array(importanceOfPackets))
+            # )
+            # +(
+            #     np.array(importanceOfPacketsSobel)
+            #     - np.min(np.array(importanceOfPacketsSobel))
+            # ) / (
+            #     np.max(np.array(importanceOfPacketsSobel))
+            #     - np.min(np.array(importanceOfPacketsSobel))
+            # )
+
             OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
                 self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
             )
@@ -1369,10 +1372,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     module = pipeline()
