@@ -707,11 +707,15 @@ class pipeline:
                     packetNum,
                 )
 
-            # importanceOfPackets = [
-            #     np.sum(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
-            # ]
+            importanceOfPackets = [
+                np.mean(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
+            ]
 
-            importanceOfPackets = []
+            OrderedImportanceOfPacketsIndexExcludeFEC = (
+                self.__getOrderedImportantPacketIndex(importanceOfPackets)
+            )
+
+            importanceOfPacketsSobel = []
             for p in packetizedfmL:
                 dx = scipy.ndimage.sobel(p, 1)
                 dy = scipy.ndimage.sobel(p, 0)
@@ -720,9 +724,23 @@ class pipeline:
                 avg_grad_magnitude = np.mean(grad_magnitude)
                 importanceOfPackets.append(avg_grad_magnitude)
 
-            OrderedImportanceOfPacketsIndexExcludeFEC = (
-                self.__getOrderedImportantPacketIndex(importanceOfPackets)
+            importanceOfPacketsWeighted = (
+                np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
+            ) / (
+                np.max(np.array(importanceOfPackets))
+                - np.min(np.array(importanceOfPackets))
             )
+            +(
+                np.array(importanceOfPacketsSobel)
+                - np.min(np.array(importanceOfPacketsSobel))
+            ) / (
+                np.max(np.array(importanceOfPacketsSobel))
+                - np.min(np.array(importanceOfPacketsSobel))
+            )
+            OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
+                self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
+            )
+
             numOfPacketsToLose = math.floor(
                 len(packetizedheatMap) * percOfPacketLoss / 100
             )
@@ -890,35 +908,37 @@ class pipeline:
 
             elif case == "Most important Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
-                    0:numOfPacketsToLose
-                ]
+                indexOfLossedPackets = (
+                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[
+                        0:numOfPacketsToLose
+                    ]
+                )
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Most important NS Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[
                     0:numOfPacketsToLose
                 ]
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
-
-            elif case == "Least importan Weighted":
+                
+            elif case == "Least important Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFEC = (
-                    OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
+                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
                 )
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[
                     0:numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
-
+                
             elif case == "Least important NS Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFEC = (
-                    OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
+                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
                 )
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[
                     0:numOfPacketsToLose
                 ]
                 indexOfInterpolatedPackets = indexOfLossedPackets
@@ -1196,19 +1216,19 @@ class pipeline:
             os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
 
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
-            # metrics = self.getMetrics(fmLPacketizedLoss)
-            # pdictVal = {
-            #     "acc": metrics["acc"],
-            #     "loss": metrics["loss"],
-            #     "min": 0,
-            #     "max": 0,
-            # }
+            metrics = self.getMetrics(fmLPacketizedLoss)
             pdictVal = {
-                "acc": sum(mseList) / len(mseList),
-                "loss": 0,
+                "acc": metrics["acc"],
+                "loss": metrics["loss"],
                 "min": 0,
                 "max": 0,
             }
+            # pdictVal = {
+            #     "acc": sum(mseList) / len(mseList),
+            #     "loss": 0,
+            #     "min": 0,
+            #     "max": 0,
+            # }
 
             rand = int(random.randint(1, sys.maxsize))
             with open(
@@ -1368,6 +1388,14 @@ if __name__ == "__main__":
         case = "Most important NS"
     elif case == "14":
         case = "Least important NS"
+    elif case == "15":
+        case = "Most important Weighted"
+    elif case == "16":
+        case = "Least important Weighted"
+    elif case == "17":
+        case = "Most important NS Weighted"
+    elif case == "18":
+        case = "Least important NS Weighted"
 
     # module.saveSuperImposedChannels(modelName)
 
@@ -1487,7 +1515,7 @@ if __name__ == "__main__":
         #     modelName=modelName,
         # )
         sys.exit()
-
+        
     if (
         case == "Most important"
         or case == "Least important"
@@ -1500,6 +1528,10 @@ if __name__ == "__main__":
         or case == "Unprotected (IID) EN"
         # or case == "FEC (IID)"
         # or case == "FEC (Burst)"
+        or case == "Most important Weighted"
+        or case == "Least important Weighted"
+        or case == "Most important NS Weighted"
+        or case == "Least important NS Weighted"
     ):
         module.packetLossSim(
             packetCount,
