@@ -1140,6 +1140,8 @@ class pipeline:
                 or case == "FEC (IID) NS"
                 or case == "Most important NS"
                 or case == "Least important NS"
+                or case == "Most important NS Weighted"
+                or case == "Least important NS Weighted"
             ):
                 # shape = tensorCompleted.shape
                 # arr = np.empty((shape[0] * 16, shape[1] * 16))
@@ -1165,7 +1167,7 @@ class pipeline:
                         cv.INPAINT_NS,
                     )
                     dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
-                    tensorCompleted[:, :, ind] = dst
+                    # tensorCompleted[:, :, ind] = dst
 
                 # img_gray_cv2 = cv.cvtColor(arr.astype("uint8"), cv.COLOR_GRAY2BGR)
                 # dst = cv.inpaint(img_gray_cv2, mask.astype("uint8"), 7, cv.INPAINT_NS)
@@ -1239,19 +1241,19 @@ class pipeline:
             os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
 
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
-            metrics = self.getMetrics(fmLPacketizedLoss)
-            pdictVal = {
-                "acc": metrics["acc"],
-                "loss": metrics["loss"],
-                "min": 0,
-                "max": 0,
-            }
+            # metrics = self.getMetrics(fmLPacketizedLoss)
             # pdictVal = {
-            #     "acc": sum(mseList) / len(mseList),
-            #     "loss": 0,
+            #     "acc": metrics["acc"],
+            #     "loss": metrics["loss"],
             #     "min": 0,
             #     "max": 0,
             # }
+            pdictVal = {
+                "acc": sum(mseList) / len(mseList),
+                "loss": 0,
+                "min": 0,
+                "max": 0,
+            }
 
             rand = int(random.randint(1, sys.maxsize))
             with open(
@@ -1367,10 +1369,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     module = pipeline()
