@@ -1167,7 +1167,7 @@ class pipeline:
                         cv.INPAINT_NS,
                     )
                     dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
-                    # tensorCompleted[:, :, ind] = dst
+                    tensorCompleted[:, :, ind] = maskCompleted[:, :, ind]
 
                 # img_gray_cv2 = cv.cvtColor(arr.astype("uint8"), cv.COLOR_GRAY2BGR)
                 # dst = cv.inpaint(img_gray_cv2, mask.astype("uint8"), 7, cv.INPAINT_NS)
