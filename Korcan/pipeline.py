@@ -361,6 +361,25 @@ class pipeline:
             "g",
             ".",
             ":",
+
+            "Most important Weighted",
+            "r",
+            ".",
+            "-",
+            "Least important Weighted",
+            "c",
+            ".",
+            "-",
+            "Most important NS Weighted",
+            "r",
+            ".",
+            ":",
+            "Least important NS Weighted",
+            "c",
+            ".",
+            ":",
+
+
             "Unprotected (IID)",
             "r",
             ".",
@@ -1558,6 +1577,12 @@ if __name__ == "__main__":
         dirNames.append("Most important NS")
         dirNames.append("Least important")
         dirNames.append("Least important NS")
+
+        dirNames.append("Most important Weighted")
+        dirNames.append("Most important NS Weighted")
+        dirNames.append("Least important Weighted")
+        dirNames.append("Least important NS Weighted")
+
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
             for fname in listFiles:
