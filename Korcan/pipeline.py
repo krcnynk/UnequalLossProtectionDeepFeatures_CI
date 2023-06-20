@@ -381,21 +381,24 @@ class pipeline:
 
 
             "Unprotected (IID)",
-            "r",
+            "m",
             ".",
             "-",
             "Unprotected (Burst)",
-            "c",
+            "y",
             ".",
             "-",
             "Unprotected (IID) NS",
-            "r",
+            "m",
             ".",
             ":",
             "Unprotected (Burst) NS",
-            "c",
+            "y",
             ".",
             ":",
+
+
+
             "FEC (IID)",
             "m",
             ".",
