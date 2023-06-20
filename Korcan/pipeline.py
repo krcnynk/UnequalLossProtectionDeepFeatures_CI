@@ -662,6 +662,31 @@ class pipeline:
     #     if saveImages:
     #         self.__savePacketLossImages(fmLRandomBatch, "randomPixelLoss")
 
+    def myImportanceFunction(self,pfmL,packetNum):
+        packetizedfmL = copy.deepcopy(pfmL)
+        for i in range(packetizedfmL):
+            packetizedfmL = copy.deepcopy(pfmL)
+            packetizedfmL[i]=0
+            channelReconstructed = [
+                np.vstack(packetizedfmL[i : i + packetNum])
+                for i in range(0, len(packetizedfmL), packetNum)
+            ]
+            tensorCompleted = np.dstack(channelReconstructed)
+            for ind in range(tensorCompleted.shape[2]):
+                    img_gray_cv2 = cv.cvtColor(
+                        tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR
+                    )
+                    dst = cv.inpaint(
+                        img_gray_cv2,
+                        maskCompleted[:, :, ind].astype("uint8"),
+                        7,
+                        cv.INPAINT_TELEA,
+                    )
+                    dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
+                    tensorCompleted[:, :, ind] = dst
+
+        return
+    
     def packetLossSim(
         self,
         packetNum,
@@ -745,6 +770,7 @@ class pipeline:
 
             importanceOfPacketsWeighted = importanceOfPacketsSobel
 
+            self.myImportanceFunction(packetizedfmL,packetNum)
             # importanceOfPacketsWeighted = (
             #     np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
             # ) / (
@@ -1608,14 +1634,14 @@ if __name__ == "__main__":
                     module.pdict[key] = val
 
         dirNames = []
-        # dirNames.append("Unprotected (IID)")
+        dirNames.append("Unprotected (IID)")
         # dirNames.append("FEC (IID)")
         # dirNames.append("FEC (Burst)")
         # dirNames.append("FEC (IID) NS")
         # dirNames.append("FEC (Burst) NS")
-        # dirNames.append("Unprotected (Burst)")
-        # dirNames.append("Unprotected (IID) NS")
-        # dirNames.append("Unprotected (Burst) NS")
+        dirNames.append("Unprotected (Burst)")
+        dirNames.append("Unprotected (IID) NS")
+        dirNames.append("Unprotected (Burst) NS")
         # dirNames = []
 
         # set the directory path
