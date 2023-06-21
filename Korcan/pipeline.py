@@ -771,9 +771,9 @@ class pipeline:
                 avg_grad_magnitude = np.mean(grad_magnitude)
                 importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-            importanceOfPacketsWeighted = importanceOfPacketsSobel
+            # importanceOfPacketsWeighted = importanceOfPacketsSobel
+            # self.myImportanceFunction(packetizedfmL,packetNum)
 
-            self.myImportanceFunction(packetizedfmL,packetNum)
             importanceOfPacketsWeighted = (
                 np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
             ) / (
