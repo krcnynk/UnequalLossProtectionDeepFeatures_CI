@@ -774,19 +774,19 @@ class pipeline:
             importanceOfPacketsWeighted = importanceOfPacketsSobel
 
             self.myImportanceFunction(packetizedfmL,packetNum)
-            # importanceOfPacketsWeighted = (
-            #     np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
-            # ) / (
-            #     np.max(np.array(importanceOfPackets))
-            #     - np.min(np.array(importanceOfPackets))
-            # )
-            # +(
-            #     np.array(importanceOfPacketsSobel)
-            #     - np.min(np.array(importanceOfPacketsSobel))
-            # ) / (
-            #     np.max(np.array(importanceOfPacketsSobel))
-            #     - np.min(np.array(importanceOfPacketsSobel))
-            # )
+            importanceOfPacketsWeighted = (
+                np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
+            ) / (
+                np.max(np.array(importanceOfPackets))
+                - np.min(np.array(importanceOfPackets))
+            )
+            +(
+                np.array(importanceOfPacketsSobel)
+                - np.min(np.array(importanceOfPacketsSobel))
+            ) / (
+                np.max(np.array(importanceOfPacketsSobel))
+                - np.min(np.array(importanceOfPacketsSobel))
+            )
 
             OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
                 self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
@@ -1273,19 +1273,19 @@ class pipeline:
             os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
 
             pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
-            # metrics = self.getMetrics(fmLPacketizedLoss)
-            # pdictVal = {
-            #     "acc": metrics["acc"],
-            #     "loss": metrics["loss"],
-            #     "min": 0,
-            #     "max": 0,
-            # }
+            metrics = self.getMetrics(fmLPacketizedLoss)
             pdictVal = {
-                "acc": sum(mseList) / len(mseList),
-                "loss": 0,
+                "acc": metrics["acc"],
+                "loss": metrics["loss"],
                 "min": 0,
                 "max": 0,
             }
+            # pdictVal = {
+            #     "acc": sum(mseList) / len(mseList),
+            #     "loss": 0,
+            #     "min": 0,
+            #     "max": 0,
+            # }
 
             rand = int(random.randint(1, sys.maxsize))
             with open(
