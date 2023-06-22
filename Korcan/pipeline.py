@@ -1275,19 +1275,20 @@ class pipeline:
                 # ] = maskCompleted[:, :, ind]
                 # ind = ind + 1
 
-                for ind in range(tensorCompleted.shape[2]):
-                    img_gray_cv2 = cv.cvtColor(
-                        tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR
-                    )
-                    dst = cv.inpaint(
-                        img_gray_cv2,
-                        maskCompleted[:, :, ind].astype("uint8"),
-                        7,
-                        cv.INPAINT_TELEA,
-                    )
-                    dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
-                    tensorCompleted[:, :, ind] = dst
+                # for ind in range(tensorCompleted.shape[2]):
+                #     img_gray_cv2 = cv.cvtColor(
+                #         tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR
+                #     )
+                #     dst = cv.inpaint(
+                #         img_gray_cv2,
+                #         maskCompleted[:, :, ind].astype("uint8"),
+                #         7,
+                #         cv.INPAINT_TELEA,
+                #     )
+                #     dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
+                #     tensorCompleted[:, :, ind] = dst
 
+                print(tensorCompleted.shape)
                 channelnum = tensorCompleted.shape[2]
                 pktnum = 8
                 lossmap = np.full(channelnum*pktnum, True)[indexOfInterpolatedPackets]
