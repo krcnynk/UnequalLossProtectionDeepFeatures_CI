@@ -703,8 +703,8 @@ class pipeline:
         # channel, the number of packets in the channel.
         num_channels = 256
         channel_width = 56
-        rowsPerPacket = 8
-        num_pkts_per_channel = 7
+        rowsPerPacket = 7
+        num_pkts_per_channel = 8
         pkt_obj=packetizedfmL
         # lost_map = lossMatrix[item_index,:,:]
         lost_map = lossMatrix
@@ -1278,11 +1278,11 @@ class pipeline:
 
                 print(tensorCompleted.shape)
                 channelnum = tensorCompleted.shape[2]
-                pktnum = 7
-                lossmap = np.full(channelnum*pktnum, True)
+                pktCount = 8
+                lossmap = np.full(channelnum*pktCount, True)
                 lossmap[indexOfInterpolatedPackets] = False
-                lossmap = np.reshape(lossmap,(channelnum,pktnum))
-                packets = np.reshape(packetizedfmL,(channelnum,pktnum))
+                lossmap = np.reshape(lossmap,(channelnum,pktCount))
+                packets = np.reshape(packetizedfmL,(channelnum,pktCount))
                 packets = self.fn_caltec(lossmap,packets)
 
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
