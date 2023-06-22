@@ -1282,7 +1282,7 @@ class pipeline:
                 lossmap = np.full(channelnum*pktCount, True)
                 lossmap[indexOfInterpolatedPackets] = False
                 lossmap = np.reshape(lossmap,(channelnum,pktCount))
-                packets = np.reshape(packetizedfmL,(channelnum,pktCount))
+                packets = np.reshape(np.array(packetizedfmL),(channelnum,pktCount))
                 packets = self.fn_caltec(lossmap,packets)
 
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
