@@ -698,7 +698,7 @@ class pipeline:
         else:
             return idx
         
-    def fn_caltec(self,lossMatrix,packetizedfmL,item_index):
+    def fn_caltec(self,lossMatrix,packetizedfmL):
         # figure out the number of channels in the tensor, the dimensionality of a
         # channel, the number of packets in the channel.
         num_channels = 256
@@ -710,7 +710,7 @@ class pipeline:
         lost_map = lossMatrix
 
         if np.size(lost_map) - np.count_nonzero(lost_map) == 0:
-            print(f"No packets lost in item {item_index}.")
+            print(f"No packets lost in item .")
             return pkt_obj
         # ------------------------------------------------------------------------ #
         for i_c in range(num_channels):
@@ -1279,7 +1279,8 @@ class pipeline:
                 print(tensorCompleted.shape)
                 channelnum = tensorCompleted.shape[2]
                 pktnum = 7
-                lossmap = np.full(channelnum*pktnum, True)[indexOfInterpolatedPackets]
+                lossmap = np.full(channelnum*pktnum, True)
+                lossmap[indexOfInterpolatedPackets] = False
                 lossmap = np.reshape(lossmap,(channelnum,pktnum))
                 packets = np.reshape(packetizedfmL,(channelnum,pktnum))
                 packets = self.fn_caltec(lossmap,packets)
