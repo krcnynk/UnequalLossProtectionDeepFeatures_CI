@@ -1282,7 +1282,7 @@ class pipeline:
                 lossmap[indexOfInterpolatedPackets] = False
                 lossmap = np.reshape(lossmap,(channelnum,pktCount))
                 pktz = np.array(packetizedfmL).reshape(np.array(packetizedfmL).shape[0], -1)
-                pktz = pktz.reshape(-1,8, pktz.shape[2])
+                pktz = pktz.reshape(256,8, pktz.shape[2])
                 print(tensorCompleted.shape)
                 print(np.array(lossmap).shape)
                 print(np.array(pktz).shape)
