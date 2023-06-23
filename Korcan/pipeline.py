@@ -1283,7 +1283,7 @@ class pipeline:
                 lossmap = np.reshape(lossmap,(channelnum,pktCount))
                 pktz = np.array(packetizedfmL).reshape(np.array(packetizedfmL).shape[0], -1)
                 print(np.array(pktz).shape)
-                pktz = pktz.reshape(256,8, pktz.shape[2])
+                pktz = pktz.reshape(-1,8, pktz.shape[1])
                 print(tensorCompleted.shape)
                 print(np.array(lossmap).shape)
                 print(np.array(pktz).shape)
