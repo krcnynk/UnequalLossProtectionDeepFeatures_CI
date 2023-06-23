@@ -1276,18 +1276,17 @@ class pipeline:
                 #     dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
                 #     tensorCompleted[:, :, ind] = dst
 
-                print(tensorCompleted.shape)
                 channelnum = tensorCompleted.shape[2]
                 pktCount = 8
                 lossmap = np.full(channelnum*pktCount, True)
                 lossmap[indexOfInterpolatedPackets] = False
                 lossmap = np.reshape(lossmap,(channelnum,pktCount))
                 pktz = np.array(packetizedfmL).reshape(np.array(packetizedfmL).shape[0], -1)
+                pktz = pktz.reshape(-1,8, pktz.shape[2])
+                print(tensorCompleted.shape)
                 print(np.array(lossmap).shape)
                 print(np.array(pktz).shape)
-                
-                packets = np.reshape(np.array(pktz),(channelnum,pktCount))
-                packets = self.fn_caltec(lossmap,packets)
+                pktz = self.fn_caltec(lossmap,pktz)
 
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
             mseList.append(mse)
