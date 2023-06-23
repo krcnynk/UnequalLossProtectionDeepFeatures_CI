@@ -763,15 +763,19 @@ class pipeline:
                     neighbor_out_channel = pkt_obj[candidate_channels[indices_below[1]],nearest_neighbor_in_channel_idx,:]
 
                     # reshape both neighbor packets into vectors and then run least squares.
-                    vec_in_channel = np.reshape(nearest_neighbor_pkt,(np.shape(nearest_neighbor_pkt)[0]*np.shape(nearest_neighbor_pkt)[1]))
-                    vec_out_channel = np.reshape(neighbor_out_channel,(np.shape(neighbor_out_channel)[0]*np.shape(neighbor_out_channel)[1]))
+                    # vec_in_channel = np.reshape(nearest_neighbor_pkt,(np.shape(nearest_neighbor_pkt)[0]*np.shape(nearest_neighbor_pkt)[1]))
+                    # vec_out_channel = np.reshape(neighbor_out_channel,(np.shape(neighbor_out_channel)[0]*np.shape(neighbor_out_channel)[1]))
+
+                    vec_in_channel = nearest_neighbor_pkt
+                    vec_out_channel = neighbor_out_channel
 
                     lumi_transf = np.polyfit(vec_out_channel,vec_in_channel,1)
                     lumi_transf_fn = np.poly1d(lumi_transf)
 
-                    vec_corrected = lumi_transf_fn(np.reshape(pkt_from_other_channel,(np.shape(pkt_from_other_channel)[0]*np.shape(pkt_from_other_channel)[1])))
-                    pkt_corrected_1 = np.reshape(vec_corrected,(np.shape(pkt_from_other_channel)))
-
+                    # vec_corrected = lumi_transf_fn(np.reshape(pkt_from_other_channel,(np.shape(pkt_from_other_channel)[0]*np.shape(pkt_from_other_channel)[1])))
+                    # pkt_corrected_1 = np.reshape(vec_corrected,(np.shape(pkt_from_other_channel)))
+                    vec_corrected = lumi_transf_fn
+                    pkt_corrected_1 = vec_corrected
                     pkt_obj[i_c,i_pkt,:] = pkt_corrected_1
                     #print(f'Packet {i_pkt} in channel {i_c} repaired.')
         return pkt_obj
