@@ -1296,7 +1296,12 @@ class pipeline:
                 pktz = pktz.reshape(-1,pktz.shape[2])
                 pktz = pktz.reshape(pktz.shape[0],7,-1)
                 print(np.array(pktz).shape)
-                tensorCompleted = pktz
+
+                channelReconstructed = [
+                np.vstack(pktz[i : i + packetNum])
+                for i in range(0, len(pktz), packetNum)
+            ]
+                tensorCompleted = np.dstack(channelReconstructed)
 
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
             mseList.append(mse)
