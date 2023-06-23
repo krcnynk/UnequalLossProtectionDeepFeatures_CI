@@ -747,20 +747,20 @@ class pipeline:
                     # print("The candidate channels for the correlation test are")
                     # print(candidate_channels)
 
-                    nearest_neighbor_pkt = pkt_obj[i_c,nearest_neighbor_in_channel_idx]
+                    nearest_neighbor_pkt = pkt_obj[i_c,nearest_neighbor_in_channel_idx,:]
                     corrcoeff_matrix = np.zeros([len(candidate_channels),len(candidate_channels)])
                     #for i_row in range(rowsPerPacket):
                     #    corrcoeff_matrix += np.corrcoef([pkt_obj.packet_seq[item_index,nearest_neighbor_in_channel_idx,i_row,:,i] for i in candidate_channels])
 
-                    corrcoeff_matrix = np.corrcoef([np.reshape(pkt_obj[i,nearest_neighbor_in_channel_idx],(rowsPerPacket*channel_width)) for i in candidate_channels])
+                    corrcoeff_matrix = np.corrcoef([np.reshape(pkt_obj[i,nearest_neighbor_in_channel_idx,:],(rowsPerPacket*channel_width)) for i in candidate_channels])
                     row_corrcoef_below = corrcoeff_matrix[0,:]
                     idx = np.argpartition(row_corrcoef_below,-2)[-2:]
                     indices_below = idx[np.argsort((-row_corrcoef_below)[idx])]
                     # print(f"The highest correlated channel is {candidate_channels[indices_below[1]]}")
 
                     # select colocated packet which gives the second maximum value in corrcoeff_matrix.
-                    pkt_from_other_channel = pkt_obj[candidate_channels[indices_below[1]],i_pkt]
-                    neighbor_out_channel = pkt_obj[candidate_channels[indices_below[1]],nearest_neighbor_in_channel_idx]
+                    pkt_from_other_channel = pkt_obj[candidate_channels[indices_below[1]],i_pkt,:]
+                    neighbor_out_channel = pkt_obj[candidate_channels[indices_below[1]],nearest_neighbor_in_channel_idx,:]
 
                     # reshape both neighbor packets into vectors and then run least squares.
                     vec_in_channel = np.reshape(nearest_neighbor_pkt,(np.shape(nearest_neighbor_pkt)[0]*np.shape(nearest_neighbor_pkt)[1]))
@@ -772,7 +772,7 @@ class pipeline:
                     vec_corrected = lumi_transf_fn(np.reshape(pkt_from_other_channel,(np.shape(pkt_from_other_channel)[0]*np.shape(pkt_from_other_channel)[1])))
                     pkt_corrected_1 = np.reshape(vec_corrected,(np.shape(pkt_from_other_channel)))
 
-                    pkt_obj[i_c,i_pkt] = pkt_corrected_1
+                    pkt_obj[i_c,i_pkt,:] = pkt_corrected_1
                     #print(f'Packet {i_pkt} in channel {i_c} repaired.')
         return pkt_obj
 
