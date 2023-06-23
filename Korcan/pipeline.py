@@ -1282,8 +1282,10 @@ class pipeline:
                 lossmap = np.full(channelnum*pktCount, True)
                 lossmap[indexOfInterpolatedPackets] = False
                 lossmap = np.reshape(lossmap,(channelnum,pktCount))
-                print(len(packetizedfmL))
+                packetizedfmL = packetizedfmL.reshape(packetizedfmL.shape[0], -1)
+                print(np.array(lossmap).shape)
                 print(np.array(packetizedfmL).shape)
+                
                 packets = np.reshape(np.array(packetizedfmL),(channelnum,pktCount))
                 packets = self.fn_caltec(lossmap,packets)
 
