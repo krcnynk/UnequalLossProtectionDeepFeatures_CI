@@ -1293,6 +1293,7 @@ class pipeline:
                 print(np.array(lossmap).shape)
                 print(np.array(pktz).shape)
                 pktz = self.fn_caltec(lossmap,pktz)
+                tensorCompleted = pktz
 
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
             mseList.append(mse)
