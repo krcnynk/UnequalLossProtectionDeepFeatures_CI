@@ -774,7 +774,7 @@ class pipeline:
 
                     # vec_corrected = lumi_transf_fn(np.reshape(pkt_from_other_channel,(np.shape(pkt_from_other_channel)[0]*np.shape(pkt_from_other_channel)[1])))
                     # pkt_corrected_1 = np.reshape(vec_corrected,(np.shape(pkt_from_other_channel)))
-                    vec_corrected = lumi_transf_fn
+                    vec_corrected = lumi_transf_fn(pkt_from_other_channel)
                     pkt_corrected_1 = vec_corrected
                     print(pkt_corrected_1.shape)
                     pkt_obj[i_c,i_pkt,:] = pkt_corrected_1
