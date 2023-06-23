@@ -776,6 +776,7 @@ class pipeline:
                     # pkt_corrected_1 = np.reshape(vec_corrected,(np.shape(pkt_from_other_channel)))
                     vec_corrected = lumi_transf_fn
                     pkt_corrected_1 = vec_corrected
+                    print(pkt_corrected_1.shape)
                     pkt_obj[i_c,i_pkt,:] = pkt_corrected_1
                     #print(f'Packet {i_pkt} in channel {i_c} repaired.')
         return pkt_obj
