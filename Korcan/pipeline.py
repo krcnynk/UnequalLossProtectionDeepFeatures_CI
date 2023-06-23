@@ -1281,19 +1281,23 @@ class pipeline:
                 #     dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
                 #     tensorCompleted[:, :, ind] = dst
 
-                channelnum = tensorCompleted.shape[2]
-                pktCount = 8
-                lossmap = np.full(channelnum*pktCount, True)
-                lossmap[indexOfInterpolatedPackets] = False
-                lossmap = np.reshape(lossmap,(channelnum,pktCount))
-                pktz = np.array(packetizedfmL).reshape(np.array(packetizedfmL).shape[0], -1)
-                print(np.array(pktz).shape)
-                pktz = pktz.reshape(-1,8, pktz.shape[1])
-                print(tensorCompleted.shape)
-                print(np.array(lossmap).shape)
-                print(np.array(pktz).shape)
-                pktz = self.fn_caltec(lossmap,pktz)
-                tensorCompleted = pktz
+                print(np.array(packetizedfmL).shape)
+                # channelnum = tensorCompleted.shape[2]
+                # pktCount = 8
+                # lossmap = np.full(channelnum*pktCount, True)
+                # lossmap[indexOfInterpolatedPackets] = False
+                # lossmap = np.reshape(lossmap,(channelnum,pktCount))
+                # pktz = np.array(packetizedfmL).reshape(np.array(packetizedfmL).shape[0], -1)
+                # print(np.array(pktz).shape)
+                # pktz = pktz.reshape(-1,8, pktz.shape[1])
+                # print(tensorCompleted.shape)
+                # print(np.array(lossmap).shape)
+                # print(np.array(pktz).shape)
+                # pktz = self.fn_caltec(lossmap,pktz)
+                # pktz = pktz.reshape(-1,pktz.shape[2])
+                # pktz = pktz.reshape(pktz.shape[0],7,-1)
+                # print(np.array(pktz).shape)
+                # tensorCompleted = pktz
 
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
             mseList.append(mse)
