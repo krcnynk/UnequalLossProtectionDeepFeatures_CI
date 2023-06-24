@@ -80,8 +80,8 @@ class pipeline:
             matrixHeat = np.empty((iS[1] * 6, iS[2] * 4))
             ind = 0
             heatMap = self.__normalizeToUnit(heatMapBatch[i_b])
-            for i_cx in range(6):
-                for i_cy in range(4):
+            for i_cx in range(16):
+                for i_cy in range(16):
                     # print(featureMap.shape)
                     matrixFeature[
                         i_cx * iS[1] : i_cx * iS[1] + iS[1],
