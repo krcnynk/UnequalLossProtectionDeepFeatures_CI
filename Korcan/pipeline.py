@@ -361,7 +361,6 @@ class pipeline:
             "g",
             ".",
             ":",
-
             "Most important Weighted",
             "r",
             ".",
@@ -378,8 +377,6 @@ class pipeline:
             "c",
             ".",
             ":",
-
-
             "Unprotected (IID)",
             "m",
             ".",
@@ -396,9 +393,6 @@ class pipeline:
             "y",
             ".",
             ":",
-
-
-
             "FEC (IID)",
             "m",
             ".",
@@ -665,47 +659,46 @@ class pipeline:
     #     if saveImages:
     #         self.__savePacketLossImages(fmLRandomBatch, "randomPixelLoss")
 
-    def myImportanceFunction(self,pfmL,packetNum):
+    def myImportanceFunction(self, pfmL, packetNum):
         packetizedfmL = copy.deepcopy(pfmL)
         for i in range(packetizedfmL):
             packetizedfmL = copy.deepcopy(pfmL)
-            packetizedfmL[i]=0
+            packetizedfmL[i] = 0
             channelReconstructed = [
                 np.vstack(packetizedfmL[i : i + packetNum])
                 for i in range(0, len(packetizedfmL), packetNum)
             ]
             tensorCompleted = np.dstack(channelReconstructed)
             for ind in range(tensorCompleted.shape[2]):
-                    img_gray_cv2 = cv.cvtColor(
-                        tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR
-                    )
-                    dst = cv.inpaint(
-                        img_gray_cv2,
-                        maskCompleted[:, :, ind].astype("uint8"),
-                        7,
-                        cv.INPAINT_TELEA,
-                    )
-                    dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
-                    tensorCompleted[:, :, ind] = dst
+                img_gray_cv2 = cv.cvtColor(
+                    tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR
+                )
+                dst = cv.inpaint(
+                    img_gray_cv2,
+                    maskCompleted[:, :, ind].astype("uint8"),
+                    7,
+                    cv.INPAINT_TELEA,
+                )
+                dst = cv.cvtColor(dst, cv.COLOR_BGR2GRAY)
+                tensorCompleted[:, :, ind] = dst
 
         return
-    
 
-    def find_nearest_index(self,array,value):
-        idx = np.searchsorted(array, value, side='left')
+    def find_nearest_index(self, array, value):
+        idx = np.searchsorted(array, value, side="left")
         if idx > 0 and (idx == len(array)):
-            return idx-1
+            return idx - 1
         else:
             return idx
-        
-    def fn_caltec(self,lossMatrix,packetizedfmL):
+
+    def fn_caltec(self, lossMatrix, packetizedfmL):
         # figure out the number of channels in the tensor, the dimensionality of a
         # channel, the number of packets in the channel.
         num_channels = 256
         channel_width = 56
         rowsPerPacket = 7
         num_pkts_per_channel = 8
-        pkt_obj=packetizedfmL
+        pkt_obj = packetizedfmL
         # lost_map = lossMatrix[item_index,:,:]
         lost_map = lossMatrix
 
@@ -714,53 +707,86 @@ class pipeline:
             return pkt_obj
         # ------------------------------------------------------------------------ #
         for i_c in range(num_channels):
-            if np.all(lost_map[i_c,:] == False) == True:
+            if np.all(lost_map[i_c, :] == False) == True:
                 # The entire channel has been knocked out. cannot recover from that,
                 # so ignore this damaged channel and continue.
-                print(f'All packets were lost in this channel. Cannot repair channel {i_c}')
+                print(
+                    f"All packets were lost in this channel. Cannot repair channel {i_c}"
+                )
                 continue
             # -------------------------------------------------------------------- #
             for i_pkt in range(num_pkts_per_channel):
-                if lost_map[i_c,i_pkt] == False:
-                    #print(f"Repairing packet {i_pkt} in channel {i_c}")
-                    existing_colocated_pkts_list = np.sort(np.where(lost_map[:,i_pkt] == True)[0])
+                if lost_map[i_c, i_pkt] == False:
+                    # print(f"Repairing packet {i_pkt} in channel {i_c}")
+                    existing_colocated_pkts_list = np.sort(
+                        np.where(lost_map[:, i_pkt] == True)[0]
+                    )
                     # print('list of existing colocated packets in other channels')
                     # print(existing_colocated_pkts_list)
 
-                    existing_pkts_in_channel_list = np.sort(np.where(lost_map[i_c,:] == True)[0])
-                    nearest_neighbor_in_channel_index = self.find_nearest_index(existing_pkts_in_channel_list,i_pkt)
+                    existing_pkts_in_channel_list = np.sort(
+                        np.where(lost_map[i_c, :] == True)[0]
+                    )
+                    nearest_neighbor_in_channel_index = self.find_nearest_index(
+                        existing_pkts_in_channel_list, i_pkt
+                    )
 
                     for test_pkt_id in range(len(existing_pkts_in_channel_list)):
-                        nearest_neighbor_in_channel_idx = existing_pkts_in_channel_list[nearest_neighbor_in_channel_index - test_pkt_id]
-                        existing_colocated_pkts_neighbor_list = np.where(lost_map[:,nearest_neighbor_in_channel_idx] == True)[0]
+                        nearest_neighbor_in_channel_idx = existing_pkts_in_channel_list[
+                            nearest_neighbor_in_channel_index - test_pkt_id
+                        ]
+                        existing_colocated_pkts_neighbor_list = np.where(
+                            lost_map[:, nearest_neighbor_in_channel_idx] == True
+                        )[0]
 
-                        candidate_channels = np.intersect1d(existing_colocated_pkts_list,existing_colocated_pkts_neighbor_list)
+                        candidate_channels = np.intersect1d(
+                            existing_colocated_pkts_list,
+                            existing_colocated_pkts_neighbor_list,
+                        )
                         if len(candidate_channels) != 0:
                             # print('found a candidate')
                             break
                     if len(candidate_channels) == 0:
-                        print(f'No candidate found. Cannot repair packet {i_pkt}')
+                        print(f"No candidate found. Cannot repair packet {i_pkt}")
                         continue
 
-                    candidate_channels = np.hstack(([i_c],candidate_channels))
+                    candidate_channels = np.hstack(([i_c], candidate_channels))
 
                     # print("The candidate channels for the correlation test are")
                     # print(candidate_channels)
 
-                    nearest_neighbor_pkt = pkt_obj[i_c,nearest_neighbor_in_channel_idx,:]
-                    corrcoeff_matrix = np.zeros([len(candidate_channels),len(candidate_channels)])
-                    #for i_row in range(rowsPerPacket):
+                    nearest_neighbor_pkt = pkt_obj[
+                        i_c, nearest_neighbor_in_channel_idx, :
+                    ]
+                    corrcoeff_matrix = np.zeros(
+                        [len(candidate_channels), len(candidate_channels)]
+                    )
+                    # for i_row in range(rowsPerPacket):
                     #    corrcoeff_matrix += np.corrcoef([pkt_obj.packet_seq[item_index,nearest_neighbor_in_channel_idx,i_row,:,i] for i in candidate_channels])
 
-                    corrcoeff_matrix = np.corrcoef([np.reshape(pkt_obj[i,nearest_neighbor_in_channel_idx,:],(rowsPerPacket*channel_width)) for i in candidate_channels])
-                    row_corrcoef_below = corrcoeff_matrix[0,:]
-                    idx = np.argpartition(row_corrcoef_below,-2)[-2:]
+                    corrcoeff_matrix = np.corrcoef(
+                        [
+                            np.reshape(
+                                pkt_obj[i, nearest_neighbor_in_channel_idx, :],
+                                (rowsPerPacket * channel_width),
+                            )
+                            for i in candidate_channels
+                        ]
+                    )
+                    row_corrcoef_below = corrcoeff_matrix[0, :]
+                    idx = np.argpartition(row_corrcoef_below, -2)[-2:]
                     indices_below = idx[np.argsort((-row_corrcoef_below)[idx])]
                     # print(f"The highest correlated channel is {candidate_channels[indices_below[1]]}")
 
                     # select colocated packet which gives the second maximum value in corrcoeff_matrix.
-                    pkt_from_other_channel = pkt_obj[candidate_channels[indices_below[1]],i_pkt,:]
-                    neighbor_out_channel = pkt_obj[candidate_channels[indices_below[1]],nearest_neighbor_in_channel_idx,:]
+                    pkt_from_other_channel = pkt_obj[
+                        candidate_channels[indices_below[1]], i_pkt, :
+                    ]
+                    neighbor_out_channel = pkt_obj[
+                        candidate_channels[indices_below[1]],
+                        nearest_neighbor_in_channel_idx,
+                        :,
+                    ]
 
                     # reshape both neighbor packets into vectors and then run least squares.
                     # vec_in_channel = np.reshape(nearest_neighbor_pkt,(np.shape(nearest_neighbor_pkt)[0]*np.shape(nearest_neighbor_pkt)[1]))
@@ -769,7 +795,7 @@ class pipeline:
                     vec_in_channel = nearest_neighbor_pkt
                     vec_out_channel = neighbor_out_channel
 
-                    lumi_transf = np.polyfit(vec_out_channel,vec_in_channel,1)
+                    lumi_transf = np.polyfit(vec_out_channel, vec_in_channel, 1)
                     lumi_transf_fn = np.poly1d(lumi_transf)
 
                     # vec_corrected = lumi_transf_fn(np.reshape(pkt_from_other_channel,(np.shape(pkt_from_other_channel)[0]*np.shape(pkt_from_other_channel)[1])))
@@ -777,8 +803,8 @@ class pipeline:
                     vec_corrected = lumi_transf_fn(pkt_from_other_channel)
                     pkt_corrected_1 = vec_corrected
                     print(pkt_corrected_1.shape)
-                    pkt_obj[i_c,i_pkt,:] = pkt_corrected_1
-                    #print(f'Packet {i_pkt} in channel {i_c} repaired.')
+                    pkt_obj[i_c, i_pkt, :] = pkt_corrected_1
+                    # print(f'Packet {i_pkt} in channel {i_c} repaired.')
         return pkt_obj
 
     def packetLossSim(
@@ -1059,30 +1085,36 @@ class pipeline:
 
             elif case == "Most important NS Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[
-                    0:numOfPacketsToLose
-                ]
+                indexOfLossedPackets = (
+                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[
+                        0:numOfPacketsToLose
+                    ]
+                )
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
-                
+
             elif case == "Least important Weighted":
                 packetsSent = packetsSent + totalNumPackets
                 OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
                     OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
                 )
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[
-                    0:numOfPacketsToLose
-                ]
+                indexOfLossedPackets = (
+                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[
+                        0:numOfPacketsToLose
+                    ]
+                )
                 packetsLost = packetsLost + len(indexOfLossedPackets)
-                
+
             elif case == "Least important NS Weighted":
                 packetsSent = packetsSent + totalNumPackets
                 OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
                     OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
                 )
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[
-                    0:numOfPacketsToLose
-                ]
+                indexOfLossedPackets = (
+                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[
+                        0:numOfPacketsToLose
+                    ]
+                )
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
@@ -1266,8 +1298,6 @@ class pipeline:
                 or case == "Most important NS Weighted"
                 or case == "Least important NS Weighted"
             ):
-
-
                 # for ind in range(tensorCompleted.shape[2]):
                 #     img_gray_cv2 = cv.cvtColor(
                 #         tensorCompleted[:, :, ind].astype("uint8"), cv.COLOR_GRAY2BGR
@@ -1283,24 +1313,26 @@ class pipeline:
 
                 channelnum = tensorCompleted.shape[2]
                 pktCount = 8
-                lossmap = np.full(channelnum*pktCount, True)
+                lossmap = np.full(channelnum * pktCount, True)
                 lossmap[indexOfInterpolatedPackets] = False
-                lossmap = np.reshape(lossmap,(channelnum,pktCount))
-                pktz = np.array(packetizedfmL).reshape(np.array(packetizedfmL).shape[0], -1)
+                lossmap = np.reshape(lossmap, (channelnum, pktCount))
+                pktz = np.array(packetizedfmL).reshape(
+                    np.array(packetizedfmL).shape[0], -1
+                )
                 print(np.array(pktz).shape)
-                pktz = pktz.reshape(-1,8, pktz.shape[1])
+                pktz = pktz.reshape(-1, 8, pktz.shape[1])
                 print(tensorCompleted.shape)
                 print(np.array(lossmap).shape)
                 print(np.array(pktz).shape)
-                pktz = self.fn_caltec(lossmap,pktz)
-                pktz = pktz.reshape(-1,pktz.shape[2])
-                pktz = pktz.reshape(pktz.shape[0],7,-1)
+                pktz = self.fn_caltec(lossmap, pktz)
+                pktz = pktz.reshape(-1, pktz.shape[2])
+                pktz = pktz.reshape(pktz.shape[0], 7, -1)
                 print(np.array(pktz).shape)
 
                 channelReconstructed = [
-                np.vstack(pktz[i : i + packetNum])
-                for i in range(0, len(pktz), packetNum)
-            ]
+                    np.vstack(pktz[i : i + packetNum])
+                    for i in range(0, len(pktz), packetNum)
+                ]
                 tensorCompleted = np.dstack(channelReconstructed)
 
             mse = np.mean((tensorCompleted - tensorCompletedNoLoss) ** 2)
@@ -1538,7 +1570,7 @@ if __name__ == "__main__":
     elif case == "18":
         case = "Least important NS Weighted"
 
-    # module.saveSuperImposedChannels(modelName)
+    module.saveSuperImposedChannels(modelName)
 
     if case == "10":
         saveImageLossPercent = 10
@@ -1656,7 +1688,7 @@ if __name__ == "__main__":
         #     modelName=modelName,
         # )
         sys.exit()
-        
+
     if (
         case == "Most important"
         or case == "Least important"
