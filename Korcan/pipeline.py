@@ -76,8 +76,8 @@ class pipeline:
         heatMapBatch = np.array(self.heatMapsChannelsBatch)
         iS = featureMapBatch.shape
         for i_b in range(len(featureMapBatch)):  # 9
-            matrixFeature = np.empty((iS[1] * 6, iS[2] * 4))
-            matrixHeat = np.empty((iS[1] * 6, iS[2] * 4))
+            matrixFeature = np.empty((iS[1] * 16, iS[2] * 16))
+            matrixHeat = np.empty((iS[1] * 16, iS[2] * 16))
             ind = 0
             heatMap = self.__normalizeToUnit(heatMapBatch[i_b])
             for i_cx in range(16):
