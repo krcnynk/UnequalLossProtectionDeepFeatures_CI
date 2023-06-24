@@ -62,6 +62,7 @@ class pipeline:
         return superimposed_img
 
     def saveSuperImposedChannels(self, modelName):
+        print("Korcan Uyanik")
         mainPath = os.path.abspath(
             "Korcan/Plots/" + modelName + "/tensorHeatmapOverlay/"
         )
