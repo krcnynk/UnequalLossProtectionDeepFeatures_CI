@@ -101,10 +101,10 @@ class pipeline:
             newcmp = matplotlib.colors.ListedColormap(colors)
             plt.imshow(matrixFeature, interpolation="bilinear", cmap="gray")
             matrixHeat = matrixHeat * 3  # HERE COMMENT
-            # matrixHeat = (matrixHeat - np.min(matrixHeat)) / (np.max(matrixHeat) - np.min(matrixHeat))
+            matrixHeat = (matrixHeat - np.min(matrixHeat)) / (np.max(matrixHeat) - np.min(matrixHeat))
             # matrixHeat[matrixHeat > 1] = 1
             # matrixHeat[matrixHeat < 0.8] = 0.6
-            matrixHeat[matrixHeat < 0.5] = 0.3
+            matrixHeat[matrixHeat < 0.5] = 0.2
             plt.imshow(matrixHeat, interpolation="bilinear", cmap=newcmp)
             plt.colorbar()
             plt.axis("off")
