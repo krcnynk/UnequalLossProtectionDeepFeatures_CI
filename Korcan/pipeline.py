@@ -104,7 +104,7 @@ class pipeline:
             matrixHeat = matrixHeat * 1.5 # HERE COMMENT
             matrixHeat[matrixHeat > 1] = 1
             # matrixHeat[matrixHeat < 0.8] = 0.6
-            matrixHeat[matrixHeat < 0.6] = 0.2
+            matrixHeat[matrixHeat < 0.5] = 0.3
             plt.imshow(matrixHeat, interpolation="bilinear", cmap=newcmp)
             plt.colorbar()
             plt.axis("off")
