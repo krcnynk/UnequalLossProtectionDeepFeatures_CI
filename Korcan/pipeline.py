@@ -1674,8 +1674,8 @@ if __name__ == "__main__":
             quantizationBits,
             saveImageLossPercent,
             "FEC (IID)",
-            40,
-            60,
+            30,
+            70,
             saveImages=True,
             modelName=modelName,
         )
@@ -1684,8 +1684,8 @@ if __name__ == "__main__":
             quantizationBits,
             saveImageLossPercent,
             "FEC (Burst)",
-            40,
-            60,
+            30,
+            70,
             saveImages=True,
             modelName=modelName,
         )
