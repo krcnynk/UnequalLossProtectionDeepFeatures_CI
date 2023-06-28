@@ -693,7 +693,7 @@ class pipeline:
         else:
             return idx
 
-    def fn_caltec(self, lossMatrix, packetizedfmL):
+    def fn_caltec(self, lossMatrix, packetizedfmL,tensorCompletedNoLoss):
         # figure out the number of channels in the tensor, the dimensionality of a
         # channel, the number of packets in the channel.
         num_channels = 256
@@ -703,7 +703,7 @@ class pipeline:
         pkt_obj = packetizedfmL
         # lost_map = lossMatrix[item_index,:,:]
         lost_map = lossMatrix
-
+        lostChannels = []
         if np.size(lost_map) - np.count_nonzero(lost_map) == 0:
             print(f"No packets lost in item .")
             return pkt_obj
@@ -715,6 +715,7 @@ class pipeline:
                 print(
                     f"All packets were lost in this channel. Cannot repair channel {i_c}"
                 )
+                lostChannels.append(i_c)
                 continue
             # -------------------------------------------------------------------- #
             for i_pkt in range(num_pkts_per_channel):
@@ -807,6 +808,26 @@ class pipeline:
                     print(pkt_corrected_1.shape)
                     pkt_obj[i_c, i_pkt, :] = pkt_corrected_1
                     # print(f'Packet {i_pkt} in channel {i_c} repaired.')
+
+        for i_c in lostChannels:
+            mse_values = [np.mean((tensorCompletedNoLoss[:,:,i_c] - pkt_obj[li_c, :, :])**2) for li_c in lostChannels]
+            # Find the index of the most similar matrix based on the lowest MSE value
+            most_similar_index = np.argmin(mse_values)
+            pkt_obj[i_c, :, :] = pkt_obj[most_similar_index, :, :]
+
+        #     corrcoeff_matrix = np.corrcoef(
+        #     [
+        #         np.reshape(
+        #             pkt_obj[i, :, :],
+        #             (rowsPerPacket * channel_width),
+        #         )
+        #         for i in range(num_channels)
+        #     ]
+        # )
+        #     row_corrcoef_below = corrcoeff_matrix[0, :]
+        #     idx = np.argpartition(row_corrcoef_below, -2)[-2:]
+        #     indices_below = idx[np.argsort((-row_corrcoef_below)[idx])]
+        #     # print(f"The highest correlated channel is {candidate_channels[indices_below[1]]}")
         return pkt_obj
 
     def packetLossSim(
@@ -1326,7 +1347,7 @@ class pipeline:
                 print(tensorCompleted.shape)
                 print(np.array(lossmap).shape)
                 print(np.array(pktz).shape)
-                pktz = self.fn_caltec(lossmap, pktz)
+                pktz = self.fn_caltec(lossmap, pktz,tensorCompletedNoLoss)
                 pktz = pktz.reshape(-1, pktz.shape[2])
                 pktz = pktz.reshape(pktz.shape[0], 7, -1)
                 print(np.array(pktz).shape)
