@@ -813,7 +813,7 @@ class pipeline:
             mse_values = [np.mean((pktzNoLoss[i_c,:,:] - pkt_obj[li_c, :, :])**2) for li_c in lostChannels]
             # Find the index of the most similar matrix based on the lowest MSE value
             most_similar_index = np.argmin(mse_values)
-            print(lostChannels)
+            print(mse_values)
             pkt_obj[i_c, :, :] = pkt_obj[most_similar_index, :, :]
 
         #     corrcoeff_matrix = np.corrcoef(
