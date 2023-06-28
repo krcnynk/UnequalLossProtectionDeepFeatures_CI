@@ -813,6 +813,7 @@ class pipeline:
             mse_values = [np.mean((pktzNoLoss[i_c,:,:] - pkt_obj[li_c, :, :])**2) for li_c in lostChannels]
             # Find the index of the most similar matrix based on the lowest MSE value
             most_similar_index = np.argmin(mse_values)
+            print(most_similar_index)
             pkt_obj[i_c, :, :] = pkt_obj[most_similar_index, :, :]
 
         #     corrcoeff_matrix = np.corrcoef(
@@ -1633,22 +1634,22 @@ if __name__ == "__main__":
             saveImages=True,
             modelName=modelName,
         )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (IID)",
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (Burst)",
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (IID)",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (Burst)",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
@@ -1694,26 +1695,26 @@ if __name__ == "__main__":
         #     saveImages=True,
         #     modelName=modelName,
         # )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "FEC (IID)",
-            30,
-            70,
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "FEC (Burst)",
-            30,
-            70,
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "FEC (IID)",
+        #     30,
+        #     70,
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "FEC (Burst)",
+        #     30,
+        #     70,
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
         sys.exit()
 
     if (
