@@ -693,7 +693,7 @@ class pipeline:
         else:
             return idx
 
-    def fn_caltec(self, lossMatrix, packetizedfmL,tensorCompletedNoLoss):
+    def fn_caltec(self, lossMatrix, packetizedfmL,pktzNoLoss):
         # figure out the number of channels in the tensor, the dimensionality of a
         # channel, the number of packets in the channel.
         num_channels = 256
@@ -1339,15 +1339,19 @@ class pipeline:
                 lossmap = np.full(channelnum * pktCount, True)
                 lossmap[indexOfInterpolatedPackets] = False
                 lossmap = np.reshape(lossmap, (channelnum, pktCount))
+
                 pktz = np.array(packetizedfmL).reshape(
                     np.array(packetizedfmL).shape[0], -1
                 )
-                print(np.array(pktz).shape)
                 pktz = pktz.reshape(-1, 8, pktz.shape[1])
-                print(tensorCompleted.shape)
-                print(np.array(lossmap).shape)
-                print(np.array(pktz).shape)
-                pktz = self.fn_caltec(lossmap, pktz,tensorCompletedNoLoss)
+
+                pktzNoLoss = np.array(packetsWithoutLoss).reshape(
+                    np.array(packetsWithoutLoss).shape[0], -1
+                )
+                pktzNoLoss = pktz.reshape(-1, 8, pktz.shape[1])
+
+
+                pktz = self.fn_caltec(lossmap, pktz,pktzNoLoss)
                 pktz = pktz.reshape(-1, pktz.shape[2])
                 pktz = pktz.reshape(pktz.shape[0], 7, -1)
                 print(np.array(pktz).shape)
