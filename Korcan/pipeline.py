@@ -1602,22 +1602,22 @@ if __name__ == "__main__":
 
     if case == "10":
         saveImageLossPercent = 30
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Most important",
-            saveImages=True,
-            modelName=modelName,
-        )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Most important NS",
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Most important",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Most important NS",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
         module.packetLossSim(
             packetCount,
             quantizationBits,
@@ -1626,14 +1626,14 @@ if __name__ == "__main__":
             saveImages=True,
             modelName=modelName,
         )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Least important",
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Least important",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
