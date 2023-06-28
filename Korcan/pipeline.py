@@ -810,8 +810,6 @@ class pipeline:
                     # print(f'Packet {i_pkt} in channel {i_c} repaired.')
 
         for i_c in lostChannels:
-            print(pktzNoLoss.shape)
-            print(pkt_obj.shape)
             mse_values = [np.mean((pktzNoLoss[i_c,:,:] - pkt_obj[li_c, :, :])**2) for li_c in lostChannels]
             # Find the index of the most similar matrix based on the lowest MSE value
             most_similar_index = np.argmin(mse_values)
@@ -1350,8 +1348,7 @@ class pipeline:
                 pktzNoLoss = np.array(packetsWithoutLoss).reshape(
                     np.array(packetsWithoutLoss).shape[0], -1
                 )
-                pktzNoLoss = pktz.reshape(-1, 8, pktz.shape[1])
-
+                pktzNoLoss = pktzNoLoss.reshape(-1, 8, pktzNoLoss.shape[1])
 
                 pktz = self.fn_caltec(lossmap, pktz,pktzNoLoss)
 
