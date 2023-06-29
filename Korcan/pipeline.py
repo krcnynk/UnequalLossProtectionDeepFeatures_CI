@@ -819,7 +819,7 @@ class pipeline:
                 # print(pktzNoLoss[i_c, :, :],pkt_obj[a_c, :, :])
             # Find the index of the most similar matrix based on the lowest MSE value
             most_similar_index = np.argmin(mse_values)
-            print(i_c, most_similar_index)
+            # print(i_c, most_similar_index)
             pkt_obj[i_c, :, :] = pkt_obj[most_similar_index, :, :]
 
         # for i_c in lostChannels:
