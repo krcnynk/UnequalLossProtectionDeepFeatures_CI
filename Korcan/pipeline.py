@@ -816,6 +816,7 @@ class pipeline:
                 mse = np.mean((pktzNoLoss[i_c, :, :] - pkt_obj[li_c, :, :])**2)
                 mse_values.append(mse)
                 print(i_c, li_c,mse)
+                print(pktzNoLoss[i_c, :, :],pkt_obj[li_c, :, :])
             # Find the index of the most similar matrix based on the lowest MSE value
             most_similar_index = np.argmin(mse_values)
             print(i_c, most_similar_index)
