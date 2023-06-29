@@ -812,7 +812,7 @@ class pipeline:
         print(lostChannels)
         for i_c in lostChannels:
             mse_values = []
-            for a_c in num_channels:
+            for a_c in range(num_channels):
                 mse = np.mean((pktzNoLoss[i_c, :, :] - pkt_obj[a_c, :, :])**2)
                 mse_values.append(mse)
                 print(i_c, a_c,mse)
