@@ -1344,7 +1344,7 @@ class pipeline:
                 )
                 pktzNoLoss = pktzNoLoss.reshape(-1, 8, pktzNoLoss.shape[1])
 
-                pktz = self.fn_caltec(lossmap, pktz,pktzNoLoss,True)
+                pktz = self.fn_caltec(lossmap, pktz,pktzNoLoss,False)
 
                 pktz = pktz.reshape(-1, pktz.shape[2])
                 pktz = pktz.reshape(pktz.shape[0], 7, -1)
