@@ -809,14 +809,14 @@ class pipeline:
                     pkt_obj[i_c, i_pkt, :] = pkt_corrected_1
                     # print(f'Packet {i_pkt} in channel {i_c} repaired.')
 
-        print(lostChannels)
+        # print(lostChannels)
         for i_c in lostChannels:
             mse_values = []
             for a_c in range(num_channels):
                 mse = np.mean((pktzNoLoss[i_c, :, :] - pkt_obj[a_c, :, :])**2)
                 mse_values.append(mse)
-                print(i_c, a_c,mse)
-                print(pktzNoLoss[i_c, :, :],pkt_obj[a_c, :, :])
+                # print(i_c, a_c,mse)
+                # print(pktzNoLoss[i_c, :, :],pkt_obj[a_c, :, :])
             # Find the index of the most similar matrix based on the lowest MSE value
             most_similar_index = np.argmin(mse_values)
             print(i_c, most_similar_index)
