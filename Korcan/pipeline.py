@@ -1591,14 +1591,14 @@ if __name__ == "__main__":
         #     saveImages=True,
         #     modelName=modelName,
         # )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Most important NS",
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Most important NS",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
         module.packetLossSim(
             packetCount,
             quantizationBits,
