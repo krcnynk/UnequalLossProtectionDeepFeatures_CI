@@ -1078,66 +1078,45 @@ class pipeline:
 
             elif case == "Least important":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFEC = (
-                    OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
-                )
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
-                    0:numOfPacketsToLose
-                ]
+                OrderedImportanceOfPacketsIndexExcludeFEC = OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important NS":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFEC = (
-                    OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
-                )
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
-                    0:numOfPacketsToLose
-                ]
+                OrderedImportanceOfPacketsIndexExcludeFEC = OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[0:numOfPacketsToLose]
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Most important Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = (
-                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[
-                        0:numOfPacketsToLose
-                    ]
-                )
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[0:numOfPacketsToLose]
+                
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Most important NS Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = (
-                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[
-                        0:numOfPacketsToLose
-                    ]
-                )
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[0:numOfPacketsToLose]
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
-                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
-                )
-                indexOfLossedPackets = (
-                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[
-                        0:numOfPacketsToLose
-                    ]
-                )
+                OrderedImportanceOfPacketsIndexExcludeFECWeighted = OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
+                
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[0:numOfPacketsToLose]
+                
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important NS Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
-                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
-                )
-                indexOfLossedPackets = (
-                    OrderedImportanceOfPacketsIndexExcludeFECWeighted[
-                        0:numOfPacketsToLose
-                    ]
-                )
+                OrderedImportanceOfPacketsIndexExcludeFECWeighted = OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
+                
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[0:numOfPacketsToLose]
+                
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
