@@ -815,7 +815,6 @@ class pipeline:
             most_similar_index = np.argmin(mse_values)
             print(mse_values)
             pkt_obj[i_c, :, :] = pkt_obj[most_similar_index, :, :]
-        pkt_obj = pktzNoLoss
         #     corrcoeff_matrix = np.corrcoef(
         #     [
         #         np.reshape(
