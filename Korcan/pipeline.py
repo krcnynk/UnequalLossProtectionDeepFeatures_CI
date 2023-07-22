@@ -908,41 +908,59 @@ class pipeline:
                     packetNum,
                 )
 
+            mse_matrix = np.zeros((self.C, self.C))
+
+            for i in range(self.C):
+                for j in range(self.C):
+                    mse = np.mean((fmL[:,:,i] - fmL[:,:,j])**2)
+                    mse_matrix[i, j] = mse
+            mse_matrix = np.sum(mse_matrix, axis=1)
+            min_mse = np.min(mse_matrix)
+            max_mse = np.max(mse_matrix)
+            channel_similarity_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
+            # similar_channels = np.argwhere(channel_similarity_scores < 0.2)
+
             importanceOfPackets = [
                 np.mean(packetizedheatMap[i_p]) for i_p in range(len(packetizedheatMap))
             ]
+            importanceOfPacketsMin = np.min(importanceOfPackets)
+            importanceOfPacketsMax = np.max(importanceOfPackets)
+            importanceOfPackets = (importanceOfPackets - importanceOfPacketsMin) / (importanceOfPacketsMax - importanceOfPacketsMin)
 
-            OrderedImportanceOfPacketsIndexExcludeFEC = (
+
+            OrderedImportanceOfPacketsIndex = (
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
             )
 
-            importanceOfPacketsSobel = []
-            for p in packetizedfmL:
-                dx = scipy.ndimage.sobel(p, 1)
-                dy = scipy.ndimage.sobel(p, 0)
-                grad_magnitude = np.sqrt(dx**2 + dy**2)
-                # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                avg_grad_magnitude = np.mean(grad_magnitude)
-                importanceOfPacketsSobel.append(avg_grad_magnitude)
+            importanceOfPacketsWeighted = channel_similarity_scores + importanceOfPackets
 
-            # importanceOfPacketsWeighted = importanceOfPacketsSobel
-            # self.myImportanceFunction(packetizedfmL,packetNum)
+            # importanceOfPacketsSobel = []
+            # for p in packetizedfmL:
+            #     dx = scipy.ndimage.sobel(p, 1)
+            #     dy = scipy.ndimage.sobel(p, 0)
+            #     grad_magnitude = np.sqrt(dx**2 + dy**2)
+            #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+            #     avg_grad_magnitude = np.mean(grad_magnitude)
+            #     importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-            importanceOfPacketsWeighted = (
-                np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
-            ) / (
-                np.max(np.array(importanceOfPackets))
-                - np.min(np.array(importanceOfPackets))
-            )
-            +(
-                np.array(importanceOfPacketsSobel)
-                - np.min(np.array(importanceOfPacketsSobel))
-            ) / (
-                np.max(np.array(importanceOfPacketsSobel))
-                - np.min(np.array(importanceOfPacketsSobel))
-            )
+            # # importanceOfPacketsWeighted = importanceOfPacketsSobel
+            # # self.myImportanceFunction(packetizedfmL,packetNum)
 
-            OrderedImportanceOfPacketsIndexExcludeFECWeighted = (
+            # importanceOfPacketsWeighted = (
+            #     np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
+            # ) / (
+            #     np.max(np.array(importanceOfPackets))
+            #     - np.min(np.array(importanceOfPackets))
+            # )
+            # +(
+            #     np.array(importanceOfPacketsSobel)
+            #     - np.min(np.array(importanceOfPacketsSobel))
+            # ) / (
+            #     np.max(np.array(importanceOfPacketsSobel))
+            #     - np.min(np.array(importanceOfPacketsSobel))
+            # )
+
+            OrderedImportanceOfPacketsIndexWeighted = (
                 self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
             )
 
@@ -974,18 +992,18 @@ class pipeline:
                 indexOfLossedPackets = (~sim).nonzero()[0]
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
-                lowestImportanceIndex = OrderedImportanceOfPacketsIndexExcludeFEC[
+                lowestImportanceIndex = OrderedImportanceOfPacketsIndex[
                     -FECPacketCount:
                 ]
-                OrderedImportanceOfPacketsIndexExcludeFEC = (
-                    OrderedImportanceOfPacketsIndexExcludeFEC[:-FECPacketCount]
+                OrderedImportanceOfPacketsIndex = (
+                    OrderedImportanceOfPacketsIndex[:-FECPacketCount]
                 )
 
                 packetsSent = packetsSent + totalNumPackets
                 packetsLost = packetsLost + numOfPacketsToLose
 
                 common_elementsProtected = np.intersect1d(
-                    indexOfLossedPackets, OrderedImportanceOfPacketsIndexExcludeFEC
+                    indexOfLossedPackets, OrderedImportanceOfPacketsIndex
                 )
                 common_elementsFEC = np.intersect1d(
                     indexOfLossedPackets, lowestImportanceIndex
@@ -1012,18 +1030,18 @@ class pipeline:
 
                 FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
                 protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
-                lowestImportanceIndex = OrderedImportanceOfPacketsIndexExcludeFEC[
+                lowestImportanceIndex = OrderedImportanceOfPacketsIndex[
                     -FECPacketCount:
                 ]
-                OrderedImportanceOfPacketsIndexExcludeFEC = (
-                    OrderedImportanceOfPacketsIndexExcludeFEC[:-FECPacketCount]
+                OrderedImportanceOfPacketsIndex = (
+                    OrderedImportanceOfPacketsIndex[:-FECPacketCount]
                 )
 
                 packetsSent = packetsSent + totalNumPackets
                 packetsLost = packetsLost + numOfPacketsToLose
 
                 common_elementsProtected = np.intersect1d(
-                    indexOfLossedPackets, OrderedImportanceOfPacketsIndexExcludeFEC
+                    indexOfLossedPackets, OrderedImportanceOfPacketsIndex
                 )
                 common_elementsFEC = np.intersect1d(
                     indexOfLossedPackets, lowestImportanceIndex
@@ -1077,14 +1095,14 @@ class pipeline:
 
             elif case == "Most important":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
                     0:numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Most important NS":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
                     0:numOfPacketsToLose
                 ]
                 
@@ -1093,44 +1111,44 @@ class pipeline:
 
             elif case == "Least important":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFEC = OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
                 
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[0:numOfPacketsToLose]
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[0:numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important NS":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFEC = OrderedImportanceOfPacketsIndexExcludeFEC[::-1]
+                OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
                 
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFEC[0:numOfPacketsToLose]
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[0:numOfPacketsToLose]
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Most important Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[0:numOfPacketsToLose]
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexWeighted[0:numOfPacketsToLose]
                 
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Most important NS Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[0:numOfPacketsToLose]
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexWeighted[0:numOfPacketsToLose]
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFECWeighted = OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
+                OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndexWeighted[::-1]
                 
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[0:numOfPacketsToLose]
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexWeighted[0:numOfPacketsToLose]
                 
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important NS Weighted":
                 packetsSent = packetsSent + totalNumPackets
-                OrderedImportanceOfPacketsIndexExcludeFECWeighted = OrderedImportanceOfPacketsIndexExcludeFECWeighted[::-1]
+                OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndexWeighted[::-1]
                 
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndexExcludeFECWeighted[0:numOfPacketsToLose]
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndexWeighted[0:numOfPacketsToLose]
                 
                 indexOfInterpolatedPackets = indexOfLossedPackets
                 packetsLost = packetsLost + len(indexOfLossedPackets)
@@ -1186,16 +1204,16 @@ class pipeline:
                     if qualityFactor == 105:
                         # High to Low index 33,1,21,199,6,512 etc to 100,99,98
                         division_length = (
-                            len(OrderedImportanceOfPacketsIndexExcludeFEC) // 100
+                            len(OrderedImportanceOfPacketsIndex) // 100
                         )
                         # Divide the array into equal divisions
                         divided_array = [
-                            OrderedImportanceOfPacketsIndexExcludeFEC[
+                            OrderedImportanceOfPacketsIndex[
                                 i : i + division_length
                             ]
                             for i in range(
                                 0,
-                                len(OrderedImportanceOfPacketsIndexExcludeFEC),
+                                len(OrderedImportanceOfPacketsIndex),
                                 division_length,
                             )
                         ]
