@@ -932,6 +932,8 @@ class pipeline:
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
             )
 
+            channel_similarity_scores = [x for x in channel_similarity_scores for _ in range(8)]
+
             importanceOfPacketsWeighted = channel_similarity_scores + importanceOfPackets
 
             # importanceOfPacketsSobel = []
