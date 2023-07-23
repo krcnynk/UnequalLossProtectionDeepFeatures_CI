@@ -1452,140 +1452,140 @@ class pipeline:
         #     acc = acc + s["acc"]
         #     loss = loss + s["loss"]
 
-        if (
-            case == "Most important"
-            or case == "Least important"
-            or case == "Most important NS"
-            or case == "Least important NS"
-            or case == "Most important Weighted"
-            or case == "Least important Weighted"
-            or case == "Most important NS Weighted"
-            or case == "Least important NS Weighted"
-            or case == "Unprotected (IID)"
-            or case == "Unprotected (Burst)"
-            or case == "Unprotected (IID) NS"
-            or case == "Unprotected (Burst) NS"
-            or case == "FEC (IID)"
-            or case == "FEC (Burst)"
-            or case == "FEC (IID) NS"
-            or case == "FEC (Burst) NS"
-            or case == "Unprotected (IID) EN"
-        ):
-            if case == "Unprotected (IID) EN":
-                case = "Unprotected (IID) EN_" + str(qualityFactor)
-                percOfPacketLoss = sum(batchBpp) / float(len(batchBpp))
+        # if (
+        #     case == "Most important"
+        #     or case == "Least important"
+        #     or case == "Most important NS"
+        #     or case == "Least important NS"
+        #     or case == "Most important Weighted"
+        #     or case == "Least important Weighted"
+        #     or case == "Most important NS Weighted"
+        #     or case == "Least important NS Weighted"
+        #     or case == "Unprotected (IID)"
+        #     or case == "Unprotected (Burst)"
+        #     or case == "Unprotected (IID) NS"
+        #     or case == "Unprotected (Burst) NS"
+        #     or case == "FEC (IID)"
+        #     or case == "FEC (Burst)"
+        #     or case == "FEC (IID) NS"
+        #     or case == "FEC (Burst) NS"
+        #     or case == "Unprotected (IID) EN"
+        # ):
+        if case == "Unprotected (IID) EN":
+            case = "Unprotected (IID) EN_" + str(qualityFactor)
+            percOfPacketLoss = sum(batchBpp) / float(len(batchBpp))
 
-            # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
-            os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
+        # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
+        os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
 
-            pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
-            metrics = self.getMetrics(fmLPacketizedLoss)
-            pdictVal = {
-                "acc": metrics["acc"],
-                "loss": metrics["loss"],
-                "min": 0,
-                "max": 0,
-            }
-            # pdictVal = {
-            #     "acc": sum(mseList) / len(mseList),
-            #     "loss": 0,
-            #     "min": 0,
-            #     "max": 0,
-            # }
+        pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
+        metrics = self.getMetrics(fmLPacketizedLoss)
+        pdictVal = {
+            "acc": metrics["acc"],
+            "loss": metrics["loss"],
+            "min": 0,
+            "max": 0,
+        }
+        # pdictVal = {
+        #     "acc": sum(mseList) / len(mseList),
+        #     "loss": 0,
+        #     "min": 0,
+        #     "max": 0,
+        # }
 
-            rand = int(random.randint(1, sys.maxsize))
-            with open(
-                "Korcan/Plots/"
-                + modelName
-                + "/"
-                + case
-                + "/key_"
-                + "{:.3f}".format(percOfPacketLoss)
-                + "_"
-                + str(rand)
-                + "_.pkl",
-                "wb",
-            ) as f:
-                pickle.dump(pdictKey, f)
-            with open(
-                "Korcan/Plots/"
-                + modelName
-                + "/"
-                + case
-                + "/val_"
-                + "{:.3f}".format(percOfPacketLoss)
-                + "_"
-                + str(rand)
-                + "_.pkl",
-                "wb",
-            ) as f:
-                pickle.dump(pdictVal, f)
-        # else:
-        #     if not os.path.exists(
-        #         "Korcan/Plots/"
-        #         + modelName
-        #         + "/"
-        #         + case
-        #         + "_"
-        #         + str(fecPerc)
-        #         + "_"
-        #         + str(protectedPerc)
-        #     ):
-        #         os.makedirs(
-        #             "Korcan/Plots/"
-        #             + modelName
-        #             + "/"
-        #             + case
-        #             + "_"
-        #             + str(fecPerc)
-        #             + "_"
-        #             + str(protectedPerc)
-        #         )
+        rand = int(random.randint(1, sys.maxsize))
+        with open(
+            "Korcan/Plots/"
+            + modelName
+            + "/"
+            + case
+            + "/key_"
+            + "{:.3f}".format(percOfPacketLoss)
+            + "_"
+            + str(rand)
+            + "_.pkl",
+            "wb",
+        ) as f:
+            pickle.dump(pdictKey, f)
+        with open(
+            "Korcan/Plots/"
+            + modelName
+            + "/"
+            + case
+            + "/val_"
+            + "{:.3f}".format(percOfPacketLoss)
+            + "_"
+            + str(rand)
+            + "_.pkl",
+            "wb",
+        ) as f:
+            pickle.dump(pdictVal, f)
+    # else:
+    #     if not os.path.exists(
+    #         "Korcan/Plots/"
+    #         + modelName
+    #         + "/"
+    #         + case
+    #         + "_"
+    #         + str(fecPerc)
+    #         + "_"
+    #         + str(protectedPerc)
+    #     ):
+    #         os.makedirs(
+    #             "Korcan/Plots/"
+    #             + modelName
+    #             + "/"
+    #             + case
+    #             + "_"
+    #             + str(fecPerc)
+    #             + "_"
+    #             + str(protectedPerc)
+    #         )
 
-        #     pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
-        #     pdictVal = {
-        #         "acc": metrics["acc"],
-        #         "loss": metrics["loss"],
-        #         "min": 0,
-        #         "max": 0,
-        #     }
+    #     pdictKey = ("{:.3f}".format(100 * packetsLost / packetsSent), case)
+    #     pdictVal = {
+    #         "acc": metrics["acc"],
+    #         "loss": metrics["loss"],
+    #         "min": 0,
+    #         "max": 0,
+    #     }
 
-        #     rand = int(random.randint(1, sys.maxsize))
-        #     with open(
-        #         "Korcan/Plots/"
-        #         + modelName
-        #         + "/"
-        #         + case
-        #         + "_"
-        #         + str(fecPerc)
-        #         + "_"
-        #         + str(protectedPerc)
-        #         + "/key_"
-        #         + "{:.3f}".format(100 * packetsLost / packetsSent)
-        #         + "_"
-        #         + str(rand)
-        #         + "_.pkl",
-        #         "wb",
-        #     ) as f:
-        #         pickle.dump(pdictKey, f)
-        #     with open(
-        #         "Korcan/Plots/"
-        #         + modelName
-        #         + "/"
-        #         + case
-        #         + "_"
-        #         + str(fecPerc)
-        #         + "_"
-        #         + str(protectedPerc)
-        #         + "/val_"
-        #         + "{:.3f}".format(100 * packetsLost / packetsSent)
-        #         + "_"
-        #         + str(rand)
-        #         + "_.pkl",
-        #         "wb",
-        #     ) as f:
-        #         pickle.dump(pdictVal, f)
-        # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
+    #     rand = int(random.randint(1, sys.maxsize))
+    #     with open(
+    #         "Korcan/Plots/"
+    #         + modelName
+    #         + "/"
+    #         + case
+    #         + "_"
+    #         + str(fecPerc)
+    #         + "_"
+    #         + str(protectedPerc)
+    #         + "/key_"
+    #         + "{:.3f}".format(100 * packetsLost / packetsSent)
+    #         + "_"
+    #         + str(rand)
+    #         + "_.pkl",
+    #         "wb",
+    #     ) as f:
+    #         pickle.dump(pdictKey, f)
+    #     with open(
+    #         "Korcan/Plots/"
+    #         + modelName
+    #         + "/"
+    #         + case
+    #         + "_"
+    #         + str(fecPerc)
+    #         + "_"
+    #         + str(protectedPerc)
+    #         + "/val_"
+    #         + "{:.3f}".format(100 * packetsLost / packetsSent)
+    #         + "_"
+    #         + str(rand)
+    #         + "_.pkl",
+    #         "wb",
+    #     ) as f:
+    #         pickle.dump(pdictVal, f)
+    # self.pdict["{:.3f}".format(100 * packetsLost / packetsSent),case,] = {"acc": metrics["acc"], "loss": metrics["loss"]}
 
 
 if __name__ == "__main__":
