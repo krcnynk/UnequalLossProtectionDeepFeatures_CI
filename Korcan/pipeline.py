@@ -934,7 +934,7 @@ class pipeline:
 
             channel_similarity_scores = [x for x in channel_similarity_scores for _ in range(8)]
 
-            importanceOfPacketsWeighted =importanceOfPackets - channel_similarity_scores  
+            importanceOfPacketsWeighted =importanceOfPackets + channel_similarity_scores  
 
             # importanceOfPacketsSobel = []
             # for p in packetizedfmL:
@@ -1044,6 +1044,43 @@ class pipeline:
 
                 common_elementsProtected = np.intersect1d(
                     indexOfLossedPackets, OrderedImportanceOfPacketsIndex
+                )
+                common_elementsFEC = np.intersect1d(
+                    indexOfLossedPackets, lowestImportanceIndex
+                )
+                # lostUnprotectedPackets = lostPackets.count(0)
+                lostProtectedPackets = len(common_elementsProtected)
+                lostRedundantPackets = len(common_elementsFEC)
+                if (
+                    lostProtectedPackets + lostRedundantPackets <= FECPacketCount
+                ):  # RECOVERABLE no protected part will be lost only unprotected
+                    indexOfLossedPackets = lowestImportanceIndex
+                    # indexOfLossedPackets = []
+                else:  # CANNOT RECOVER,lostProtectedPackets valid
+                    indexOfLossedPackets = np.append(
+                        indexOfLossedPackets, lowestImportanceIndex
+                    )
+                    indexOfInterpolatedPackets = indexOfLossedPackets
+                    pass
+            elif case == "FEC (IID) Weighted" or case == "FEC (IID) NS Weighted":
+                indexOfLossedPackets = list(range(0, totalNumPackets))
+                rng.shuffle(indexOfLossedPackets)
+                indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
+
+                FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
+                protectedPacketCount = math.floor(totalNumPackets * protectedPerc / 100)
+                lowestImportanceIndex = OrderedImportanceOfPacketsIndexWeighted[
+                    -FECPacketCount:
+                ]
+                OrderedImportanceOfPacketsIndexWeighted = (
+                    OrderedImportanceOfPacketsIndexWeighted[:-FECPacketCount]
+                )
+
+                packetsSent = packetsSent + totalNumPackets
+                packetsLost = packetsLost + numOfPacketsToLose
+
+                common_elementsProtected = np.intersect1d(
+                    indexOfLossedPackets, OrderedImportanceOfPacketsIndexWeighted
                 )
                 common_elementsFEC = np.intersect1d(
                     indexOfLossedPackets, lowestImportanceIndex
@@ -1334,6 +1371,7 @@ class pipeline:
                 or case == "Least important NS"
                 or case == "Most important NS Weighted"
                 or case == "Least important NS Weighted"
+                or case == "FEC (IID) NS Weighted"
             ):
                 # for ind in range(tensorCompleted.shape[2]):
                 #     img_gray_cv2 = cv.cvtColor(
@@ -1610,7 +1648,10 @@ if __name__ == "__main__":
         case = "Most important NS Weighted"
     elif case == "18":
         case = "Least important NS Weighted"
-
+    elif case == "19":
+        case = "FEC (IID) Weighted"
+    elif case == "20":
+        case = "FEC (IID) NS Weighted"
     module.saveSuperImposedChannels(modelName)
 
     if case == "10":
