@@ -8,11 +8,15 @@ sbatch pipelineT.sh
 sbatch pipelineB.sh
 sbatch pipelineTNS.sh
 sbatch pipelineBNS.sh
+sbatch pipelineRSBUR.sh
+sbatch pipelineRSIID.sh
+sbatch pipelineRSBURNS.sh
+sbatch pipelineRSIIDNS.sh
 
-sbatch pipelineRIID.sh
-sbatch pipelineRIIDNS.sh
-sbatch pipelineRBUR.sh
-sbatch pipelineRBURNS.sh
+# sbatch pipelineRIID.sh
+# sbatch pipelineRIIDNS.sh
+# sbatch pipelineRBUR.sh
+# sbatch pipelineRBURNS.sh
 
 # sbatch pipelineRIID.sh
 # for i in $(seq 0 10 100)
