@@ -1835,14 +1835,18 @@ if __name__ == "__main__":
                     module.pdict[key] = val
 
         dirNames = []
-        dirNames.append("Unprotected (IID)")
-        # dirNames.append("FEC (IID)")
-        # dirNames.append("FEC (Burst)")
-        # dirNames.append("FEC (IID) NS")
-        # dirNames.append("FEC (Burst) NS")
-        dirNames.append("Unprotected (Burst)")
-        dirNames.append("Unprotected (IID) NS")
-        dirNames.append("Unprotected (Burst) NS")
+
+        dirNames.append("FEC (IID) Weighted")
+        dirNames.append("FEC (IID) NS Weighted")
+        dirNames.append("FEC (IID)")
+        dirNames.append("FEC (Burst)")
+        dirNames.append("FEC (IID) NS")
+        dirNames.append("FEC (Burst) NS")
+
+        # dirNames.append("Unprotected (IID)")
+        # dirNames.append("Unprotected (Burst)")
+        # dirNames.append("Unprotected (IID) NS")
+        # dirNames.append("Unprotected (Burst) NS")
         # dirNames = []
 
         # set the directory path
@@ -2102,11 +2106,14 @@ if __name__ == "__main__":
         #     bbox_inches="tight",
         #     dpi=300,
         # )
+
     elif (
         case == "FEC (IID)"
         or case == "FEC (Burst)"
         or case == "FEC (IID) NS"
         or case == "FEC (Burst) NS"
+        or case == "FEC (IID) NS Weighted"
+        or case == "FEC (IID) Weighted"
     ):
         fecPercent = int(sys.argv[3])
         protectPercent = int(sys.argv[4])
