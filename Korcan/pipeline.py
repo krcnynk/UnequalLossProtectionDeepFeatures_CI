@@ -379,6 +379,7 @@ class pipeline:
             "c",
             ".",
             ":",
+
             "Unprotected (IID)",
             "m",
             ".",
@@ -395,6 +396,7 @@ class pipeline:
             "y",
             ".",
             ":",
+
             "FEC (IID)",
             "m",
             ".",
@@ -409,6 +411,15 @@ class pipeline:
             ":",
             "FEC (Burst) NS",
             "y",
+            ".",
+            ":",
+
+            "FEC (IID) Weighted",
+            "k",
+            ".",
+            "-",
+            "FEC (IID) NS Weighted",
+            "k",
             ".",
             ":",
         ]
@@ -1781,8 +1792,6 @@ if __name__ == "__main__":
         or case == "Unprotected (IID) NS"
         or case == "Unprotected (Burst) NS"
         or case == "Unprotected (IID) EN"
-        # or case == "FEC (IID)"
-        # or case == "FEC (Burst)"
         or case == "Most important Weighted"
         or case == "Least important Weighted"
         or case == "Most important NS Weighted"
