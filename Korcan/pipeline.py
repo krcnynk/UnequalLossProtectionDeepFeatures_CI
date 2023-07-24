@@ -1618,11 +1618,11 @@ if __name__ == "__main__":
     quantizationBits = 8
 
     module = pipeline()
-    # module.loadModel(
-    #     modelPath, mobile_model_path, cloud_model_path, trained_model_path, splitLayer
-    # )
-    # module.loadData(dataName, [224, 224], False)
-    # module.findHeatmaps(splitLayer, modelName, dataName)
+    module.loadModel(
+        modelPath, mobile_model_path, cloud_model_path, trained_model_path, splitLayer
+    )
+    module.loadData(dataName, [224, 224], False)
+    module.findHeatmaps(splitLayer, modelName, dataName)
 
     packetCount = 8
 
@@ -1827,7 +1827,7 @@ if __name__ == "__main__":
         dirNames.append("Most important Weighted")
         dirNames.append("Most important NS Weighted")
         dirNames.append("Least important Weighted")
-        # dirNames.append("Least important NS Weighted")
+        dirNames.append("Least important NS Weighted")
 
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
