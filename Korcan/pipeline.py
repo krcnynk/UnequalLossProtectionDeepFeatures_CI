@@ -945,7 +945,7 @@ class pipeline:
 
             channel_similarity_scores = [x for x in channel_similarity_scores for _ in range(8)]
 
-            importanceOfPacketsWeighted =importanceOfPackets + channel_similarity_scores  
+            importanceOfPacketsWeighted =importanceOfPackets - channel_similarity_scores  
 
             # importanceOfPacketsSobel = []
             # for p in packetizedfmL:
