@@ -1596,6 +1596,10 @@ if __name__ == "__main__":
     # modelName = "dense"
     # splitLayer = "pool2_conv"
 
+    percLoss = int(sys.argv[1])
+    case = sys.argv[2]
+    qualityFactor = sys.argv[4]
+
     modelName = "resnet"
     splitLayer = "conv2_block1_add"
     os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
@@ -1621,9 +1625,6 @@ if __name__ == "__main__":
     module.findHeatmaps(splitLayer, modelName, dataName)
 
     packetCount = 8
-    percLoss = int(sys.argv[1])
-    case = sys.argv[2]
-    qualityFactor = sys.argv[4]
 
     if case == "1":
         case = "Most important"
@@ -1663,9 +1664,9 @@ if __name__ == "__main__":
         case = "FEC (IID) Weighted"
     elif case == "20":
         case = "FEC (IID) NS Weighted"
-    module.saveSuperImposedChannels(modelName)
 
     if case == "10":
+        module.saveSuperImposedChannels(modelName)
         saveImageLossPercent = 30
         # module.packetLossSim(
         #     packetCount,
@@ -1820,7 +1821,7 @@ if __name__ == "__main__":
         dirNames = []
         dirNames.append("Most important")
         dirNames.append("Most important NS")
-        dirNames.append("Least important")
+        # dirNames.append("Least important")
         dirNames.append("Least important NS")
 
         dirNames.append("Most important Weighted")
