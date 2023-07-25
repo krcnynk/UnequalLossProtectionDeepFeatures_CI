@@ -1819,15 +1819,15 @@ if __name__ == "__main__":
         #         fpPairs.append(splitted[3:])  # FEC_10_50
 
         dirNames = []
-        dirNames.append("Most important")
-        dirNames.append("Most important NS")
-        # dirNames.append("Least important")
-        dirNames.append("Least important NS")
+        # dirNames.append("Most important")
+        # dirNames.append("Most important NS")
+        # # dirNames.append("Least important")
+        # dirNames.append("Least important NS")
 
-        dirNames.append("Most important Weighted")
-        dirNames.append("Most important NS Weighted")
-        dirNames.append("Least important Weighted")
-        dirNames.append("Least important NS Weighted")
+        # dirNames.append("Most important Weighted")
+        # dirNames.append("Most important NS Weighted")
+        # dirNames.append("Least important Weighted")
+        # dirNames.append("Least important NS Weighted")
 
         for d in dirNames:
             listFiles = os.listdir("Korcan/Plots/" + modelName + "/" + d)
