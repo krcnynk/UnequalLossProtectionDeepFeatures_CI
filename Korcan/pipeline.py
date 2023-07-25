@@ -1066,12 +1066,12 @@ class pipeline:
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
-                    # indexOfLossedPackets = []
+                    indexOfInterpolatedPackets = indexOfLossedPackets
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
-                    indexOfInterpolatedPackets = indexOfLossedPackets + lowestImportanceIndex
+                    indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
             elif case == "FEC (IID) Weighted" or case == "FEC (IID) NS Weighted":
                 indexOfLossedPackets = list(range(0, totalNumPackets))
@@ -1103,12 +1103,12 @@ class pipeline:
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
-                    # indexOfLossedPackets = []
+                    indexOfInterpolatedPackets = indexOfLossedPackets
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
-                    indexOfInterpolatedPackets = indexOfLossedPackets + lowestImportanceIndex
+                    indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
 
             elif case == "Unprotected (Burst)":
