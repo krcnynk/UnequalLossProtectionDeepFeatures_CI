@@ -939,7 +939,7 @@ class pipeline:
             )
             OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:len(OrderedImportanceOfChannelsIndex)//2]
             
-            mse_matrix = np.zeros((self.C, len(OrderedImportanceOfChannelsFirstHalf)))
+            mse_matrix = np.zeros((self.C, self.C))
             for i in range(self.C):
                 for j in OrderedImportanceOfChannelsFirstHalf:
                     mse = np.mean((fmL[:,:,i] - fmL[:,:,j])**2)
