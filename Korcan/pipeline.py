@@ -931,8 +931,9 @@ class pipeline:
 
             importanceOfChannels = []
             for i in range(0, len(importanceOfPackets), 8):
-                group_sum = sum(np.concatenate(importanceOfPackets[i:i+8]))
+                group_sum = sum(importanceOfPackets[i:i+8])
                 importanceOfChannels.append(group_sum)
+
             OrderedImportanceOfChannelsIndex = (
                 self.__getOrderedImportantPacketIndex(importanceOfChannels)
             )
