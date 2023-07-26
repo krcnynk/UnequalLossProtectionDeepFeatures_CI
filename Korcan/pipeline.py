@@ -824,13 +824,12 @@ class pipeline:
             for i_c in lostChannels:
                 mse_values = []
                 for a_c in range(num_channels):
-                    # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
-                    mse = np.corrcoef(pktzNoLoss[i_c, :, :].flatten() , pkt_obj[a_c, :, :].flatten())[0, 1]
+                    mse = np.mean((pktzNoLoss[i_c, :, :] - pkt_obj[a_c, :, :])**2)
                     mse_values.append(mse)
                     # print(i_c, a_c,mse)
                     # print(pktzNoLoss[i_c, :, :],pkt_obj[a_c, :, :])
                 # Find the index of the most similar matrix based on the lowest MSE value
-                most_similar_index = np.argmax(mse_values)
+                most_similar_index = np.argmin(mse_values)
                 # print(i_c, most_similar_index)
                 pkt_obj[i_c, :, :] = pkt_obj[most_similar_index, :, :]
 
@@ -940,20 +939,21 @@ class pipeline:
             )
             OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:2*len(OrderedImportanceOfChannelsIndex)//5]
             
-            pearson_matrix = np.zeros((self.C, self.C))
+            mse_matrix = np.zeros((self.C, self.C))
             for i in range(self.C):
                 for j in OrderedImportanceOfChannelsFirstHalf:
-                    corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
-                    pearson_matrix[i, j] = corr_coefficient
+                    mse = np.mean((fmL[:,:,i] - fmL[:,:,j])**2)
+                    # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
+                    mse_matrix[i, j] = mse
 
-            pearson_matrix = np.sum(pearson_matrix, axis=1)
-            min_mse = np.min(pearson_matrix)
-            max_mse = np.max(pearson_matrix)
-            channel_sim_scores = (pearson_matrix - min_mse) / (max_mse - min_mse)
+            mse_matrix = np.sum(mse_matrix, axis=1)
+            min_mse = np.min(mse_matrix)
+            max_mse = np.max(mse_matrix)
+            channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
             # similar_channels = np.argwhere(channel_sim_scores < 0.2)
 
             channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
-            importanceOfPacketsWeighted =importanceOfPackets+channel_sim_scores  
+            importanceOfPacketsWeighted =importanceOfPackets+channel_sim_scores*0.5
 
             # importanceOfPacketsSobel = []
             # for p in packetizedfmL:
