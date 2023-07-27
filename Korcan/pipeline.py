@@ -953,7 +953,7 @@ class pipeline:
 
             OrderedImportanceOfPacketsFirstHalf= OrderedImportanceOfPacketsIndex[:2*len(OrderedImportanceOfPacketsIndex)//5]
 
-            mse_matrix = np.zeros((len(OrderedImportanceOfPacketsIndex), len(OrderedImportanceOfPacketsFirstHalf)))
+            mse_matrix = np.zeros((len(OrderedImportanceOfPacketsIndex), len(OrderedImportanceOfPacketsIndex)))
             for i in range(len(OrderedImportanceOfPacketsIndex)):
                 for j in OrderedImportanceOfPacketsFirstHalf:
                     mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
