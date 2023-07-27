@@ -953,7 +953,7 @@ class pipeline:
             # similar_channels = np.argwhere(channel_sim_scores < 0.2)
 
             channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
-            importanceOfPacketsWeighted =importanceOfPackets+channel_sim_scores*0.5
+            importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
 
             # importanceOfPacketsSobel = []
             # for p in packetizedfmL:
