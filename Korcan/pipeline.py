@@ -928,44 +928,46 @@ class pipeline:
             OrderedImportanceOfPacketsIndex = (
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
             )
-#####################
-            # importanceOfChannels = []
-            # for i in range(0, len(importanceOfPackets), 8):
-            #     group_sum = sum(importanceOfPackets[i:i+8])
-            #     importanceOfChannels.append(group_sum)
+#####################################  
+            importanceOfChannels = []
+            for i in range(0, len(importanceOfPackets), 8):
+                group_sum = sum(importanceOfPackets[i:i+8])
+                importanceOfChannels.append(group_sum)
 
-            # OrderedImportanceOfChannelsIndex = (
-            #     self.__getOrderedImportantPacketIndex(importanceOfChannels)
-            # )
-            # OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:2*len(OrderedImportanceOfChannelsIndex)//5]
+            OrderedImportanceOfChannelsIndex = (
+                self.__getOrderedImportantPacketIndex(importanceOfChannels)
+            )
+            OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:2*len(OrderedImportanceOfChannelsIndex)//5]
             
-            # mse_matrix = np.zeros((self.C, self.C))
-            # for i in range(self.C):
-            #     for j in OrderedImportanceOfChannelsFirstHalf:
-            #         mse = np.mean((fmL[:,:,i] - fmL[:,:,j])**2)
-            #         # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
-            #         mse_matrix[i, j] = mse
-            # mse_matrix = np.sum(mse_matrix, axis=1)
-            # min_mse = np.min(mse_matrix)
-            # max_mse = np.max(mse_matrix)
-            # channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
-##################  
-
-            OrderedImportanceOfPacketsFirstHalf= OrderedImportanceOfPacketsIndex[:2*len(OrderedImportanceOfPacketsIndex)//5]
-
-            mse_matrix = np.zeros((len(OrderedImportanceOfPacketsIndex), len(OrderedImportanceOfPacketsIndex)))
-            for i in range(len(OrderedImportanceOfPacketsIndex)):
-                for j in OrderedImportanceOfPacketsFirstHalf:
-                    mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
+            mse_matrix = np.zeros((self.C, self.C))
+            for i in range(self.C):
+                for j in OrderedImportanceOfChannelsFirstHalf:
+                    mse = np.mean((fmL[:,:,i] - fmL[:,:,j])**2)
                     # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
                     mse_matrix[i, j] = mse
             mse_matrix = np.sum(mse_matrix, axis=1)
             min_mse = np.min(mse_matrix)
             max_mse = np.max(mse_matrix)
-            packet_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
-            # similar_channels = np.argwhere(channel_sim_scores < 0.2)
-            importanceOfPacketsWeighted =importanceOfPackets+np.array(packet_sim_scores)
+            channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
+            importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores) * 0.7
+#################  #################  
 
+            # OrderedImportanceOfPacketsFirstHalf= OrderedImportanceOfPacketsIndex[:2*len(OrderedImportanceOfPacketsIndex)//5]
+
+            # mse_matrix = np.zeros((len(OrderedImportanceOfPacketsIndex), len(OrderedImportanceOfPacketsIndex)))
+            # for i in range(len(OrderedImportanceOfPacketsIndex)):
+            #     for j in OrderedImportanceOfPacketsFirstHalf:
+            #         mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
+            #         # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
+            #         mse_matrix[i, j] = mse
+            # mse_matrix = np.sum(mse_matrix, axis=1)
+            # min_mse = np.min(mse_matrix)
+            # max_mse = np.max(mse_matrix)
+            # packet_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
+            # # similar_channels = np.argwhere(channel_sim_scores < 0.2)
+            # importanceOfPacketsWeighted =importanceOfPackets+np.array(packet_sim_scores)
+
+#################  #################  
             # importanceOfPacketsSobel = []
             # for p in packetizedfmL:
             #     dx = scipy.ndimage.sobel(p, 1)
