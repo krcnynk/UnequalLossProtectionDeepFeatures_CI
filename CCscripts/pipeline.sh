@@ -4,15 +4,18 @@ git pull
 rm -r /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots
 mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet
 
-sbatch pipelineT.sh
-sbatch pipelineB.sh
-sbatch pipelineTNS.sh
-sbatch pipelineBNS.sh
-sbatch pipelineRSBUR.sh
-sbatch pipelineRSIID.sh
-sbatch pipelineRSBURNS.sh
-sbatch pipelineRSIIDNS.sh
+# sbatch pipelineT.sh
+# sbatch pipelineB.sh
+# sbatch pipelineTNS.sh
+# sbatch pipelineBNS.sh
+# sbatch pipelineRSBUR.sh
+# sbatch pipelineRSBURNS.sh
 
+for i in {1..20}
+do
+    sbatch pipelineRSIID.sh
+    sbatch pipelineRSIIDNS.sh
+done
 # sbatch pipelineRIID.sh
 # sbatch pipelineRIIDNS.sh
 # sbatch pipelineRBUR.sh
