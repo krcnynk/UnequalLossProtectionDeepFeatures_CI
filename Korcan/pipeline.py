@@ -937,7 +937,7 @@ class pipeline:
             OrderedImportanceOfChannelsIndex = (
                 self.__getOrderedImportantPacketIndex(importanceOfChannels)
             )
-            OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:2*len(OrderedImportanceOfChannelsIndex)//5]
+            OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:len(OrderedImportanceOfChannelsIndex)//2]
             
             mse_matrix = np.zeros((self.C, self.C))
             for i in range(self.C):
