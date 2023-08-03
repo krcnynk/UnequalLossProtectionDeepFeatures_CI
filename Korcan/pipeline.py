@@ -950,7 +950,7 @@ class pipeline:
             max_mse = np.max(mse_matrix)
             channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
             channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
-            importanceOfPacketsWeighted = np.array(channel_sim_scores)
+            importanceOfPacketsWeighted = channel_sim_scores
             # importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
 #################  #################  
 
