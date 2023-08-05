@@ -937,7 +937,7 @@ class pipeline:
             OrderedImportanceOfChannelsIndex = (
                 self.__getOrderedImportantPacketIndex(importanceOfChannels)
             )
-            OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:len(OrderedImportanceOfChannelsIndex)//2]
+            OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:len(OrderedImportanceOfChannelsIndex)//5]
             
             mse_matrix = np.zeros((self.C, self.C))
             for i in range(self.C):
@@ -950,8 +950,8 @@ class pipeline:
             max_mse = np.max(mse_matrix)
             channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
             channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
-            importanceOfPacketsWeighted = channel_sim_scores
-            # importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
+            # importanceOfPacketsWeighted = channel_sim_scores
+            importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
 #################  #################  
 
             # OrderedImportanceOfPacketsFirstHalf= OrderedImportanceOfPacketsIndex[:2*len(OrderedImportanceOfPacketsIndex)//5]
