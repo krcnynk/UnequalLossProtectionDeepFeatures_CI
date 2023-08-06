@@ -1015,7 +1015,7 @@ class pipeline:
             # )
             points_list = [0] * len(OrderedImportanceOfPacketsIndex)
             # Generate random indices to place the points
-            random_indices = random.sample(range(len(OrderedImportanceOfPacketsIndex)), num_points)
+            random_indices = random.sample(range(len(OrderedImportanceOfPacketsIndex)), math.floor(totalNumPackets * fecPerc / 100))
             # Set the points at the random indices to 1
             for index in random_indices:
                 points_list[index] = 1
