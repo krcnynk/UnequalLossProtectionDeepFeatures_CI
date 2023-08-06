@@ -937,22 +937,40 @@ class pipeline:
             OrderedImportanceOfChannelsIndex = (
                 self.__getOrderedImportantPacketIndex(importanceOfChannels)
             )
-            OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:len(OrderedImportanceOfChannelsIndex)//5]
-            
-            mse_matrix = np.zeros((self.C, self.C))
-            for i in range(self.C):
-                for j in OrderedImportanceOfChannelsFirstHalf:
-                    mse = np.mean((fmL[:,:,i] - fmL[:,:,j])**2)
-                    # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
-                    mse_matrix[i, j] = mse
-            mse_matrix = np.sum(mse_matrix, axis=1)
-            min_mse = np.min(mse_matrix)
-            max_mse = np.max(mse_matrix)
-            channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
-            channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
-            # importanceOfPacketsWeighted = channel_sim_scores
-            importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
-#################  #################  
+            OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:len(OrderedImportanceOfChannelsIndex)//2]
+
+            OrderedImportanceOfChannelsSecondHalf= OrderedImportanceOfChannelsIndex[len(OrderedImportanceOfChannelsIndex)//2:]
+
+            for ca in OrderedImportanceOfChannelsFirstHalf:
+                for cb in OrderedImportanceOfChannelsSecondHalf:
+                    fmL[:,:,cb] = fmL[:,:,ca]
+            fmLChannelArray = np.dsplit(fmL, self.C)
+            packetizedfmL = []
+            for i_c in range(self.C):
+                packetizedfmL = packetizedfmL + np.vsplit(
+                    np.pad(
+                        fmLChannelArray[i_c].squeeze(),
+                        [(0, pad), (0, 0)],
+                        mode="constant",
+                        constant_values=0,
+                    ),
+                    packetNum,
+                )     
+############################################# ##########   
+            # mse_matrix = np.zeros((self.C, self.C))
+            # for i in range(self.C):
+            #     for j in OrderedImportanceOfChannelsFirstHalf:
+            #         mse = np.mean((fmL[:,:,i] - fmL[:,:,j])**2)
+            #         # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
+            #         mse_matrix[i, j] = mse
+            # mse_matrix = np.sum(mse_matrix, axis=1)
+            # min_mse = np.min(mse_matrix)
+            # max_mse = np.max(mse_matrix)
+            # channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
+            # channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
+            # # importanceOfPacketsWeighted = channel_sim_scores
+            # importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
+#################  #################  ################
 
             # OrderedImportanceOfPacketsFirstHalf= OrderedImportanceOfPacketsIndex[:2*len(OrderedImportanceOfPacketsIndex)//5]
 
@@ -995,6 +1013,13 @@ class pipeline:
             #     np.max(np.array(importanceOfPacketsSobel))
             #     - np.min(np.array(importanceOfPacketsSobel))
             # )
+            points_list = [0] * len(OrderedImportanceOfPacketsIndex)
+            # Generate random indices to place the points
+            random_indices = random.sample(range(len(OrderedImportanceOfPacketsIndex)), num_points)
+            # Set the points at the random indices to 1
+            for index in random_indices:
+                points_list[index] = 1
+            importanceOfPacketsWeighted =importanceOfPackets+np.array(points_list)
 
             OrderedImportanceOfPacketsIndexWeighted = (
                 self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)

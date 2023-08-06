@@ -16,8 +16,10 @@ do
     sbatch pipelineRSIID.sh
     sbatch pipelineRSIIDNS.sh
 done
-# sbatch pipelineRIID.sh
-# sbatch pipelineRIIDNS.sh
+
+sbatch pipelineRIID.sh
+sbatch pipelineRIIDNS.sh
+
 # sbatch pipelineRBUR.sh
 # sbatch pipelineRBURNS.sh
 
