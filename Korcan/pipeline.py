@@ -929,20 +929,26 @@ class pipeline:
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
             )
 #####################################  
-            importanceOfChannels = []
-            for i in range(0, len(importanceOfPackets), 8):
-                group_sum = sum(importanceOfPackets[i:i+8])
-                importanceOfChannels.append(group_sum)
+            # importanceOfChannels = []
+            # for i in range(0, len(importanceOfPackets), 8):
+            #     group_sum = sum(importanceOfPackets[i:i+8])
+            #     importanceOfChannels.append(group_sum)
 
-            OrderedImportanceOfChannelsIndex = (
-                self.__getOrderedImportantPacketIndex(importanceOfChannels)
-            )
-            OrderedImportanceOfChannelsFirstHalf= OrderedImportanceOfChannelsIndex[:len(OrderedImportanceOfChannelsIndex)//2]
+            # OrderedImportanceOfChannelsIndex = (
+            #     self.__getOrderedImportantPacketIndex(importanceOfChannels)
+            # )
+            OrderedChannelList = [value // 8 for value in OrderedImportanceOfPacketsIndex]
+            OrderedChannelListF= OrderedChannelList[:len(OrderedChannelList)//2]
+            OrderedChannelListF = list(set(OrderedChannelListF))
+            OrderedChannelListS= OrderedChannelList[len(OrderedChannelList)//2:]
+            OrderedChannelListS = list(set(OrderedChannelListS))
 
-            OrderedImportanceOfChannelsSecondHalf= OrderedImportanceOfChannelsIndex[len(OrderedImportanceOfChannelsIndex)//2:]
-
-            for i in range(len(OrderedImportanceOfChannelsSecondHalf)):
-                fmL[:,:,OrderedImportanceOfChannelsSecondHalf[i]] = fmL[:,:,OrderedImportanceOfChannelsFirstHalf[i]]
+            if len(OrderedChannelListF) <= len(OrderedChannelListS):
+                for i in range(len(OrderedChannelListS)):
+                    fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i%len(OrderedChannelListS)]]
+            else:
+                for i in range(len(OrderedChannelListS)):
+                    fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i]]
 
             fmLChannelArray = np.dsplit(fmL, self.C)
             packetizedfmL = []
