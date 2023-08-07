@@ -944,6 +944,7 @@ class pipeline:
             for ca in OrderedImportanceOfChannelsFirstHalf:
                 for cb in OrderedImportanceOfChannelsSecondHalf:
                     fmL[:,:,cb] = fmL[:,:,ca]
+
             fmLChannelArray = np.dsplit(fmL, self.C)
             packetizedfmL = []
             for i_c in range(self.C):
@@ -1013,17 +1014,19 @@ class pipeline:
             #     np.max(np.array(importanceOfPacketsSobel))
             #     - np.min(np.array(importanceOfPacketsSobel))
             # )
-            points_list = [0] * len(OrderedImportanceOfPacketsIndex)
-            # Generate random indices to place the points
-            random_indices = random.sample(range(len(OrderedImportanceOfPacketsIndex)), math.floor(len(packetizedfmL) * fecPerc / 100))
-            # Set the points at the random indices to 1
-            for index in random_indices:
-                points_list[index] = 1
-            importanceOfPacketsWeighted =importanceOfPackets+np.array(points_list)
 
-            OrderedImportanceOfPacketsIndexWeighted = (
-                self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
-            )
+            if fecPerc is not None:
+                points_list = [0] * len(OrderedImportanceOfPacketsIndex)
+                # Generate random indices to place the points
+                random_indices = random.sample(range(len(OrderedImportanceOfPacketsIndex)), math.floor(len(packetizedfmL) * fecPerc / 100))
+                # Set the points at the random indices to 1
+                for index in random_indices:
+                    points_list[index] = -1
+                importanceOfPacketsWeighted =importanceOfPackets+np.array(points_list)
+
+                OrderedImportanceOfPacketsIndexWeighted = (
+                    self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
+                )
 
             numOfPacketsToLose = math.floor(
                 len(packetizedheatMap) * percOfPacketLoss / 100
