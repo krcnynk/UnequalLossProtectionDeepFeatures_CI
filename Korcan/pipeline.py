@@ -941,9 +941,8 @@ class pipeline:
 
             OrderedImportanceOfChannelsSecondHalf= OrderedImportanceOfChannelsIndex[len(OrderedImportanceOfChannelsIndex)//2:]
 
-            for ca in OrderedImportanceOfChannelsFirstHalf:
-                for cb in OrderedImportanceOfChannelsSecondHalf:
-                    fmL[:,:,cb] = fmL[:,:,ca]
+            for i in range(OrderedImportanceOfChannelsSecondHalf):
+                fmL[:,:,OrderedImportanceOfChannelsSecondHalf[i]] = fmL[:,:,OrderedImportanceOfChannelsFirstHalf[i]]
 
             fmLChannelArray = np.dsplit(fmL, self.C)
             packetizedfmL = []
