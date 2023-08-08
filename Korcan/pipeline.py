@@ -945,7 +945,7 @@ class pipeline:
 
             if len(OrderedChannelListF) <= len(OrderedChannelListS):
                 for i in range(len(OrderedChannelListS)):
-                    fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i%len(OrderedChannelListS)]]
+                    fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i%len(OrderedChannelListF)]]
             else:
                 for i in range(len(OrderedChannelListS)):
                     fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i]]
