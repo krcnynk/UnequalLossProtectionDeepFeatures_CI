@@ -1032,7 +1032,7 @@ class pipeline:
             #     OrderedImportanceOfPacketsIndexWeighted = (
             #         self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
             #     )
-
+            OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndex
             numOfPacketsToLose = math.floor(
                 len(packetizedheatMap) * percOfPacketLoss / 100
             )
