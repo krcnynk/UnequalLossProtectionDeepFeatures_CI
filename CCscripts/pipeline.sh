@@ -30,8 +30,12 @@ sbatch pipelineRIIDNS.sh
 #     sbatch --export=arg1=$i pipelineRIIDEN.sh
 # done
 
+# Give score to packets based on channel similarity, played with the weight
 
+# then similar to only first half because where the importance is
 
+# then i copied first half to second half to see if that would work not much improvemnt, i am still playing with the parameters,
+# not sure if this is ok basically sending twice
 
 # sbatch pipelineNLEN.sh
 

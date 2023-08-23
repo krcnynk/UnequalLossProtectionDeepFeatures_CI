@@ -937,31 +937,31 @@ class pipeline:
             # OrderedImportanceOfChannelsIndex = (
             #     self.__getOrderedImportantPacketIndex(importanceOfChannels)
             # )
-            OrderedChannelList = [value // 8 for value in OrderedImportanceOfPacketsIndex]
-            OrderedChannelListF= OrderedChannelList[:len(OrderedChannelList)//2]
-            OrderedChannelListF = list(set(OrderedChannelListF))
-            OrderedChannelListS= OrderedChannelList[len(OrderedChannelList)//2:]
-            OrderedChannelListS = list(set(OrderedChannelListS))
+            # OrderedChannelList = [value // 8 for value in OrderedImportanceOfPacketsIndex]
+            # OrderedChannelListF= OrderedChannelList[:len(OrderedChannelList)//2]
+            # OrderedChannelListF = list(set(OrderedChannelListF))
+            # OrderedChannelListS= OrderedChannelList[len(OrderedChannelList)//2:]
+            # OrderedChannelListS = list(set(OrderedChannelListS))
 
-            if len(OrderedChannelListF) <= len(OrderedChannelListS):
-                for i in range(len(OrderedChannelListS)):
-                    fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i%len(OrderedChannelListF)]]
-            else:
-                for i in range(len(OrderedChannelListS)):
-                    fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i]]
+            # if len(OrderedChannelListF) <= len(OrderedChannelListS):
+            #     for i in range(len(OrderedChannelListS)):
+            #         fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i%len(OrderedChannelListF)]]
+            # else:
+            #     for i in range(len(OrderedChannelListS)):
+            #         fmL[:,:,OrderedChannelListS[i]] = fmL[:,:,OrderedChannelListF[i]]
 
-            fmLChannelArray = np.dsplit(fmL, self.C)
-            packetizedfmL = []
-            for i_c in range(self.C):
-                packetizedfmL = packetizedfmL + np.vsplit(
-                    np.pad(
-                        fmLChannelArray[i_c].squeeze(),
-                        [(0, pad), (0, 0)],
-                        mode="constant",
-                        constant_values=0,
-                    ),
-                    packetNum,
-                )     
+            # fmLChannelArray = np.dsplit(fmL, self.C)
+            # packetizedfmL = []
+            # for i_c in range(self.C):
+            #     packetizedfmL = packetizedfmL + np.vsplit(
+            #         np.pad(
+            #             fmLChannelArray[i_c].squeeze(),
+            #             [(0, pad), (0, 0)],
+            #             mode="constant",
+            #             constant_values=0,
+            #         ),
+            #         packetNum,
+            #     )     
 ############################################# ##########   
             # mse_matrix = np.zeros((self.C, self.C))
             # for i in range(self.C):
@@ -1020,18 +1020,18 @@ class pipeline:
             #     - np.min(np.array(importanceOfPacketsSobel))
             # )
 
-            if fecPerc is not None:
-                points_list = [0] * len(OrderedImportanceOfPacketsIndex)
-                # Generate random indices to place the points
-                random_indices = random.sample(range(len(OrderedImportanceOfPacketsIndex)), math.floor(len(packetizedfmL) * fecPerc / 100))
-                # Set the points at the random indices to 1
-                for index in random_indices:
-                    points_list[index] = -1
-                importanceOfPacketsWeighted =importanceOfPackets+np.array(points_list)
+            # if fecPerc is not None:
+            #     points_list = [0] * len(OrderedImportanceOfPacketsIndex)
+            #     # Generate random indices to place the points
+            #     random_indices = random.sample(range(len(OrderedImportanceOfPacketsIndex)), math.floor(len(packetizedfmL) * fecPerc / 100))
+            #     # Set the points at the random indices to 1
+            #     for index in random_indices:
+            #         points_list[index] = -1
+            #     importanceOfPacketsWeighted =importanceOfPackets+np.array(points_list)
 
-                OrderedImportanceOfPacketsIndexWeighted = (
-                    self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
-                )
+            #     OrderedImportanceOfPacketsIndexWeighted = (
+            #         self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
+            #     )
 
             numOfPacketsToLose = math.floor(
                 len(packetizedheatMap) * percOfPacketLoss / 100
@@ -1469,11 +1469,10 @@ class pipeline:
                 )
                 pktzNoLoss = pktzNoLoss.reshape(-1, 8, pktzNoLoss.shape[1])
 
-                pktz = self.fn_caltec(lossmap, pktz,pktzNoLoss,True)
+                pktz = self.fn_caltec(lossmap, pktz,pktzNoLoss,False)
 
                 pktz = pktz.reshape(-1, pktz.shape[2])
                 pktz = pktz.reshape(pktz.shape[0], 7, -1)
-                print(np.array(pktz).shape)
 
                 channelReconstructed = [
                     np.vstack(pktz[i : i + packetNum])
