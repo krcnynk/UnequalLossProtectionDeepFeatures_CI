@@ -994,31 +994,33 @@ class pipeline:
             # importanceOfPacketsWeighted =importanceOfPackets+np.array(packet_sim_scores)
 
 #################  #################  
-            # importanceOfPacketsSobel = []
-            # for p in packetizedfmL:
-            #     dx = scipy.ndimage.sobel(p, 1)
-            #     dy = scipy.ndimage.sobel(p, 0)
-            #     grad_magnitude = np.sqrt(dx**2 + dy**2)
-            #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-            #     avg_grad_magnitude = np.mean(grad_magnitude)
-            #     importanceOfPacketsSobel.append(avg_grad_magnitude)
+            importanceOfPacketsSobel = []
+            for p in packetizedfmL:
+                dx = scipy.ndimage.sobel(p, 1)
+                dy = scipy.ndimage.sobel(p, 0)
+                grad_magnitude = np.sqrt(dx**2 + dy**2)
+                # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                avg_grad_magnitude = np.mean(grad_magnitude)
+                importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-            # # importanceOfPacketsWeighted = importanceOfPacketsSobel
-            # # self.myImportanceFunction(packetizedfmL,packetNum)
+            OrderedimportanceOfPacketsSobel = (
+                self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
+            )
+            
+            
+            # importanceOfPacketsWeighted = importanceOfPacketsSobel
+            # self.myImportanceFunction(packetizedfmL,packetNum)
 
-            # importanceOfPacketsWeighted = (
-            #     np.array(importanceOfPackets) - np.min(np.array(importanceOfPackets))
-            # ) / (
-            #     np.max(np.array(importanceOfPackets))
-            #     - np.min(np.array(importanceOfPackets))
-            # )
-            # +(
-            #     np.array(importanceOfPacketsSobel)
-            #     - np.min(np.array(importanceOfPacketsSobel))
-            # ) / (
-            #     np.max(np.array(importanceOfPacketsSobel))
-            #     - np.min(np.array(importanceOfPacketsSobel))
-            # )
+            importanceOfPacketsWeighted=importanceOfPackets.copy()
+            notImportantIndexesCanBeUsedAsFEC = list(range(len(importanceOfPackets)*60/100,len(importanceOfPackets)*50/100,-1))
+            importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[len(importanceOfPackets)*90/100:]] = max(importanceOfPacketsWeighted[notImportantIndexesCanBeUsedAsFEC])
+
+            # importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[len(importanceOfPackets)*90/100:]]
+
+            # for i in range (len(importanceOfPackets)*60/100,len(importanceOfPackets)):
+            #     OrderedImportanceOfPacketsIndex
+
+            # importanceOfPackets[] importanceOfPacketsSobel
 
             # if fecPerc is not None:
             #     points_list = [0] * len(OrderedImportanceOfPacketsIndex)
@@ -1029,10 +1031,11 @@ class pipeline:
             #         points_list[index] = -1
             #     importanceOfPacketsWeighted =importanceOfPackets+np.array(points_list)
 
-            #     OrderedImportanceOfPacketsIndexWeighted = (
-            #         self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
-            #     )
-            OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndex
+            OrderedImportanceOfPacketsIndexWeighted = (
+                self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
+            )
+            # OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndex
+
             numOfPacketsToLose = math.floor(
                 len(packetizedheatMap) * percOfPacketLoss / 100
             )
