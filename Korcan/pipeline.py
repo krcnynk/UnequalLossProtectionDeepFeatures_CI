@@ -1012,7 +1012,13 @@ class pipeline:
             # self.myImportanceFunction(packetizedfmL,packetNum)
 
             importanceOfPacketsWeighted=importanceOfPackets.copy()
-            importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]] = max(importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[range(math.ceil(len(importanceOfPackets)*60/100),math.floor(len(importanceOfPackets)*50/100),-1)]])
+
+            IndexesLowGradient = OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]
+
+            IndexesNoImportanceNotFEC = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]
+
+            for i in IndexesLowGradient:
+                importanceOfPacketsWeighted[i] = max([importanceOfPacketsWeighted[i] for i in IndexesNoImportanceNotFEC])
 
             # importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[len(importanceOfPackets)*90/100:]]
 
