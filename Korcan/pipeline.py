@@ -1013,7 +1013,7 @@ class pipeline:
 
             importanceOfPacketsWeighted=importanceOfPackets.copy()
             notImportantIndexesCanBeUsedAsFEC = list(range(math.ceil(len(importanceOfPackets)*60/100),math.floor(len(importanceOfPackets)*50/100),-1))
-            importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]] = max(importanceOfPacketsWeighted[notImportantIndexesCanBeUsedAsFEC])
+            importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]] = max(importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[notImportantIndexesCanBeUsedAsFEC]])
 
             # importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[len(importanceOfPackets)*90/100:]]
 
