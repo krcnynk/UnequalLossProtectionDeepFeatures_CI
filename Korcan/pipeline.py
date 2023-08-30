@@ -1012,14 +1012,11 @@ class pipeline:
             # self.myImportanceFunction(packetizedfmL,packetNum)
 
             importanceOfPacketsWeighted=importanceOfPackets.copy()
-
             IndexesLowGradient = OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]
-
             IndexesNoImportanceNotFEC = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]
-
             for i in IndexesLowGradient:
                 importanceOfPacketsWeighted[i] = max([importanceOfPacketsWeighted[i] for i in IndexesNoImportanceNotFEC])
-
+                
             # importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[len(importanceOfPackets)*90/100:]]
 
             # for i in range (len(importanceOfPackets)*60/100,len(importanceOfPackets)):
@@ -1039,7 +1036,7 @@ class pipeline:
             OrderedImportanceOfPacketsIndexWeighted = (
                 self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
             )
-            # OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndex
+            OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndex
 
             numOfPacketsToLose = math.floor(
                 len(packetizedheatMap) * percOfPacketLoss / 100
@@ -1130,12 +1127,14 @@ class pipeline:
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
-                    indexOfInterpolatedPackets = indexOfLossedPackets
+                    # indexOfInterpolatedPackets = indexOfLossedPackets
+                    # indexOfInterpolatedPackets nothing
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
+                    indexOfInterpolatedPackets = indexOfLossedPackets.copy()
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
-                    indexOfInterpolatedPackets = indexOfLossedPackets
+                    # indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
             elif case == "FEC (IID) Weighted" or case == "FEC (IID) NS Weighted":
                 indexOfLossedPackets = list(range(0, totalNumPackets))
@@ -1167,12 +1166,13 @@ class pipeline:
                     lostProtectedPackets + lostRedundantPackets <= FECPacketCount
                 ):  # RECOVERABLE no protected part will be lost only unprotected
                     indexOfLossedPackets = lowestImportanceIndex
-                    indexOfInterpolatedPackets = indexOfLossedPackets
+                    # indexOfInterpolatedPackets = indexOfLossedPackets
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
+                    indexOfInterpolatedPackets = indexOfLossedPackets.copy()
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
-                    indexOfInterpolatedPackets = indexOfLossedPackets
+                    # indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
 
             elif case == "Unprotected (Burst)":
