@@ -931,18 +931,31 @@ class pipeline:
 
             importanceOfPacketsWeighted=importanceOfPackets.copy()
 
-            NoImportanceNotFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]
-            NoImportanceFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+            NoImportanceNotFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):math.ceil(len(importanceOfPackets)*60/100)]
+            NoImportanceFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):]
             Start10PercentIndex = OrderedImportanceOfPacketsIndex[:math.ceil(len(importanceOfPackets)*10/100)]
+
+            Start20PercentNeighborsIndex = []
+            for number in Start10PercentIndex:
+                if number > 0:
+                    Start20PercentNeighborsIndex.append(number - 1)
+                    Start20PercentNeighborsIndex.append(number + 1)
+                else:
+                    Start20PercentNeighborsIndex.append(number + 1)
+
+            # Filter out negative values and duplicates
+            Start20PercentNeighborsIndex = list(set(filter(lambda x: x >= 0, Start20PercentNeighborsIndex)))
+
+            # Sort the result list
+            Start20PercentNeighborsIndex.sort()
+
 
             maximumI=0
             for i in NoImportanceNotFECIndex:
                 if maximumI < importanceOfPackets[i]:
                     maximumI = importanceOfPackets[i]
 
-
-            tobeMaximumIndexes = []
-            for i in Start10PercentIndex:
+            for i in Start20PercentNeighborsIndex:
                 correlation_coefficient = 0
                 indexHigher = i
                 for j in NoImportanceFECIndex:
