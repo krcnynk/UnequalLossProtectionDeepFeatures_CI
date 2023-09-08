@@ -928,6 +928,29 @@ class pipeline:
             OrderedImportanceOfPacketsIndex = (
                 self.__getOrderedImportantPacketIndex(importanceOfPackets)
             )
+
+            importanceOfPacketsWeighted=importanceOfPackets.copy()
+
+            NoImportanceNotFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]
+            NoImportanceFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+            Start10PercentIndex = OrderedImportanceOfPacketsIndex[:math.ceil(len(importanceOfPackets)*10/100)]
+
+            maximumI=0
+            for i in NoImportanceNotFECIndex:
+                if maximumI < importanceOfPackets[i]:
+                    maximumI = importanceOfPackets[i]
+
+
+            tobeMaximumIndexes = []
+            for i in Start10PercentIndex:
+                correlation_coefficient = 0
+                indexHigher = i
+                for j in NoImportanceFECIndex:
+                    if correlation_coefficient < np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]:
+                        correlation_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
+                        indexHigher = j
+                importanceOfPacketsWeighted[indexHigher] = maximumI
+
 #####################################  
             # importanceOfChannels = []
             # for i in range(0, len(importanceOfPackets), 8):
@@ -994,28 +1017,25 @@ class pipeline:
             # importanceOfPacketsWeighted =importanceOfPackets+np.array(packet_sim_scores)
 
 #################  #################  
-            importanceOfPacketsSobel = []
-            for p in packetizedfmL:
-                dx = scipy.ndimage.sobel(p, 1)
-                dy = scipy.ndimage.sobel(p, 0)
-                grad_magnitude = np.sqrt(dx**2 + dy**2)
-                # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                avg_grad_magnitude = np.mean(grad_magnitude)
-                importanceOfPacketsSobel.append(avg_grad_magnitude)
+            # importanceOfPacketsSobel = []
+            # for p in packetizedfmL:
+            #     dx = scipy.ndimage.sobel(p, 1)
+            #     dy = scipy.ndimage.sobel(p, 0)
+            #     grad_magnitude = np.sqrt(dx**2 + dy**2)
+            #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+            #     avg_grad_magnitude = np.mean(grad_magnitude)
+            #     importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-            OrderedimportanceOfPacketsSobel = (
-                self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
-            )
+            # OrderedimportanceOfPacketsSobel = (
+            #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
+            # )
             
-            
-            # importanceOfPacketsWeighted = importanceOfPacketsSobel
-            # self.myImportanceFunction(packetizedfmL,packetNum)
 
-            importanceOfPacketsWeighted=importanceOfPackets.copy()
-            IndexesLowGradient = OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]
-            IndexesNoImportanceNotFEC = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]
-            for i in IndexesLowGradient:
-                importanceOfPacketsWeighted[i] = max([importanceOfPacketsWeighted[i] for i in IndexesNoImportanceNotFEC])
+            # importanceOfPacketsWeighted=importanceOfPackets.copy()
+            # IndexesLowGradient = OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]
+            # IndexesNoImportanceNotFEC = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]
+            # for i in IndexesLowGradient:
+            #     importanceOfPacketsWeighted[i] = max([importanceOfPacketsWeighted[i] for i in IndexesNoImportanceNotFEC])
                 
             # importanceOfPacketsWeighted[OrderedimportanceOfPacketsSobel[len(importanceOfPackets)*90/100:]]
 
@@ -1036,6 +1056,7 @@ class pipeline:
             OrderedImportanceOfPacketsIndexWeighted = (
                 self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
             )
+
             # OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndex
 
             numOfPacketsToLose = math.floor(
@@ -1130,11 +1151,11 @@ class pipeline:
                     # indexOfInterpolatedPackets = indexOfLossedPackets
                     # indexOfInterpolatedPackets nothing
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    indexOfInterpolatedPackets = indexOfLossedPackets.copy()
+                    # indexOfInterpolatedPackets = indexOfLossedPackets.copy()
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
-                    # indexOfInterpolatedPackets = indexOfLossedPackets
+                    indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
             elif case == "FEC (IID) Weighted" or case == "FEC (IID) NS Weighted":
                 indexOfLossedPackets = list(range(0, totalNumPackets))
@@ -1168,11 +1189,11 @@ class pipeline:
                     indexOfLossedPackets = lowestImportanceIndex
                     # indexOfInterpolatedPackets = indexOfLossedPackets
                 else:  # CANNOT RECOVER,lostProtectedPackets valid
-                    indexOfInterpolatedPackets = indexOfLossedPackets.copy()
+                    # indexOfInterpolatedPackets = indexOfLossedPackets.copy()
                     indexOfLossedPackets = np.append(
                         indexOfLossedPackets, lowestImportanceIndex
                     )
-                    # indexOfInterpolatedPackets = indexOfLossedPackets
+                    indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
 
             elif case == "Unprotected (Burst)":
