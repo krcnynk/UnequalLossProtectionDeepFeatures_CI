@@ -931,38 +931,39 @@ class pipeline:
 
             importanceOfPacketsWeighted=importanceOfPackets.copy()
 
-            NoImportanceNotFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):math.ceil(len(importanceOfPackets)*60/100)]
-            NoImportanceFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):]
-            Start10PercentIndex = OrderedImportanceOfPacketsIndex[:math.ceil(len(importanceOfPackets)*10/100)]
+            if fecPerc is not None:
+                # NoImportanceNotFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):math.ceil(len(importanceOfPackets)*60/100)]
+                # NoImportanceFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):]
+                # Start10PercentIndex = OrderedImportanceOfPacketsIndex[:math.ceil(len(importanceOfPackets)*10/100)]
 
-            Start20PercentNeighborsIndex = []
-            for number in Start10PercentIndex:
-                if number > 0:
-                    Start20PercentNeighborsIndex.append(number - 1)
-                    Start20PercentNeighborsIndex.append(number + 1)
-                else:
-                    Start20PercentNeighborsIndex.append(number + 1)
+                # Start20PercentNeighborsIndex = []
+                # for number in Start10PercentIndex:
+                #     if number > 0:
+                #         Start20PercentNeighborsIndex.append(number - 1)
+                #         Start20PercentNeighborsIndex.append(number + 1)
+                #     else:
+                #         Start20PercentNeighborsIndex.append(number + 1)
 
-            # Filter out negative values and duplicates
-            Start20PercentNeighborsIndex = list(set(filter(lambda x: x >= 0, Start20PercentNeighborsIndex)))
+                # # Filter out negative values and duplicates
+                # Start20PercentNeighborsIndex = list(set(filter(lambda x: x >= 0, Start20PercentNeighborsIndex)))
 
-            # Sort the result list
-            Start20PercentNeighborsIndex.sort()
+                # # Sort the result list
+                # Start20PercentNeighborsIndex.sort()
 
 
-            maximumI=0
-            for i in NoImportanceNotFECIndex:
-                if maximumI < importanceOfPackets[i]:
-                    maximumI = importanceOfPackets[i]
+                # maximumI=0
+                # for i in NoImportanceNotFECIndex:
+                #     if maximumI < importanceOfPackets[i]:
+                #         maximumI = importanceOfPackets[i]
 
-            for i in Start20PercentNeighborsIndex:
-                correlation_coefficient = 0
-                indexHigher = i
-                for j in NoImportanceFECIndex:
-                    if correlation_coefficient < np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]:
-                        correlation_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
-                        indexHigher = j
-                importanceOfPacketsWeighted[indexHigher] = maximumI
+                # for i in Start20PercentNeighborsIndex:
+                #     correlation_coefficient = 0
+                #     indexHigher = i
+                #     for j in NoImportanceFECIndex:
+                #         if correlation_coefficient < np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]:
+                #             correlation_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
+                #             indexHigher = j
+                #     importanceOfPacketsWeighted[indexHigher] = maximumI
 
 #####################################  
             # importanceOfChannels = []
@@ -1030,20 +1031,29 @@ class pipeline:
             # importanceOfPacketsWeighted =importanceOfPackets+np.array(packet_sim_scores)
 
 #################  #################  
-            # importanceOfPacketsSobel = []
-            # for p in packetizedfmL:
-            #     dx = scipy.ndimage.sobel(p, 1)
-            #     dy = scipy.ndimage.sobel(p, 0)
-            #     grad_magnitude = np.sqrt(dx**2 + dy**2)
-            #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-            #     avg_grad_magnitude = np.mean(grad_magnitude)
-            #     importanceOfPacketsSobel.append(avg_grad_magnitude)
+            importanceOfPacketsSobel = []
+            for p in packetizedfmL:
+                dx = scipy.ndimage.sobel(p, 1)
+                dy = scipy.ndimage.sobel(p, 0)
+                grad_magnitude = np.sqrt(dx**2 + dy**2)
+                # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                avg_grad_magnitude = np.mean(grad_magnitude)
+                importanceOfPacketsSobel.append(avg_grad_magnitude)
 
+            importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
+            importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
+            importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
+            
             # OrderedimportanceOfPacketsSobel = (
             #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
             # )
-            
 
+            NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+            ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
+
+            alpha = 0.1
+            importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
+            importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
             # importanceOfPacketsWeighted=importanceOfPackets.copy()
             # IndexesLowGradient = OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]
             # IndexesNoImportanceNotFEC = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]

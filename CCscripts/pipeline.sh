@@ -11,10 +11,12 @@ sbatch pipelineBNS.sh
 # sbatch pipelineRSBUR.sh
 # sbatch pipelineRSBURNS.sh
 
-for i in {1..5}
+for i in {1..1}
 do
     sbatch pipelineRSIID.sh
     sbatch pipelineRSIIDNS.sh
+    sbatch pipelineRSIIDW.sh
+    sbatch pipelineRSIIDNSW.sh
 done
 
 sbatch pipelineRIID.sh
@@ -30,6 +32,8 @@ sbatch pipelineRIIDNS.sh
 #     sbatch --export=arg1=$i pipelineRIIDEN.sh
 # done
 
+
+# Hi my name is Korcan, I joined the group during my undergrad which is since 2021. I am doing error resilience in transmission of tensor data.
 # Give score to packets based on channel similarity, played with the weight
 
 # then similar to only first half because where the importance is
