@@ -1031,29 +1031,29 @@ class pipeline:
             # importanceOfPacketsWeighted =importanceOfPackets+np.array(packet_sim_scores)
 
 #################  #################  
-            importanceOfPacketsSobel = []
-            for p in packetizedfmL:
-                dx = scipy.ndimage.sobel(p, 1)
-                dy = scipy.ndimage.sobel(p, 0)
-                grad_magnitude = np.sqrt(dx**2 + dy**2)
-                # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                avg_grad_magnitude = np.mean(grad_magnitude)
-                importanceOfPacketsSobel.append(avg_grad_magnitude)
+                importanceOfPacketsSobel = []
+                for p in packetizedfmL:
+                    dx = scipy.ndimage.sobel(p, 1)
+                    dy = scipy.ndimage.sobel(p, 0)
+                    grad_magnitude = np.sqrt(dx**2 + dy**2)
+                    # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                    avg_grad_magnitude = np.mean(grad_magnitude)
+                    importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-            importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
-            importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
-            importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
-            
-            # OrderedimportanceOfPacketsSobel = (
-            #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
-            # )
+                importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
+                importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
+                importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
+                
+                # OrderedimportanceOfPacketsSobel = (
+                #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
+                # )
 
-            NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-            ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
 
-            alpha = 0.1
-            importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
-            importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
+                alpha = 0.1
+                importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
+                importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
             # importanceOfPacketsWeighted=importanceOfPackets.copy()
             # IndexesLowGradient = OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]
             # IndexesNoImportanceNotFEC = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]
