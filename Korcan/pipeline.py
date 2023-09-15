@@ -1051,9 +1051,15 @@ class pipeline:
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
 
-                alpha = 0.1
+                alpha = 0.2
                 importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
                 importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
+
+
+######################################
+
+
+######################################
             # importanceOfPacketsWeighted=importanceOfPackets.copy()
             # IndexesLowGradient = OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]
             # IndexesNoImportanceNotFEC = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):math.ceil(len(importanceOfPackets)*60/100)]
