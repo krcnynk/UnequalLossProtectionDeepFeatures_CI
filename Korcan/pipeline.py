@@ -1031,34 +1031,47 @@ class pipeline:
             # importanceOfPacketsWeighted =importanceOfPackets+np.array(packet_sim_scores)
 
 #################  #################  
-                importanceOfPacketsSobel = []
-                for p in packetizedfmL:
-                    dx = scipy.ndimage.sobel(p, 1)
-                    dy = scipy.ndimage.sobel(p, 0)
-                    grad_magnitude = np.sqrt(dx**2 + dy**2)
-                    # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                    avg_grad_magnitude = np.mean(grad_magnitude)
-                    importanceOfPacketsSobel.append(avg_grad_magnitude)
+                # importanceOfPacketsSobel = []
+                # for p in packetizedfmL:
+                #     dx = scipy.ndimage.sobel(p, 1)
+                #     dy = scipy.ndimage.sobel(p, 0)
+                #     grad_magnitude = np.sqrt(dx**2 + dy**2)
+                #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                #     avg_grad_magnitude = np.mean(grad_magnitude)
+                #     importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-                importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
-                importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
-                importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
+                # importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
+                # importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
+                # importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
                 
-                # OrderedimportanceOfPacketsSobel = (
-                #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
-                # )
+                # # OrderedimportanceOfPacketsSobel = (
+                # #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
+                # # )
 
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-                ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                # ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
 
-                alpha = 0.05
-                importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
-                importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
+                # alpha = 0.05
+                # importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
+                # importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
 
 
 ######################################
+                ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*5/100)]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
 
+                maxx = importanceOfPackets[OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100)]]
+                
+                importanceOfPacketsCorr=np.zeros_like(importanceOfPackets)
 
+                for ip in ImportantPackets:
+                    for np in NoImportanceIndex:
+                        corr_coefficient = np.corrcoef(fmL[:,:,ip].flatten(), fmL[:,:,np].flatten())[0, 1]
+                        importanceOfPacketsCorr[np]= importanceOfPacketsCorr[np] + corr_coefficient
+
+                OrderedCorr = self.__getOrderedImportantPacketIndex(importanceOfPacketsCorr)
+                for cp in OrderedCorr[:math.floor(len(importanceOfPackets)*10/100)]:
+                    importanceOfPacketsWeighted[cp] = maxx
 ######################################
             # importanceOfPacketsWeighted=importanceOfPackets.copy()
             # IndexesLowGradient = OrderedimportanceOfPacketsSobel[math.floor(len(importanceOfPackets)*90/100):]
