@@ -1057,9 +1057,8 @@ class pipeline:
 
 
 ######################################
-                ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*5/100)]
+                ImportantPackets = OrderedImportanceOfPacketsIndex[:16]
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-
                 maxx = importanceOfPackets[OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100)]]
                 
                 importanceOfPacketsCorr=np.zeros_like(importanceOfPackets)
