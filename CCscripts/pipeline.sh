@@ -11,7 +11,7 @@ sbatch pipelineBNS.sh
 # sbatch pipelineRSBUR.sh
 # sbatch pipelineRSBURNS.sh
 
-for i in {1..10}
+for i in {1..100}
 do
     sbatch pipelineRSIID.sh
     sbatch pipelineRSIIDNS.sh
