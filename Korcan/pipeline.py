@@ -1066,7 +1066,7 @@ class pipeline:
 
                 for ip in ImportantPackets:
                     for nnp in NoImportanceIndex:
-                        corr_coefficient = np.corrcoef(fmL[:,:,ip].flatten(), fmL[:,:,nnp].flatten())[0, 1]
+                        corr_coefficient = np.corrcoef(packetizedfmL[ip].flatten(), packetizedfmL[nnp].flatten())[0, 1]
                         importanceOfPacketsCorr[nnp]= importanceOfPacketsCorr[nnp] + corr_coefficient
 
                 OrderedCorr = self.__getOrderedImportantPacketIndex(importanceOfPacketsCorr)
