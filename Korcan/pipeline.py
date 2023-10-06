@@ -1032,8 +1032,8 @@ class pipeline:
 
 #################  #################  
 
-                ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*5/100)]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*55/100):]
 
                 # importanceOfPacketsNew = np.zeros_like(np.array(importanceOfPackets))
 
