@@ -1032,10 +1032,10 @@ class pipeline:
 
 #################  #################  
 
-                ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*5/100)]
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*55/100):]
+                ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*60/100)]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
 
-                # importanceOfPacketsNew = np.zeros_like(np.array(importanceOfPackets))
+                importanceOfPacketsNew = np.zeros_like(np.array(importanceOfPackets))
 
                 similarIndexes = []
                 for i in ImportantPacketsIndex:
@@ -1044,13 +1044,17 @@ class pipeline:
                     for j in NoImportanceIndex:
                         # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
                         corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
-                        if abs(corrcoef) < abs(corr_coefficient):
-                            corrcoef = abs(corr_coefficient)
-                            index = j
-                    similarIndexes.append(index)
+                        importanceOfPacketsNew[j] = importanceOfPacketsNew[j] + abs(corr_coefficient)
+                        # if abs(corrcoef) < abs(corr_coefficient):
+                        #     corrcoef = abs(corr_coefficient)
+                        #     index = j
+                    # similarIndexes.append(index)
                         # importanceOfPacketsNew[j] = importanceOfPacketsNew[j] + corr_coefficient
+                OrderedimportanceOfPacketsNewIndex = (
+                self.__getOrderedImportantPacketIndex(importanceOfPacketsNew)
+                )
                 maxOfList = max(importanceOfPackets[NoImportanceIndex])
-                importanceOfPacketsWeighted[similarIndexes] = maxOfList
+                importanceOfPacketsWeighted[OrderedimportanceOfPacketsNewIndex[:math.floor(len(importanceOfPackets)*20/100)]] = maxOfList
 
                 # importanceOfPacketsNew[ImportantPacketsIndex] = max(importanceOfPacketsNew)
 
