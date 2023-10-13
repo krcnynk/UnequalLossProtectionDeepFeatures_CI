@@ -1464,9 +1464,9 @@ class pipeline:
 
             packetsWithoutLoss = copy.deepcopy(packetizedfmL)
 
-            for j in indexOfLossedPackets:
-                packetizedfmL[j][...] = 0
-
+            # for j in indexOfLossedPackets:
+            #     packetizedfmL[j][...] = 0
+            packetizedfmL[indexOfLossedPackets][...] = 0
             for j in indexOfInterpolatedPackets:
                 mask[j][...] = 1
 
