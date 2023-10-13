@@ -6,8 +6,8 @@ mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/
 
 sbatch pipelineT.sh
 sbatch pipelineB.sh
-sbatch pipelineTNS.sh
-sbatch pipelineBNS.sh
+# sbatch pipelineTNS.sh
+# sbatch pipelineBNS.sh
 # sbatch pipelineRSBUR.sh
 # sbatch pipelineRSBURNS.sh
 
