@@ -1297,7 +1297,7 @@ class pipeline:
             elif case == "Most important":
                 packetsSent = packetsSent + totalNumPackets
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
-                    0:numOfPacketsToLose
+                    numOfPacketsToLose
                 ]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
@@ -1314,7 +1314,7 @@ class pipeline:
                 packetsSent = packetsSent + totalNumPackets
                 OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
                 
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[0:numOfPacketsToLose]
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[numOfPacketsToLose]
                 packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important NS":
