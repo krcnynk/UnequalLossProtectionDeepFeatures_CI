@@ -11,16 +11,16 @@ sbatch pipelineB.sh
 # sbatch pipelineRSBUR.sh
 # sbatch pipelineRSBURNS.sh
 
-# for i in {1..2}
-# do
-#     sbatch pipelineRSIID.sh
-#     sbatch pipelineRSIIDNS.sh
-#     sbatch pipelineRSIIDW.sh
-#     sbatch pipelineRSIIDNSW.sh
-# done
+for i in {1..2}
+do
+    sbatch pipelineRSIID.sh
+    sbatch pipelineRSIIDNS.sh
+    sbatch pipelineRSIIDW.sh
+    sbatch pipelineRSIIDNSW.sh
+done
 
-# sbatch pipelineRIID.sh
-# sbatch pipelineRIIDNS.sh
+sbatch pipelineRIID.sh
+sbatch pipelineRIIDNS.sh
 
 # sbatch pipelineRBUR.sh
 # sbatch pipelineRBURNS.sh
