@@ -1297,9 +1297,9 @@ class pipeline:
             elif case == "Most important":
                 packetsSent = packetsSent + totalNumPackets
                 indexOfLossedPackets = OrderedImportanceOfPacketsIndex[
-                    numOfPacketsToLose
+                    0:numOfPacketsToLose
                 ]
-                packetsLost = packetsLost + numOfPacketsToLose
+                packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Most important NS":
                 packetsSent = packetsSent + totalNumPackets
@@ -1314,8 +1314,8 @@ class pipeline:
                 packetsSent = packetsSent + totalNumPackets
                 OrderedImportanceOfPacketsIndex = OrderedImportanceOfPacketsIndex[::-1]
                 
-                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[numOfPacketsToLose]
-                packetsLost = packetsLost + numOfPacketsToLose
+                indexOfLossedPackets = OrderedImportanceOfPacketsIndex[0:numOfPacketsToLose]
+                packetsLost = packetsLost + len(indexOfLossedPackets)
 
             elif case == "Least important NS":
                 packetsSent = packetsSent + totalNumPackets
@@ -1464,9 +1464,9 @@ class pipeline:
 
             packetsWithoutLoss = copy.deepcopy(packetizedfmL)
 
-            # for j in indexOfLossedPackets:
-            #     packetizedfmL[j][...] = 0
-            packetizedfmL[indexOfLossedPackets][...] = 0
+            for j in indexOfLossedPackets:
+                packetizedfmL[j][...] = 0
+
             for j in indexOfInterpolatedPackets:
                 mask[j][...] = 1
 
@@ -1970,9 +1970,9 @@ if __name__ == "__main__":
 
         dirNames = []
         dirNames.append("Most important")
-        dirNames.append("Most important NS")
         dirNames.append("Least important")
-        dirNames.append("Least important NS")
+        # dirNames.append("Most important NS")
+        # dirNames.append("Least important NS")
 
         # dirNames.append("Most important Weighted")
         # dirNames.append("Most important NS Weighted")
@@ -1996,15 +1996,16 @@ if __name__ == "__main__":
 
         dirNames = []
 
-        dirNames.append("FEC (IID) Weighted")
-        dirNames.append("FEC (IID) NS Weighted")
-        dirNames.append("FEC (IID)")
-        dirNames.append("FEC (IID) NS")
+        # dirNames.append("FEC (IID) Weighted")
+        # dirNames.append("FEC (IID) NS Weighted")
+        # dirNames.append("FEC (IID)")
+        # dirNames.append("FEC (IID) NS")
+
+        # dirNames.append("Unprotected (IID)")
+        # dirNames.append("Unprotected (IID) NS")
+
         # dirNames.append("FEC (Burst)")
         # dirNames.append("FEC (Burst) NS")
-
-        dirNames.append("Unprotected (IID)")
-        dirNames.append("Unprotected (IID) NS")
         # dirNames.append("Unprotected (Burst)")
         # dirNames.append("Unprotected (Burst) NS")
         # dirNames = []
