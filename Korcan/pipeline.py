@@ -1092,10 +1092,10 @@ class pipeline:
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
 
 
-                max = max(importanceOfPackets[NoImportanceIndex])
-                min = min(importanceOfPackets[NoImportanceIndex])
+                maxX = max(importanceOfPackets[NoImportanceIndex])
+                minX = min(importanceOfPackets[NoImportanceIndex])
                 NoImportancePacketValues = importanceOfPacketsSobel[NoImportanceIndex]
-                scaledSobelValues = self.rescale(NoImportancePacketValues,min,max)
+                scaledSobelValues = self.rescale(NoImportancePacketValues,minX,maxX)
                 importanceOfPacketsWeighted[NoImportanceIndex] = scaledSobelValues
 
                 ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*60/100)]
