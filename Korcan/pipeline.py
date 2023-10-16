@@ -2022,13 +2022,13 @@ if __name__ == "__main__":
 
         dirNames = []
 
-        # dirNames.append("FEC (IID) Weighted")
-        # dirNames.append("FEC (IID) NS Weighted")
-        # dirNames.append("FEC (IID)")
-        # dirNames.append("FEC (IID) NS")
+        dirNames.append("FEC (IID) Weighted")
+        dirNames.append("FEC (IID) NS Weighted")
+        dirNames.append("FEC (IID)")
+        dirNames.append("FEC (IID) NS")
 
-        # dirNames.append("Unprotected (IID)")
-        # dirNames.append("Unprotected (IID) NS")
+        dirNames.append("Unprotected (IID)")
+        dirNames.append("Unprotected (IID) NS")
 
         # dirNames.append("FEC (Burst)")
         # dirNames.append("FEC (Burst) NS")
