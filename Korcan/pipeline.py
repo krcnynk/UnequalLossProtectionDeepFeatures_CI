@@ -855,7 +855,7 @@ class pipeline:
         #     # print(f"The highest correlated channel is {candidate_channels[indices_below[1]]}")
         return pkt_obj
 
-    def rescale(values, new_min, new_max):
+    def rescale(self,values, new_min, new_max):
         # Find the current minimum and maximum values in the input list
         current_min = min(values)
         current_max = max(values)
