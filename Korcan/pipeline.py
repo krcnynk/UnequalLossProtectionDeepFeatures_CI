@@ -1012,7 +1012,7 @@ class pipeline:
             #         ),
             #         packetNum,
             #     )     
-############################################# ##########   
+############################################# ##########  Korcan2
 
             NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
             TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
