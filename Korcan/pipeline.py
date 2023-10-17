@@ -1016,7 +1016,7 @@ class pipeline:
 
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
                 TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
-                mse_matrix = np.zeros(len(importanceOfPackets),len(importanceOfPackets))
+                mse_matrix = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
                 
                 
                 for i in TopImportanteIndex:
