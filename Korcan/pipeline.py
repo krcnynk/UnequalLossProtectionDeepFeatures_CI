@@ -1014,26 +1014,26 @@ class pipeline:
             #     )     
 ############################################# ##########  Korcan2
 
-            NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-            TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
-            mse_matrix = np.zeros((math.floor(len(importanceOfPackets)*30/100), math.floor(len(importanceOfPackets)*60/100)))
-            
-            for i in TopImportanteIndex:
-                for j in NoImportanceIndex:
-                    mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
-                    # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
-                    mse_matrix[i, j] = mse
-                    
-            max_indices = np.argmin(mse_matrix, axis=1)
-            maxX = max(importanceOfPackets[NoImportanceIndex])
-            importanceOfPacketsWeighted[max_indices] = maxX
-            # mse_matrix = np.sum(mse_matrix, axis=1)
-            # min_mse = np.min(mse_matrix)
-            # max_mse = np.max(mse_matrix)
-            # channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
-            # channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
-            # # importanceOfPacketsWeighted = channel_sim_scores
-            # importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
+                mse_matrix = np.zeros((math.floor(len(importanceOfPackets)*30/100), math.floor(len(importanceOfPackets)*60/100)))
+                
+                for i in TopImportanteIndex:
+                    for j in NoImportanceIndex:
+                        mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
+                        # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
+                        mse_matrix[i, j] = mse
+                        
+                max_indices = np.argmin(mse_matrix, axis=1)
+                maxX = max(importanceOfPackets[NoImportanceIndex])
+                importanceOfPacketsWeighted[max_indices] = maxX
+                # mse_matrix = np.sum(mse_matrix, axis=1)
+                # min_mse = np.min(mse_matrix)
+                # max_mse = np.max(mse_matrix)
+                # channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
+                # channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
+                # # importanceOfPacketsWeighted = channel_sim_scores
+                # importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
 #################  #################  ################
 
             # OrderedImportanceOfPacketsFirstHalf= OrderedImportanceOfPacketsIndex[:2*len(OrderedImportanceOfPacketsIndex)//5]
