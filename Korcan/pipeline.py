@@ -1013,12 +1013,20 @@ class pipeline:
             #         packetNum,
             #     )     
 ############################################# ##########   
-            # mse_matrix = np.zeros((self.C, self.C))
-            # for i in range(self.C):
-            #     for j in OrderedImportanceOfChannelsFirstHalf:
-            #         mse = np.mean((fmL[:,:,i] - fmL[:,:,j])**2)
-            #         # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
-            #         mse_matrix[i, j] = mse
+
+            NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+            TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
+            mse_matrix = np.zeros((math.floor(len(importanceOfPackets)*30/100), math.floor(len(importanceOfPackets)*60/100)))
+            
+            for i in TopImportanteIndex:
+                for j in NoImportanceIndex:
+                    mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
+                    # corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
+                    mse_matrix[i, j] = mse
+                    
+            max_indices = np.argmin(mse_matrix, axis=1)
+            maxX = max(importanceOfPackets[NoImportanceIndex])
+            importanceOfPacketsWeighted[max_indices] = maxX
             # mse_matrix = np.sum(mse_matrix, axis=1)
             # min_mse = np.min(mse_matrix)
             # max_mse = np.max(mse_matrix)
@@ -1071,39 +1079,39 @@ class pipeline:
 
                 # # importanceOfPacketsNew[ImportantPacketsIndex] = max(importanceOfPacketsNew)
 
-#################  #################  
-                importanceOfPacketsSobel = []
-                for p in packetizedfmL:
-                    dx = scipy.ndimage.sobel(p, 1)
-                    dy = scipy.ndimage.sobel(p, 0)
-                    grad_magnitude = np.sqrt(dx**2 + dy**2)
-                    # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                    avg_grad_magnitude = np.mean(grad_magnitude)
-                    importanceOfPacketsSobel.append(avg_grad_magnitude)
+#################  #################  Korcan 1
+                # importanceOfPacketsSobel = []
+                # for p in packetizedfmL:
+                #     dx = scipy.ndimage.sobel(p, 1)
+                #     dy = scipy.ndimage.sobel(p, 0)
+                #     grad_magnitude = np.sqrt(dx**2 + dy**2)
+                #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                #     avg_grad_magnitude = np.mean(grad_magnitude)
+                #     importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-                importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
-                importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
-                importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
+                # importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
+                # importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
+                # importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
                 
-                OrderedimportanceOfPacketsSobel = (
-                    self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
-                )
+                # OrderedimportanceOfPacketsSobel = (
+                #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
+                # )
 
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-
-
-                maxX = max(importanceOfPackets[NoImportanceIndex])
-                minX = min(importanceOfPackets[NoImportanceIndex])
-                NoImportancePacketValues = importanceOfPacketsSobel[NoImportanceIndex]
-                scaledSobelValues = self.rescale(NoImportancePacketValues,minX,maxX)
-                importanceOfPacketsWeighted[NoImportanceIndex] = scaledSobelValues
-
-                ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*60/100)]
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
 
 
-                # alpha = 0.07
-                # importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
-                importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
+                # maxX = max(importanceOfPackets[NoImportanceIndex])
+                # minX = min(importanceOfPackets[NoImportanceIndex])
+                # NoImportancePacketValues = importanceOfPacketsSobel[NoImportanceIndex]
+                # scaledSobelValues = self.rescale(NoImportancePacketValues,minX,maxX)
+                # importanceOfPacketsWeighted[NoImportanceIndex] = scaledSobelValues
+
+                # ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*60/100)]
+
+
+                # # alpha = 0.07
+                # # importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
+                # importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
 
 ######################################
 
