@@ -1016,7 +1016,8 @@ class pipeline:
 
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
                 TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
-                mse_matrix = np.zeros((math.floor(len(importanceOfPackets)*30/100), math.floor(len(importanceOfPackets)*60/100)))
+                mse_matrix = np.zeros(len(importanceOfPackets),len(importanceOfPackets))
+                
                 
                 for i in TopImportanteIndex:
                     for j in NoImportanceIndex:
@@ -1025,8 +1026,10 @@ class pipeline:
                         mse_matrix[i, j] = mse
                         
                 max_indices = np.argmin(mse_matrix, axis=1)
+                sum_indices = np.sum(mse_matrix, axis=1)
+                complement = np.setdiff1d(max_indices, sum_indices)
                 maxX = max(importanceOfPackets[NoImportanceIndex])
-                importanceOfPacketsWeighted[max_indices] = maxX
+                importanceOfPacketsWeighted[complement] = maxX
                 # mse_matrix = np.sum(mse_matrix, axis=1)
                 # min_mse = np.min(mse_matrix)
                 # max_mse = np.max(mse_matrix)
