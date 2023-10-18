@@ -989,21 +989,21 @@ class pipeline:
                 )
 
                 importantChannelIndex = OrderedImportanceOfChannelsIndex[:math.floor(len(importanceOfChannels)/100*20)]
-                notimportantChannelIndex = OrderedImportanceOfChannelsIndex[math.floor(len(importanceOfChannels)/100*40):]
+                notimportantChannelIndex = OrderedImportanceOfChannelsIndex[math.floor(len(importanceOfChannels)/100*60):]
 
                 mse_matrix = np.zeros(self.C,self.C)
                 
                 
-                for i in importantChannelIndex:
-                    for j in notimportantChannelIndex:
+                for i in notimportantChannelIndex:
+                    for j in importantChannelIndex:
                         corr_coefficient = np.corrcoef(fmL[:,:,i].flatten(), fmL[:,:,j].flatten())[0, 1]
                         mse_matrix[i, j] = abs(corr_coefficient)
                         
                 max_indices = np.argmax(mse_matrix, axis=1)
-                sum_indices = np.sum(mse_matrix, axis=1)
-                complement = np.setdiff1d(max_indices, sum_indices)
-                for i in range(len(importantChannelIndex)):
-                    fmL[:,:,complement[i]] = fmL[:,:,importantChannelIndex[i]]
+                # sum_indices = np.argwhere(np.sum(mse_matrix, axis=1) == 0)
+                # complement = np.setdiff1d(max_indices, sum_indices)
+                for i in range(len(notimportantChannelIndex)):
+                    fmL[:,:,notimportantChannelIndex[i]] = fmL[:,:,max_indices[i]]
 
                 fmLChannelArray = np.dsplit(fmL, self.C)
                 packetizedfmL = []
