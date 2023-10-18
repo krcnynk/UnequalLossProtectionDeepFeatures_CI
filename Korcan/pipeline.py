@@ -991,7 +991,7 @@ class pipeline:
                 importantChannelIndex = OrderedImportanceOfChannelsIndex[:math.floor(len(importanceOfChannels)/100*20)]
                 notimportantChannelIndex = OrderedImportanceOfChannelsIndex[math.floor(len(importanceOfChannels)/100*60):]
 
-                mse_matrix = np.zeros(self.C,self.C)
+                mse_matrix = np.zeros((self.C,self.C))
                 
                 
                 for i in notimportantChannelIndex:
