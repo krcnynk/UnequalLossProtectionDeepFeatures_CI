@@ -1050,33 +1050,42 @@ class pipeline:
                 #             constant_values=0,
                 #         ),
                 #         packetNum,
-                #     )     
+                #     )  
+                # 
+                # 
+                # 
+############################################# ##########  KorcanRandom
+#               NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
+                maxX = max(importanceOfPackets[NoImportanceIndex])
+                selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
+                importanceOfPacketsWeighted[selected_ind] = maxX
 ############################################# ##########  Korcan2
 
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-                TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
-                mse_matrix = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                # TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
+                # mse_matrix = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
                 
                 
-                for i in TopImportanteIndex:
-                    for j in NoImportanceIndex:
-                        # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
-                        mse = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
-                        mse_matrix[i, j] = abs(mse)
+                # for i in TopImportanteIndex:
+                #     for j in NoImportanceIndex:
+                #         # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
+                #         mse = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
+                #         mse_matrix[i, j] = abs(mse)
                         
-                max_indices = np.argmax(mse_matrix, axis=1)
-                # sum_indices = np.sum(mse_matrix, axis=1)
-                # complement = np.setdiff1d(max_indices, sum_indices)
-                maxX = max(importanceOfPackets[NoImportanceIndex])
-                importanceOfPacketsWeighted[max_indices] = maxX
+                # max_indices = np.argmax(mse_matrix, axis=1)
+                # # sum_indices = np.sum(mse_matrix, axis=1)
+                # # complement = np.setdiff1d(max_indices, sum_indices)
+                # maxX = max(importanceOfPackets[NoImportanceIndex])
+                # importanceOfPacketsWeighted[max_indices] = maxX
 
-                # mse_matrix = np.sum(mse_matrix, axis=1)
-                # min_mse = np.min(mse_matrix)
-                # max_mse = np.max(mse_matrix)
-                # channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
-                # channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
-                # # importanceOfPacketsWeighted = channel_sim_scores
-                # importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
+                # # mse_matrix = np.sum(mse_matrix, axis=1)
+                # # min_mse = np.min(mse_matrix)
+                # # max_mse = np.max(mse_matrix)
+                # # channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
+                # # channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
+                # # # importanceOfPacketsWeighted = channel_sim_scores
+                # # importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
 #################  #################  ################
 #################  #################  KorcanX
 
