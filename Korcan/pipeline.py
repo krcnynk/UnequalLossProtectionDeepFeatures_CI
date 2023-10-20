@@ -1078,7 +1078,7 @@ class pipeline:
                 bins_list = [indices for _, indices in sorted(bins.items())]
                 sorted_bins = sorted(bins_list, key=len, reverse=True)
                 combined_list = [index for indices in sorted_bins for index in indices]
-                importanceOfPacketsWeighted[combined_list[math.floor(len(importanceOfPackets)*20/100)]] = maxX
+                importanceOfPacketsWeighted[combined_list[math.floor(len(importanceOfPackets)*50/100)]] = maxX
 ############################################# ##########  Korcan2
 
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
