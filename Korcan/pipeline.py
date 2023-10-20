@@ -1063,7 +1063,7 @@ class pipeline:
 
 ############################################# ##########  KorcanRandom2
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-                maxX = max(importanceOfPackets[NoImportanceIndex])
+                maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
                 bin_size = 8
                 # Initialize a dictionary to store the bins
                 bins = {}
@@ -1078,8 +1078,8 @@ class pipeline:
                 bins_list = [indices for _, indices in sorted(bins.items())]
                 sorted_bins = sorted(bins_list, key=len, reverse=True)
                 combined_list = [index for indices in sorted_bins for index in indices]
-                importanceOfPacketsWeighted[combined_list[math.floor(len(importanceOfPackets)*50/100)]] = maxX
-############################################# ##########  Korcan2
+                importanceOfPacketsWeighted[combined_list[math.floor(len(importanceOfPackets)*30/100)]] = maxX
+############################################# ##########  Korcan2vvv
 
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
                 # TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
