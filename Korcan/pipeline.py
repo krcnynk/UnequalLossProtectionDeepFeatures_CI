@@ -1062,7 +1062,7 @@ class pipeline:
                 # importanceOfPacketsWeighted[selected_ind] = maxX
 
 ############################################# ##########  KorcanRandom2
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 maxX = max(importanceOfPackets[NoImportanceIndex])
                 bin_size = 8
                 # Initialize a dictionary to store the bins
