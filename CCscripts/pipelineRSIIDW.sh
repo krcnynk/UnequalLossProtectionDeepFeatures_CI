@@ -10,5 +10,5 @@ module restore uneq
 cd ..
 
 # python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+40)) 5 40 60
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 19 40 60
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+40)) 19 40 60
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 19 30 70
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+30)) 19 30 70
