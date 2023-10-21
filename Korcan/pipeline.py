@@ -505,11 +505,11 @@ class pipeline:
             #         linewidth=1.2,
             #         color=cases[mapping + 1],
             # )
-            if types[s] == "Unprotected (IID)":
+            if types[s] == "FEC (IID) NS Weighted":
                 plt.fill_between(
                     seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.3, facecolor="r"
                 )
-            elif types[s] == "Unprotected (Burst)":
+            elif types[s] == "FEC (IID) NS":
                 plt.fill_between(
                     seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.4, facecolor="c"
                 )
@@ -1079,7 +1079,7 @@ class pipeline:
                 sorted_bins = sorted(bins_list, key=len, reverse=True)
                 combined_list = [index for indices in sorted_bins for index in indices]
                 importanceOfPacketsWeighted[combined_list[math.floor(len(importanceOfPackets)*30/100)]] = maxX
-############################################# ##########  Korcan2vvv
+############################################# ##########  Korcan2
 
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
                 # TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
