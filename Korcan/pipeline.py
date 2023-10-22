@@ -1906,7 +1906,7 @@ if __name__ == "__main__":
 
     if case == "10":
         # module.saveSuperImposedChannels(modelName)
-        saveImageLossPercent = 30
+        saveImageLossPercent = 32
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
