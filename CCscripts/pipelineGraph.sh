@@ -7,4 +7,3 @@ module restore uneq
 # source /project/6008756/foniks/Project_1/uneqENV/bin/activate
 cd ..
 python Korcan/pipeline.py 0 makeplot 0 0
-python Korcan/pipeline.py 0 10 0 0
