@@ -331,15 +331,24 @@ class pipeline:
                     ] = lossedTensorBatchArray[i_b, :, :, ind]
                     ind = ind + 1
             plt.imshow(arr, cmap="gray",interpolation="none")
-            cmap = matplotlib.colors.LinearSegmentedColormap.from_list("custom_cmap", [(1, 0, 0, 0), (1, 0, 0, 1)])
-            # Set the under value (0) to fully transparent
-            # Display the data using the custom colormap
-            plt.imshow(arrFEC, cmap=cmap,interpolation="none")
-
             plt.axis("off")
             plt.savefig(
                 os.path.join(
                     mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]
+                ),
+                bbox_inches="tight",
+                dpi=400,
+            )
+
+            cmap = matplotlib.colors.LinearSegmentedColormap.from_list("custom_cmap", [(1, 0, 0, 0), (1, 0, 0, 1)])
+            # Set the under value (0) to fully transparent
+            # Display the data using the custom colormap
+            plt.imshow(arrFEC, cmap=cmap,interpolation="none", alpha="0.7")
+
+            plt.axis("off")
+            plt.savefig(
+                os.path.join(
+                    mainPath, self.dataset_y_labels[i_b], self.file_names[i_b],"FECHighlight"
                 ),
                 bbox_inches="tight",
                 dpi=400,
