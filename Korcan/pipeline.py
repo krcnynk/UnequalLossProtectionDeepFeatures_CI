@@ -331,7 +331,7 @@ class pipeline:
                     ] = lossedTensorBatchArray[i_b, :, :, ind]
                     ind = ind + 1
             im = plt.matshow(arr, cmap="gray")
-            cmap_colors = [(1, 0, 0, 1), (1, 0, 0, 0)]  # (R, G, B, Alpha)
+            cmap_colors = [(0, 0, 0, 0), (1, 0, 0, 1)]  # (R, G, B, Alpha)
             custom_cmap = matplotlib.colors.ListedColormap(cmap_colors)
             # Display the data using the custom colormap
             plt.matshow(arrFEC, cmap=custom_cmap)
