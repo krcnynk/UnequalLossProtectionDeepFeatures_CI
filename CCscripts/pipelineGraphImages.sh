@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=2:00:00
+#SBATCH --time=6:00:00
 #SBATCH --mem=50G
 #SBATCH --account=def-ibajic
 
