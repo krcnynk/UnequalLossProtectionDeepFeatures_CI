@@ -331,10 +331,11 @@ class pipeline:
                     ] = lossedTensorBatchArray[i_b, :, :, ind]
                     ind = ind + 1
             im = plt.matshow(arr, cmap="gray")
-            cmap_colors = [(0, 0, 0, 0), (1, 0, 0, 1)]  # (R, G, B, Alpha)
-            custom_cmap = matplotlib.colors.ListedColormap(cmap_colors)
+            cmap = matplotlib.colors.LinearSegmentedColormap.from_list("custom_cmap", [(1, 0, 0, 0), (1, 0, 0, 1)], N=256)
+            # Set the under value (0) to fully transparent
+            cmap.set_under("transparent")
             # Display the data using the custom colormap
-            plt.matshow(arrFEC, cmap=custom_cmap)
+            plt.matshow(arrFEC, cmap=cmap)
 
             plt.axis("off")
             plt.savefig(
