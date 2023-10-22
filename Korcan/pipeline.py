@@ -1730,7 +1730,7 @@ class pipeline:
         if saveImages:
             self.__savePacketLossImages(fmLPacketizedLoss,fmLPacketizedFEC, case, modelName)
             self.__savePacketLossImages(
-                self.__normalizeToUnit(np.array(importancePacketsTensor)),
+                self.__normalizeToUnit(np.array(importancePacketsTensor)),np.zeros_like(fmL)
                 "packetImportance",
                 modelName,
             )
