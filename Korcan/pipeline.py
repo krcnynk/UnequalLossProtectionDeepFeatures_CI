@@ -1729,11 +1729,11 @@ class pipeline:
 
         if saveImages:
             self.__savePacketLossImages(fmLPacketizedLoss,fmLPacketizedFEC, case, modelName)
-            # self.__savePacketLossImages(
-            #     self.__normalizeToUnit(np.array(importancePacketsTensor)),
-            #     "packetImportance",
-            #     modelName,
-            # )
+            self.__savePacketLossImages(
+                self.__normalizeToUnit(np.array(importancePacketsTensor)),
+                "packetImportance",
+                modelName,
+            )
             return
 
         # with open("Korcan/Plots/"+modelName+"/"+case+"_"+str(packetNum)+"_"+str(percOfPacketLoss)+".npy", 'wb') as f:
