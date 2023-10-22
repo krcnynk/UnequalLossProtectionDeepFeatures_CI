@@ -1066,28 +1066,28 @@ class pipeline:
                 # 
                 # 
 ############################################# ##########  KorcanRandom
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                # selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*30/100))]
-                # importanceOfPacketsWeighted[selected_ind] = maxX
-############################################# ##########  KorcanRandom2
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                bin_size = 8
-                # Initialize a dictionary to store the bins
-                bins = {}
-                # Iterate through the random indices and assign them to bins
-                for index in NoImportanceIndex:
-                    bin_number = index // bin_size
-                    if bin_number not in bins:
-                        bins[bin_number] = []
-                    bins[bin_number].append(index)
+                selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*30/100))]
+                importanceOfPacketsWeighted[selected_ind] = maxX
+############################################# ##########  KorcanRandom2
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                # bin_size = 8
+                # # Initialize a dictionary to store the bins
+                # bins = {}
+                # # Iterate through the random indices and assign them to bins
+                # for index in NoImportanceIndex:
+                #     bin_number = index // bin_size
+                #     if bin_number not in bins:
+                #         bins[bin_number] = []
+                #     bins[bin_number].append(index)
 
-                # Convert the bins dictionary to a list
-                bins_list = [indices for _, indices in sorted(bins.items())]
-                sorted_bins = sorted(bins_list, key=len, reverse=False)
-                combined_list = [index for indices in sorted_bins for index in indices]
-                importanceOfPacketsWeighted[combined_list[math.floor(len(importanceOfPackets)*30/100)]] = maxX
+                # # Convert the bins dictionary to a list
+                # bins_list = [indices for _, indices in sorted(bins.items())]
+                # sorted_bins = sorted(bins_list, key=len, reverse=False)
+                # combined_list = [index for indices in sorted_bins for index in indices]
+                # importanceOfPacketsWeighted[combined_list[math.floor(len(importanceOfPackets)*30/100)]] = maxX
             
 ############################################# ##########  Korcan2
 
