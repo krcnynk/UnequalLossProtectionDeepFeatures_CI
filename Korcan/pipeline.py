@@ -348,7 +348,7 @@ class pipeline:
             plt.axis("off")
             plt.savefig(
                 os.path.join(
-                    mainPath, self.dataset_y_labels[i_b], self.file_names[i_b],"FECHighlight"
+                    mainPath, self.dataset_y_labels[i_b], self.file_names[i_b]+"FECHighlight"
                 ),
                 bbox_inches="tight",
                 dpi=400,
