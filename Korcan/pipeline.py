@@ -1905,7 +1905,7 @@ if __name__ == "__main__":
         case = "FEC (IID) NS Weighted"
 
     if case == "10":
-        module.saveSuperImposedChannels(modelName)
+        # module.saveSuperImposedChannels(modelName)
         saveImageLossPercent = 30
         # module.packetLossSim(
         #     packetCount,
@@ -1923,14 +1923,14 @@ if __name__ == "__main__":
         #     saveImages=True,
         #     modelName=modelName,
         # )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Least important NS",
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Least important NS",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
@@ -1939,14 +1939,14 @@ if __name__ == "__main__":
         #     saveImages=True,
         #     modelName=modelName,
         # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Unprotected (IID)",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (IID)",
+            saveImages=True,
+            modelName=modelName,
+        )
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
@@ -1955,14 +1955,14 @@ if __name__ == "__main__":
         #     saveImages=True,
         #     modelName=modelName,
         # )
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "Unprotected (IID) NS",
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "Unprotected (IID) NS",
+            saveImages=True,
+            modelName=modelName,
+        )
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
@@ -1980,16 +1980,50 @@ if __name__ == "__main__":
         #     modelName=modelName,
         # )
 
-        # module.packetLossSim(
-        #     packetCount,
-        #     quantizationBits,
-        #     saveImageLossPercent,
-        #     "FEC (IID) NS",
-        #     20,
-        #     80,
-        #     saveImages=True,
-        #     modelName=modelName,
-        # )
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (IID)",
+            30,
+            70,
+            saveImages=True,
+            modelName=modelName,
+        )
+
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (IID) NS",
+            30,
+            70,
+            saveImages=True,
+            modelName=modelName,
+        )
+
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (IID) Weighted",
+            30,
+            70,
+            saveImages=True,
+            modelName=modelName,
+        )
+
+        module.packetLossSim(
+            packetCount,
+            quantizationBits,
+            saveImageLossPercent,
+            "FEC (IID) NS Weighted",
+            30,
+            70,
+            saveImages=True,
+            modelName=modelName,
+        )
+
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
