@@ -312,6 +312,7 @@ class pipeline:
                 os.makedirs(os.path.join(mainPath, label))
 
         lossedTensorBatchArray = np.array(lossedTensorBatchArray).astype(np.float64)
+        fmLPacketizedFEC = np.array(fmLPacketizedFEC).astype(np.bool_)
         shape = lossedTensorBatchArray.shape
         for i_b in range(len(lossedTensorBatchArray)):  # 9
             arrFEC = np.empty((shape[1] * 16, shape[2] * 16))
