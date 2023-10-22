@@ -303,7 +303,7 @@ class pipeline:
         self.heatmapsBatch = np.array(self.heatmapsBatch)
         self.heatMapsChannelsBatch = np.array(self.heatMapsChannelsBatch)
 
-    def __savePacketLossImages(self, lossedTensorBatchArray, case, modelName):
+    def __savePacketLossImages(self, lossedTensorBatchArray,fmLPacketizedFEC, case, modelName):
         mainPath = os.path.abspath("Korcan/Plots/" + modelName + "/tensorLoss/" + case)
         if not os.path.exists(mainPath):
             os.makedirs(mainPath)
@@ -314,6 +314,7 @@ class pipeline:
         lossedTensorBatchArray = np.array(lossedTensorBatchArray).astype(np.float64)
         shape = lossedTensorBatchArray.shape
         for i_b in range(len(lossedTensorBatchArray)):  # 9
+            arrFEC = np.empty((shape[1] * 16, shape[2] * 16))
             arr = np.empty((shape[1] * 16, shape[2] * 16))
             ind = 0
             for i_cx in range(16):
@@ -321,11 +322,19 @@ class pipeline:
                     # lossedTensorBatchArray[i_b, :, :, ind] = self.__normalizeToUnit(
                     #     lossedTensorBatchArray[i_b, :, :, ind]
                     # )
+                    arrFEC[
+                        i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
+                    ] = fmLPacketizedFEC[i_b, :, :, ind]
                     arr[
                         i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
                     ] = lossedTensorBatchArray[i_b, :, :, ind]
                     ind = ind + 1
             im = plt.matshow(arr, cmap="gray")
+            cmap_colors = [(1, 0, 0, 1), (1, 0, 0, 0)]  # (R, G, B, Alpha)
+            custom_cmap = matplotlib.colors.ListedColormap(cmap_colors)
+            # Display the data using the custom colormap
+            plt.matshow(arrFEC, cmap=custom_cmap)
+
             plt.axis("off")
             plt.savefig(
                 os.path.join(
@@ -893,6 +902,7 @@ class pipeline:
         else:
             pad = 0
         fmLPacketizedLoss = []
+        fmLPacketizedFEC = []
         mseList = []
         importancePacketsTensor = []
         rng = np.random.default_rng()
@@ -1059,7 +1069,6 @@ class pipeline:
                 maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
                 selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*30/100))]
                 importanceOfPacketsWeighted[selected_ind] = maxX
-
 ############################################# ##########  KorcanRandom2
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
@@ -1212,7 +1221,9 @@ class pipeline:
                 self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
             )
 
+            
             # OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndex
+            tensorFECCompleted = np.zeros_like(fmL)
 
             numOfPacketsToLose = math.floor(
                 len(packetizedheatMap) * percOfPacketLoss / 100
@@ -1274,6 +1285,22 @@ class pipeline:
                     pass
 
             elif case == "FEC (IID)" or case == "FEC (IID) NS":
+                fecMask = copy.deepcopy(packetizedfmL)
+                totalNumPackets = len(packetizedheatMap)
+                FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
+                lowestImportanceIndexFEC = OrderedImportanceOfPacketsIndex[
+                -FECPacketCount:
+                ]
+                for j in range(len(packetizedfmL)):
+                    fecMask[j][...] = 0
+                for j in lowestImportanceIndexFEC:
+                    fecMask[j][...] = 1
+                channelFECReconstructed = [
+                    np.vstack(fecMask[i : i + packetNum])
+                    for i in range(0, len(fecMask), packetNum)
+                ]
+                tensorFECCompleted = np.dstack(channelFECReconstructed)
+
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
@@ -1313,6 +1340,23 @@ class pipeline:
                     indexOfInterpolatedPackets = indexOfLossedPackets
                     pass
             elif case == "FEC (IID) Weighted" or case == "FEC (IID) NS Weighted":
+                fecMask = copy.deepcopy(packetizedfmL)
+                totalNumPackets = len(packetizedheatMap)
+                FECPacketCount = math.floor(totalNumPackets * fecPerc / 100)
+                lowestImportanceIndexFECWeighted = OrderedImportanceOfPacketsIndexWeighted[
+                    -FECPacketCount:
+                ]
+                for j in range(len(packetizedfmL)):
+                    fecMask[j][...] = 0
+                for j in lowestImportanceIndexFECWeighted:
+                    fecMask[j][...] = 1
+                channelFECReconstructed = [
+                    np.vstack(fecMask[i : i + packetNum])
+                    for i in range(0, len(fecMask), packetNum)
+                ]
+                tensorFECCompleted = np.dstack(channelFECReconstructed)
+
+
                 indexOfLossedPackets = list(range(0, totalNumPackets))
                 rng.shuffle(indexOfLossedPackets)
                 indexOfLossedPackets = indexOfLossedPackets[0:numOfPacketsToLose]
@@ -1668,11 +1712,13 @@ class pipeline:
             mseList.append(mse)
 
             fmL = self.__inverseQuantize(tensorCompleted, qBits, minVal, maxVal)
+
+            fmLPacketizedFEC.append(tensorFECCompleted)
             fmLPacketizedLoss.append(fmL)
             importancePacketsTensor.append(tensorImportanceCompleted)
 
         if saveImages:
-            self.__savePacketLossImages(fmLPacketizedLoss, case, modelName)
+            self.__savePacketLossImages(fmLPacketizedLoss,fmLPacketizedFEC, case, modelName)
             self.__savePacketLossImages(
                 self.__normalizeToUnit(np.array(importancePacketsTensor)),
                 "packetImportance",
