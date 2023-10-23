@@ -11,5 +11,5 @@ cd ..
 
 # python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+40)) 11 40 60
 # python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 11 40 60
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 20 30 70
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+30)) 20 30 70
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 20 50 50
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+50)) 20 50 50
