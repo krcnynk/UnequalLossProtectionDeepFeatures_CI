@@ -343,7 +343,7 @@ class pipeline:
             cmap = matplotlib.colors.LinearSegmentedColormap.from_list("custom_cmap", [(1, 0, 0, 0), (1, 0, 0, 1)])
             # Set the under value (0) to fully transparent
             # Display the data using the custom colormap
-            plt.imshow(arrFEC, cmap=cmap,interpolation="none", alpha=1.0)
+            plt.imshow(arrFEC, cmap=cmap,interpolation="none")
 
             plt.axis("off")
             plt.savefig(
