@@ -1075,10 +1075,10 @@ class pipeline:
                 # 
                 # 
 ############################################# ##########  KorcanRandom1
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-                maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
-                importanceOfPacketsWeighted[selected_ind] = maxX
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                # selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
+                # importanceOfPacketsWeighted[selected_ind] = maxX
 ############################################# ##########  KorcanRandom2
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
                 # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
@@ -1099,18 +1099,18 @@ class pipeline:
                 # importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*20/100)]] = maxX
 
 ############################################# ##########  KorcanRandom3
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                # NoImportanceIndex.sort()
-                # step = len(NoImportanceIndex) / (math.floor(len(importanceOfPackets)*20/100)- 1)  # Calculate the step size
-                # selected_indices = []
-                # for i in range(math.floor(len(importanceOfPackets) * 20/100)):
-                #     index = int(i * step)
-                #     if 0 <= index < len(NoImportanceIndex):
-                #         selected_indices.append(NoImportanceIndex[index])
-                #     else:
-                #         break  # Break the loop if index is out of bounds
-                # importanceOfPacketsWeighted[selected_indices] = maxX
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*20/100):]
+                maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                NoImportanceIndex.sort()
+                step = len(NoImportanceIndex) / (math.floor(len(importanceOfPackets)*70/100)- 1)  # Calculate the step size
+                selected_indices = []
+                for i in range(math.floor(len(importanceOfPackets) * 70/100)):
+                    index = int(i * step)
+                    if 0 <= index < len(NoImportanceIndex):
+                        selected_indices.append(NoImportanceIndex[index])
+                    else:
+                        break  # Break the loop if index is out of bounds
+                importanceOfPacketsWeighted[selected_indices] = maxX
 ############################################# ##########  Korcan2
 
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
