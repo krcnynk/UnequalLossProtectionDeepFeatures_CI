@@ -1075,10 +1075,10 @@ class pipeline:
                 # 
                 # 
 ############################################# ##########  KorcanRandom1
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                # selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
-                # importanceOfPacketsWeighted[selected_ind] = maxX
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
+                importanceOfPacketsWeighted[selected_ind] = maxX
 ############################################# ##########  KorcanRandom2
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
                 # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
@@ -1099,18 +1099,18 @@ class pipeline:
                 # importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*20/100)]] = maxX
 
 ############################################# ##########  KorcanRandom3
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*20/100):]
-                maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                NoImportanceIndex.sort()
-                step = len(NoImportanceIndex) / (math.floor(len(importanceOfPackets)*70/100)- 1)  # Calculate the step size
-                selected_indices = []
-                for i in range(math.floor(len(importanceOfPackets) * 70/100)):
-                    index = int(i * step)
-                    if 0 <= index < len(NoImportanceIndex):
-                        selected_indices.append(NoImportanceIndex[index])
-                    else:
-                        break  # Break the loop if index is out of bounds
-                importanceOfPacketsWeighted[selected_indices] = maxX
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*20/100):]
+                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                # NoImportanceIndex.sort()
+                # step = len(NoImportanceIndex) / (math.floor(len(importanceOfPackets)*70/100)- 1)  # Calculate the step size
+                # selected_indices = []
+                # for i in range(math.floor(len(importanceOfPackets) * 70/100)):
+                #     index = int(i * step)
+                #     if 0 <= index < len(NoImportanceIndex):
+                #         selected_indices.append(NoImportanceIndex[index])
+                #     else:
+                #         break  # Break the loop if index is out of bounds
+                # importanceOfPacketsWeighted[selected_indices] = maxX
 ############################################# ##########  Korcan2
 
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
@@ -1919,10 +1919,10 @@ if __name__ == "__main__":
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    # trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    # dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
-    trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
-    dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
+    trained_model_path = "/local-scratch/localhome/kuyanik/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    dataName = "/local-scratch/localhome/kuyanik/dataset/smallTest"
+    # trained_model_path = "/project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/model.05-0.00.h5"
+    # dataName = "/home/foniks/projects/def-ibajic/foniks/Project_1/largeTest"
     quantizationBits = 8
 
     module = pipeline()
