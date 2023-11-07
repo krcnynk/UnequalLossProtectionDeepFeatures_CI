@@ -538,7 +538,7 @@ class pipeline:
 
         # specify order
         # order=[0,2,1,3]
-        order=[0,3,7,4,5, 1,2,7,]
+        order=[0,3,6,4,5, 1,2,7,]
 
         plt.legend(
             [handles[i] for i in order], [labels[i] for i in order],
