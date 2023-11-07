@@ -417,7 +417,7 @@ class pipeline:
             ":",
 
             "FEC (IID)",
-            "m",
+            "c",
             ".",
             "-",
             "FEC (Burst)",
@@ -425,7 +425,7 @@ class pipeline:
             ".",
             "-",
             "FEC (IID) NS",
-            "m",
+            "c",
             ".",
             ":",
             "FEC (Burst) NS",
@@ -526,7 +526,7 @@ class pipeline:
             # )
             if types[s] == "FEC (IID) NS Weighted":
                 plt.fill_between(
-                    seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.3, facecolor="r"
+                    seriesX[s], seriesYmin[s], seriesYmax[s], alpha=0.3, facecolor="k"
                 )
             elif types[s] == "FEC (IID) NS":
                 plt.fill_between(
@@ -538,10 +538,10 @@ class pipeline:
 
         # specify order
         # order=[0,2,1,3]
-        # order=[3,5,6, 2,0,1,7,4]
+        order=[0,3,7,4,5, 1,2,7,]
 
         plt.legend(
-            # [handles[i] for i in order], [labels[i] for i in order],
+            [handles[i] for i in order], [labels[i] for i in order],
             loc="upper right",
             fontsize="xx-small",
             markerscale=0.7,
