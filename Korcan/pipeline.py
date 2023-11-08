@@ -463,7 +463,7 @@ class pipeline:
         # plt.title("Top1 Accuracy")
 
         plt.xlabel("Percent Lost")
-        plt.ylabel("Top-1 Accuracy")
+        plt.ylabel("MSE")
 
         for s in range(len(seriesX)):
             if types[s] in l:
