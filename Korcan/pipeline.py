@@ -1788,18 +1788,18 @@ class pipeline:
 
         pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
         metrics = self.getMetrics(fmLPacketizedLoss)
-        # pdictVal = {
-        #     "acc": metrics["acc"],
-        #     "loss": metrics["loss"],
-        #     "min": 0,
-        #     "max": 0,
-        # }
         pdictVal = {
-            "acc": sum(mseList) / len(mseList),
-            "loss": 0,
+            "acc": metrics["acc"],
+            "loss": metrics["loss"],
             "min": 0,
             "max": 0,
         }
+        # pdictVal = {
+        #     "acc": sum(mseList) / len(mseList),
+        #     "loss": 0,
+        #     "min": 0,
+        #     "max": 0,
+        # }
 
         rand = int(random.randint(1, sys.maxsize))
         with open(
