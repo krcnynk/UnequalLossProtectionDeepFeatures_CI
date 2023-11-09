@@ -1080,23 +1080,23 @@ class pipeline:
                 # selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
                 # importanceOfPacketsWeighted[selected_ind] = maxX
 ############################################# ##########  KorcanRandom2
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-                maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                bin_size = 8
-                # Initialize a dictionary to store the bins
-                bins = {}
-                # Iterate through the random indices and assign them to bins
-                for index in NoImportanceIndex:
-                    bin_number = index // bin_size
-                    if bin_number not in bins:
-                        bins[bin_number] = []
-                    bins[bin_number].append(index)
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                # bin_size = 8
+                # # Initialize a dictionary to store the bins
+                # bins = {}
+                # # Iterate through the random indices and assign them to bins
+                # for index in NoImportanceIndex:
+                #     bin_number = index // bin_size
+                #     if bin_number not in bins:
+                #         bins[bin_number] = []
+                #     bins[bin_number].append(index)
 
-                # Convert the bins dictionary to a list
-                bins_list = [indices for _, indices in sorted(bins.items())]
-                sorted_bins = sorted(bins_list, key=len, reverse=True)
-                combined_list = [index for indices in sorted_bins for index in indices]
-                importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*20/100)]] = maxX
+                # # Convert the bins dictionary to a list
+                # bins_list = [indices for _, indices in sorted(bins.items())]
+                # sorted_bins = sorted(bins_list, key=len, reverse=True)
+                # combined_list = [index for indices in sorted_bins for index in indices]
+                # importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*20/100)]] = maxX
 
 ############################################# ##########  KorcanRandom3
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*20/100):]
@@ -1167,24 +1167,24 @@ class pipeline:
                 # importanceOfPacketsNew[ImportantPacketsIndex] = max(importanceOfPacketsNew)
 
 #################  #################  Korcan 1
-                # importanceOfPacketsSobel = []
-                # for p in packetizedfmL:
-                #     dx = scipy.ndimage.sobel(p, 1)
-                #     dy = scipy.ndimage.sobel(p, 0)
-                #     grad_magnitude = np.sqrt(dx**2 + dy**2)
-                #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                #     avg_grad_magnitude = np.mean(grad_magnitude)
-                #     importanceOfPacketsSobel.append(avg_grad_magnitude)
+                importanceOfPacketsSobel = []
+                for p in packetizedfmL:
+                    dx = scipy.ndimage.sobel(p, 1)
+                    dy = scipy.ndimage.sobel(p, 0)
+                    grad_magnitude = np.sqrt(dx**2 + dy**2)
+                    # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                    avg_grad_magnitude = np.mean(grad_magnitude)
+                    importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-                # importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
-                # importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
-                # importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
+                importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
+                importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
+                importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
                 
-                # OrderedimportanceOfPacketsSobel = (
-                #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
-                # )
+                OrderedimportanceOfPacketsSobel = (
+                    self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
+                )
 
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
 
 
                 # maxX = max(importanceOfPackets[NoImportanceIndex])
@@ -1193,12 +1193,12 @@ class pipeline:
                 # scaledSobelValues = self.rescale(NoImportancePacketValues,minX,maxX)
                 # importanceOfPacketsWeighted[NoImportanceIndex] = scaledSobelValues
 
-                # ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*60/100)]
+                ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*60/100)]
 
 
-                # # alpha = 0.07
-                # # importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
-                # importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
+                alpha = 0.01
+                importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
+                importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
 
 ######################################
 
