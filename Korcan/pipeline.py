@@ -1075,28 +1075,28 @@ class pipeline:
                 # 
                 # 
 ############################################# ##########  KorcanRandom1
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                # selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
-                # importanceOfPacketsWeighted[selected_ind] = maxX
-############################################# ##########  KorcanRandom2
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
                 maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                bin_size = 8
-                # Initialize a dictionary to store the bins
-                bins = {}
-                # Iterate through the random indices and assign them to bins
-                for index in NoImportanceIndex:
-                    bin_number = index // bin_size
-                    if bin_number not in bins:
-                        bins[bin_number] = []
-                    bins[bin_number].append(index)
+                selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
+                importanceOfPacketsWeighted[selected_ind] = maxX
+############################################# ##########  KorcanRandom2
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                # bin_size = 8
+                # # Initialize a dictionary to store the bins
+                # bins = {}
+                # # Iterate through the random indices and assign them to bins
+                # for index in NoImportanceIndex:
+                #     bin_number = index // bin_size
+                #     if bin_number not in bins:
+                #         bins[bin_number] = []
+                #     bins[bin_number].append(index)
 
-                # Convert the bins dictionary to a list
-                bins_list = [indices for _, indices in sorted(bins.items())]
-                sorted_bins = sorted(bins_list, key=len, reverse=True)
-                combined_list = [index for indices in sorted_bins for index in indices]
-                importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*20/100)]] = maxX
+                # # Convert the bins dictionary to a list
+                # bins_list = [indices for _, indices in sorted(bins.items())]
+                # sorted_bins = sorted(bins_list, key=len, reverse=True)
+                # combined_list = [index for indices in sorted_bins for index in indices]
+                # importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*20/100)]] = maxX
 
 ############################################# ##########  KorcanRandom3
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*20/100):]
@@ -1788,18 +1788,18 @@ class pipeline:
 
         pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
         metrics = self.getMetrics(fmLPacketizedLoss)
-        pdictVal = {
-            "acc": metrics["acc"],
-            "loss": metrics["loss"],
-            "min": 0,
-            "max": 0,
-        }
         # pdictVal = {
-        #     "acc": sum(mseList) / len(mseList),
-        #     "loss": 0,
+        #     "acc": metrics["acc"],
+        #     "loss": metrics["loss"],
         #     "min": 0,
         #     "max": 0,
         # }
+        pdictVal = {
+            "acc": sum(mseList) / len(mseList),
+            "loss": 0,
+            "min": 0,
+            "max": 0,
+        }
 
         rand = int(random.randint(1, sys.maxsize))
         with open(
