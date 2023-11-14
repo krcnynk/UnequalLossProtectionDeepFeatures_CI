@@ -1077,7 +1077,7 @@ class pipeline:
 ############################################# ##########  KorcanRandom1
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
                 maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*20/100))]
+                selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*30/100))]
                 importanceOfPacketsWeighted[selected_ind] = maxX
 ############################################# ##########  KorcanRandom2
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
