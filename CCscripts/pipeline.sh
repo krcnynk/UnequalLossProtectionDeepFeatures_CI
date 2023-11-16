@@ -43,8 +43,8 @@ sbatch pipelineRIIDNS.sh
 
 # sbatch pipelineNLEN.sh
 
-for i in {1..1}
-do
+# for i in {1..1}
+# do
     # # sbatch pipelineRBUR.sh
     # sbatch pipelineRIID.sh
 
@@ -58,4 +58,4 @@ do
     
     # # sbatch pipelineRSBURNS.sh
     # sbatch pipelineRSIIDNS.sh
-done
+# done
