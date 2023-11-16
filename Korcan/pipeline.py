@@ -460,10 +460,10 @@ class pipeline:
             seriesY[index].append(float(value["acc"]))
             seriesYmin[index].append(float(value["min"]))
             seriesYmax[index].append(float(value["max"]))
-        # plt.title("Top1 Accuracy")
+        plt.title("Top1 Accuracy")
 
         plt.xlabel("Percent Lost")
-        plt.ylabel("MSE")
+        # plt.ylabel("MSE")
 
         for s in range(len(seriesX)):
             if types[s] in l:
@@ -538,7 +538,7 @@ class pipeline:
 
         # specify order
         # order=[0,2,1,3]
-        order=[0,3,6,4,5, 1,2,7,]
+        order=[0,3,6,4,5,1,2,7,]
 
         plt.legend(
             [handles[i] for i in order], [labels[i] for i in order],
@@ -1783,8 +1783,8 @@ class pipeline:
             case = "Unprotected (IID) EN_" + str(qualityFactor)
             percOfPacketLoss = sum(batchBpp) / float(len(batchBpp))
 
-        # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
-        os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
+        if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
+            os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
 
         pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
         metrics = self.getMetrics(fmLPacketizedLoss)
