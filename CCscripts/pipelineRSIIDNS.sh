@@ -9,6 +9,8 @@ module restore uneq
 # mkdir -p /project/6008756/foniks/Project_1/UnequalLossProtectionDeepFeatures_CI/Korcan/Plots/resnet/Random_RSCorrected_20_80
 cd ..
 
+mkdir -p ./Korcan/Plots/resnet/FEC\ (IID)\ NS/
+
 python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+30)) 11 30 70
 python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 11 30 70
 # python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 20 40 60

@@ -1783,8 +1783,8 @@ class pipeline:
             case = "Unprotected (IID) EN_" + str(qualityFactor)
             percOfPacketLoss = sum(batchBpp) / float(len(batchBpp))
 
-        if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
-            os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
+        # if not os.path.exists("Korcan/Plots/" + modelName + "/" + case):
+        #     os.makedirs("Korcan/Plots/" + modelName + "/" + case, exist_ok=True)
 
         pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
         metrics = self.getMetrics(fmLPacketizedLoss)
