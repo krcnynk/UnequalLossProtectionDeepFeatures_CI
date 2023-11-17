@@ -10,6 +10,4 @@ module restore uneq
 cd ..
 
 mkdir -p ./Korcan/Plots/resnet/Unprotected\ \(IID\)\ NS/
-
-
 python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 7 0 0
