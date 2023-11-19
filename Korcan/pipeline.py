@@ -1947,7 +1947,7 @@ if __name__ == "__main__":
     elif case == "6":
         case = "FEC (Burst)"
     elif case == "7":
-        case = "Unprotected (IID) NS"                                                                      "
+        case = "Unprotected (IID) NS"
     elif case == "8":
         case = "Unprotected (Burst) NS"
     elif case == "9":
