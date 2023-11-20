@@ -1140,8 +1140,8 @@ class pipeline:
 #################  #################  ################
 #################  #################  KorcanX
 
-                # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
+                # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
 
                 # importanceOfPacketsNew = np.zeros_like(np.array(importanceOfPackets))
 
@@ -1152,10 +1152,10 @@ class pipeline:
                 #     for j in NoImportanceIndex:
                 #         # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
                 #         corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
-                #         # importanceOfPacketsNew[j] = importanceOfPacketsNew[j] + abs(corr_coefficient)
-                #         if abs(corrcoef) < abs(corr_coefficient):
-                #             corrcoef = abs(corr_coefficient)
-                #             index = j
+                #         importanceOfPacketsNew[j] = importanceOfPacketsNew[j] + abs(corr_coefficient)
+                #         # if abs(corrcoef) < abs(corr_coefficient):
+                #         #     corrcoef = abs(corr_coefficient)
+                #         #     index = j
                 #     # similarIndexes.append(index)
                 #         # importanceOfPacketsNew[j] = importanceOfPacketsNew[j] + corr_coefficient
                 # OrderedimportanceOfPacketsNewIndex = (
@@ -1196,7 +1196,7 @@ class pipeline:
                 ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
 
 
-                alpha = 0.1
+                alpha = 0.5
                 importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
                 importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
 
