@@ -1196,7 +1196,7 @@ class pipeline:
                 ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
 
 
-                alpha = 0.5
+                alpha = 0.8
                 importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
                 importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
 
