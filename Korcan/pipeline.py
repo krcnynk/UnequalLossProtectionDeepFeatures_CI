@@ -460,7 +460,7 @@ class pipeline:
             seriesY[index].append(float(value["acc"]))
             seriesYmin[index].append(float(value["min"]))
             seriesYmax[index].append(float(value["max"]))
-        plt.title("Top1 Accuracy")
+        plt.title("MSE")
 
         plt.xlabel("Percent Lost")
         # plt.ylabel("MSE")
