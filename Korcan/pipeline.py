@@ -1075,10 +1075,10 @@ class pipeline:
                 # 
                 # 
 ############################################# ##########  KorcanRandom1
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                # selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*30/100))]
-                # importanceOfPacketsWeighted[selected_ind] = maxX
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*30/100))]
+                importanceOfPacketsWeighted[selected_ind] = maxX
 ############################################ ##########  KorcanRandom2
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
@@ -1167,38 +1167,38 @@ class pipeline:
                 # importanceOfPacketsNew[ImportantPacketsIndex] = max(importanceOfPacketsNew)
 
 #################  #################  Korcan 1
-                importanceOfPacketsSobel = []
-                for p in packetizedfmL:
-                    dx = scipy.ndimage.sobel(p, 1)
-                    dy = scipy.ndimage.sobel(p, 0)
-                    grad_magnitude = np.sqrt(dx**2 + dy**2)
-                    # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                    avg_grad_magnitude = np.mean(grad_magnitude)
-                    importanceOfPacketsSobel.append(avg_grad_magnitude)
+                # importanceOfPacketsSobel = []
+                # for p in packetizedfmL:
+                #     dx = scipy.ndimage.sobel(p, 1)
+                #     dy = scipy.ndimage.sobel(p, 0)
+                #     grad_magnitude = np.sqrt(dx**2 + dy**2)
+                #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                #     avg_grad_magnitude = np.mean(grad_magnitude)
+                #     importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-                importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
-                importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
-                importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
+                # importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
+                # importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
+                # importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
                 
-                OrderedimportanceOfPacketsSobel = (
-                    self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
-                )
+                # OrderedimportanceOfPacketsSobel = (
+                #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
+                # )
 
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-
-
-                # maxX = max(importanceOfPackets[NoImportanceIndex])
-                # minX = min(importanceOfPackets[NoImportanceIndex])
-                # NoImportancePacketValues = importanceOfPacketsSobel[NoImportanceIndex]
-                # scaledSobelValues = self.rescale(NoImportancePacketValues,minX,maxX)
-                # importanceOfPacketsWeighted[NoImportanceIndex] = scaledSobelValues
-
-                ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
 
 
-                alpha = 1.0
-                importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
-                importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
+                # # maxX = max(importanceOfPackets[NoImportanceIndex])
+                # # minX = min(importanceOfPackets[NoImportanceIndex])
+                # # NoImportancePacketValues = importanceOfPacketsSobel[NoImportanceIndex]
+                # # scaledSobelValues = self.rescale(NoImportancePacketValues,minX,maxX)
+                # # importanceOfPacketsWeighted[NoImportanceIndex] = scaledSobelValues
+
+                # ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
+
+
+                # alpha = 1.0
+                # importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
+                # importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
 
 ######################################
 
@@ -1788,18 +1788,18 @@ class pipeline:
 
         pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
         metrics = self.getMetrics(fmLPacketizedLoss)
-        pdictVal = {
-            "acc": metrics["acc"],
-            "loss": metrics["loss"],
-            "min": 0,
-            "max": 0,
-        }
         # pdictVal = {
-        #     "acc": sum(mseList) / len(mseList),
-        #     "loss": 0,
+        #     "acc": metrics["acc"],
+        #     "loss": metrics["loss"],
         #     "min": 0,
         #     "max": 0,
         # }
+        pdictVal = {
+            "acc": sum(mseList) / len(mseList),
+            "loss": 0,
+            "min": 0,
+            "max": 0,
+        }
 
         rand = int(random.randint(1, sys.maxsize))
         with open(
