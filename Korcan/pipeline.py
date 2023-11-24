@@ -460,7 +460,7 @@ class pipeline:
             seriesY[index].append(float(value["acc"]))
             seriesYmin[index].append(float(value["min"]))
             seriesYmax[index].append(float(value["max"]))
-        plt.title("MSE")
+        plt.title("Top1 Accuracy")
 
         plt.xlabel("Percent Lost")
         # plt.ylabel("MSE")
@@ -1080,23 +1080,23 @@ class pipeline:
                 # selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*30/100))]
                 # importanceOfPacketsWeighted[selected_ind] = maxX
 ############################################ ##########  KorcanRandom2
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-                maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
-                bin_size = 8
-                # Initialize a dictionary to store the bins
-                bins = {}
-                # Iterate through the random indices and assign them to bins
-                for index in NoImportanceIndex:
-                    bin_number = index // bin_size
-                    if bin_number not in bins:
-                        bins[bin_number] = []
-                    bins[bin_number].append(index)
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
+                # bin_size = 8
+                # # Initialize a dictionary to store the bins
+                # bins = {}
+                # # Iterate through the random indices and assign them to bins
+                # for index in NoImportanceIndex:
+                #     bin_number = index // bin_size
+                #     if bin_number not in bins:
+                #         bins[bin_number] = []
+                #     bins[bin_number].append(index)
 
-                # Convert the bins dictionary to a list
-                bins_list = [indices for _, indices in sorted(bins.items())]
-                sorted_bins = sorted(bins_list, key=len, reverse=True)
-                combined_list = [index for indices in sorted_bins for index in indices]
-                importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*30/100)]] = maxX
+                # # Convert the bins dictionary to a list
+                # bins_list = [indices for _, indices in sorted(bins.items())]
+                # sorted_bins = sorted(bins_list, key=len, reverse=True)
+                # combined_list = [index for indices in sorted_bins for index in indices]
+                # importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*30/100)]] = maxX
 
 ############################################# ##########  KorcanRandom3
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
@@ -1140,31 +1140,24 @@ class pipeline:
 #################  #################  ################
 #################  #################  KorcanX
 
-                # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
 
-                # importanceOfPacketsNew = np.zeros_like(np.array(importanceOfPackets))
+                importanceOfPacketsNew = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
 
-                # similarIndexes = []
-                # for i in ImportantPacketsIndex:
-                #     corrcoef = 0
-                #     index = -1
-                #     for j in NoImportanceIndex:
-                #         # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
-                #         corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
-                #         importanceOfPacketsNew[j] = importanceOfPacketsNew[j] + abs(corr_coefficient)
-                #         # if abs(corrcoef) < abs(corr_coefficient):
-                #         #     corrcoef = abs(corr_coefficient)
-                #         #     index = j
-                #     # similarIndexes.append(index)
-                #         # importanceOfPacketsNew[j] = importanceOfPacketsNew[j] + corr_coefficient
-                # OrderedimportanceOfPacketsNewIndex = (
-                # self.__getOrderedImportantPacketIndex(importanceOfPacketsNew)
-                # )
-                # maxOfList = max(importanceOfPackets[NoImportanceIndex])
-                # importanceOfPacketsWeighted[OrderedimportanceOfPacketsNewIndex[:math.floor(len(importanceOfPackets)*20/100)]] = maxOfList
+                similarIndexes = []
+                for i in ImportantPacketsIndex:
+                    corrcoef = 0
+                    for j in NoImportanceIndex:
+                        # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
+                        corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
+                        importanceOfPacketsNew[j,i] = importanceOfPacketsNew[j,i] + abs(corr_coefficient)
+                importanceList = np.sum(importanceOfPacketsNew,axis=1)
+                sorted_indices = np.argsort(importanceList)[::-1]
+                tobeBoosted = sorted_indices[:math.floor(len(importanceOfPackets)*20/100)]
 
-                # importanceOfPacketsNew[ImportantPacketsIndex] = max(importanceOfPacketsNew)
+                maxX = max(importanceOfPackets[NoImportanceIndex])
+                importanceOfPacketsWeighted[tobeBoosted] = maxX
 
 #################  #################  Korcan 1
                 # importanceOfPacketsSobel = []
@@ -1788,18 +1781,18 @@ class pipeline:
 
         pdictKey = ("{:.3f}".format(percOfPacketLoss), case)
         metrics = self.getMetrics(fmLPacketizedLoss)
-        # pdictVal = {
-        #     "acc": metrics["acc"],
-        #     "loss": metrics["loss"],
-        #     "min": 0,
-        #     "max": 0,
-        # }
         pdictVal = {
-            "acc": sum(mseList) / len(mseList),
-            "loss": 0,
+            "acc": metrics["acc"],
+            "loss": metrics["loss"],
             "min": 0,
             "max": 0,
         }
+        # pdictVal = {
+        #     "acc": sum(mseList) / len(mseList),
+        #     "loss": 0,
+        #     "min": 0,
+        #     "max": 0,
+        # }
 
         rand = int(random.randint(1, sys.maxsize))
         with open(
