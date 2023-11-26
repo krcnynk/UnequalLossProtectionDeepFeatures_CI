@@ -1140,12 +1140,11 @@ class pipeline:
 #################  #################  ################
 #################  #################  KorcanX
 
-                ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
+                ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
 
                 importanceOfPacketsNew = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
-
-                similarIndexes = []
+                
                 for i in ImportantPacketsIndex:
                     corrcoef = 0
                     for j in NoImportanceIndex:
