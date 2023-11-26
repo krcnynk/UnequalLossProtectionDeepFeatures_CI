@@ -13,8 +13,8 @@ git pull
 
 for i in {1..10}
 do
-    sbatch pipelineRSIID.sh
-    sbatch pipelineRSIIDNS.sh
+    # sbatch pipelineRSIID.sh
+    # sbatch pipelineRSIIDNS.sh
     sbatch pipelineRSIIDW.sh
     sbatch pipelineRSIIDNSW.sh
 done
