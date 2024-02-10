@@ -1138,25 +1138,43 @@ class pipeline:
                 # # # importanceOfPacketsWeighted = channel_sim_scores
                 # # importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
 #################  #################  ################
+                # inSameChannelMatrix = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
+                # for i in range(importanceOfPackets.shape[0]):
+                #     # Access the i-th row of importanceOfPackets
+                #     score = 1
+                #     # Assign values to the corresponding row in inSameChannelMatrix
+                #     inSameChannelMatrix[i, :] = score
+######################  #################  ################
+                channelGlobalMap = np.zeros((len(packetNum)))
+                for i in range(len(importanceOfPackets)):
+                    channelGlobalMap[i%len(packetNum)] = importanceOfPackets[i] + channelGlobalMap[i%len(packetNum)]
+                
+                channelGlobalMapMin = np.min(channelGlobalMap)
+                channelGlobalMapMax = np.max(channelGlobalMap)
+                channelGlobalMap = (channelGlobalMap - channelGlobalMapMin) / (channelGlobalMapMax - channelGlobalMapMin)
+
+
+                for i in range(len(importanceOfPackets)):
+                    importanceOfPacketsWeighted[i] = importanceOfPacketsWeighted[i] + channelGlobalMap[i%len(packetNum)]
 #################  #################  KorcanX
 
-                ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
+                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
 
-                importanceOfPacketsNew = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
+                # importanceOfPacketsNew = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
                 
-                for i in ImportantPacketsIndex:
-                    corrcoef = 0
-                    for j in NoImportanceIndex:
-                        # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
-                        corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
-                        importanceOfPacketsNew[j,i] = importanceOfPacketsNew[j,i] + abs(corr_coefficient)
-                importanceList = np.sum(importanceOfPacketsNew,axis=1)
-                sorted_indices = np.argsort(importanceList)[::-1]
-                tobeBoosted = sorted_indices[:math.floor(len(importanceOfPackets)*20/100)]
+                # for i in ImportantPacketsIndex:
+                #     corrcoef = 0
+                #     for j in NoImportanceIndex:
+                #         # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
+                #         corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
+                #         importanceOfPacketsNew[j,i] = importanceOfPacketsNew[j,i] + abs(corr_coefficient)
+                # importanceList = np.sum(importanceOfPacketsNew,axis=1)
+                # sorted_indices = np.argsort(importanceList)[::-1]
+                # tobeBoosted = sorted_indices[:math.floor(len(importanceOfPackets)*20/100)]
 
-                maxX = max(importanceOfPackets[NoImportanceIndex])
-                importanceOfPacketsWeighted[tobeBoosted] = maxX
+                # maxX = max(importanceOfPackets[NoImportanceIndex])
+                # importanceOfPacketsWeighted[tobeBoosted] = maxX
 
 #################  #################  Korcan 1
                 # importanceOfPacketsSobel = []
