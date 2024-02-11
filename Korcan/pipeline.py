@@ -1145,6 +1145,9 @@ class pipeline:
                 #     # Assign values to the corresponding row in inSameChannelMatrix
                 #     inSameChannelMatrix[i, :] = score
 ######################  #################  ################
+                # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+
                 channelGlobalMap = np.zeros(( packetNum))
                 for i in range(len(importanceOfPackets)):
                     channelGlobalMap[i% packetNum] = importanceOfPackets[i] + channelGlobalMap[i% packetNum]
@@ -1154,8 +1157,8 @@ class pipeline:
                 channelGlobalMap = (channelGlobalMap - channelGlobalMapMin) / (channelGlobalMapMax - channelGlobalMapMin)
 
 
-                for i in range(len(importanceOfPackets)):
-                    importanceOfPacketsWeighted[i] = importanceOfPacketsWeighted[i] + channelGlobalMap[i% packetNum]
+                for i in NoImportanceIndex:
+                    importanceOfPacketsWeighted[i] = importanceOfPackets[i] + channelGlobalMap[i% packetNum]
 #################  #################  KorcanX
 
                 # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
