@@ -1158,7 +1158,7 @@ class pipeline:
 
 
                 for i in NoImportanceIndex:
-                    importanceOfPacketsWeighted[i] = importanceOfPackets[i] + channelGlobalMap[i% packetNum]
+                    importanceOfPacketsWeighted[i] = importanceOfPackets[i] + channelGlobalMap[i% packetNum] * 0.1
 #################  #################  KorcanX
 
                 # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
