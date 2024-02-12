@@ -1158,7 +1158,7 @@ class pipeline:
 
 
                 for i in NoImportanceIndex:
-                    importanceOfPacketsWeighted[i] = importanceOfPackets[i] + channelGlobalMap[i% packetNum] * 0.1
+                    importanceOfPacketsWeighted[i] = importanceOfPackets[i] + channelGlobalMap[i% packetNum] * 0.02
 #################  #################  KorcanX
 
                 # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
@@ -1257,7 +1257,23 @@ class pipeline:
                 self.__getOrderedImportantPacketIndex(importanceOfPacketsWeighted)
             )
 
-            
+            # if fecPerc not None:
+            #     fecIndexs = OrderedImportanceOfPacketsIndexWeighted[-math.floor(len(importanceOfPackets)*fecPerc/100):]
+            #     otherIndexs = OrderedImportanceOfPacketsIndexWeighted[:-math.floor(len(importanceOfPackets)*fecPerc/100)]
+            #     sorted_list = sorted(fecIndexs)
+
+            #     bins = []
+            #     current_bin = []
+            #     for i, num in enumerate(sorted_list):
+            #         if i % 3 == 0 and i != 0:
+            #             bins.append(current_bin)
+            #             current_bin = []
+            #         current_bin.append(num)
+            #     if current_bin:
+            #         bins.append(current_bin)
+            #     return bins
+                    
+                    
             # OrderedImportanceOfPacketsIndexWeighted = OrderedImportanceOfPacketsIndex
             tensorFECCompleted = np.zeros_like(fmL)
 
