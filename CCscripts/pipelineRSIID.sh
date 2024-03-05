@@ -11,7 +11,7 @@ cd ..
 
 mkdir -p ./Korcan/Plots/resnet/FEC\ \(IID\)/
 
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+30)) 5 20 80
-python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 5 20 80
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+30)) 5 30 70
+python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 5 30 70
 # python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))*10)) 19 40 60
 # python Korcan/pipeline.py $(($(($SLURM_ARRAY_TASK_ID-1))+40)) 19 40 60
