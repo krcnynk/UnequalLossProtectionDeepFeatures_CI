@@ -1168,8 +1168,8 @@ class pipeline:
                 for i in NoImportanceIndex:
                     for j in ImportantPacketsIndex:
                         if j%packetNum == i%packetNum:
-                        corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
-                        NoImportanceIndexWeights[i] = NoImportanceIndexWeights[i] + abs(corr_coefficient)
+                            corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
+                            NoImportanceIndexWeights[i] = NoImportanceIndexWeights[i] + abs(corr_coefficient)
 
                 NoImportanceIndexWeightsMin = np.min(NoImportanceIndexWeights)
                 NoImportanceIndexWeightsMax = np.max(NoImportanceIndexWeights)
