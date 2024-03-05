@@ -11,7 +11,7 @@ git pull
 # sbatch pipelineRSBUR.sh
 # sbatch pipelineRSBURNS.sh
 
-for i in {1..10}
+for i in {1..4}
 do
     # sbatch pipelineRSIID.sh
     # sbatch pipelineRSIIDNS.sh
