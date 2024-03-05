@@ -1177,7 +1177,7 @@ class pipeline:
 
                 importanceOfPacketsWeighted[ImportanceIndex] = 3
                 for i in NoImportanceIndex:
-                    importanceOfPacketsWeighted[i] = importanceOfPacketsWeighted[i] + NoImportanceIndexWeights[i] * 0.01
+                    importanceOfPacketsWeighted[i] = importanceOfPacketsWeighted[i] + NoImportanceIndexWeights[i] * 0.1
 
 #################  #################  Korcan 1
                 # importanceOfPacketsSobel = []
