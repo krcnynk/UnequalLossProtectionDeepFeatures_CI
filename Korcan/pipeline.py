@@ -1163,7 +1163,7 @@ class pipeline:
 #################  #################  KorcanX
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 ImportanceIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
-                NoImportanceIndexWeights = np.zeros_like(NoImportanceIndex)
+                NoImportanceIndexWeights = np.zeros_like(importanceOfPacketsWeighted)
                 
                 for i in NoImportanceIndex:
                     for j in ImportanceIndex:
