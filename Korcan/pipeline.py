@@ -1166,7 +1166,7 @@ class pipeline:
                 NoImportanceIndexWeights = np.zeros_like(NoImportanceIndex)
                 
                 for i in NoImportanceIndex:
-                    for j in ImportantPacketsIndex:
+                    for j in ImportanceIndex:
                         if j%packetNum == i%packetNum:
                             corr_coefficient = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
                             NoImportanceIndexWeights[i] = NoImportanceIndexWeights[i] + abs(corr_coefficient)
