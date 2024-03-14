@@ -964,7 +964,7 @@ class pipeline:
 
             importanceOfPacketsWeighted=importanceOfPackets.copy()
 
-            if fecPerc is not None:
+            # if fecPerc is not None:
                 # NoImportanceNotFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):math.ceil(len(importanceOfPackets)*60/100)]
                 # NoImportanceFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):]
                 # Start10PercentIndex = OrderedImportanceOfPacketsIndex[:math.ceil(len(importanceOfPackets)*10/100)]
