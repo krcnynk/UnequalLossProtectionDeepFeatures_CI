@@ -2301,7 +2301,7 @@ if __name__ == "__main__":
                     max = (acc / count) + std
                     # min = np.amin(np.array(accList))
                     # max = np.amax(np.array(accList))
-
+                    print(lossPercInfo,std)
                     if d == "Unprotected (IID)":
                         tTestIID[lossPercInfo] = accList
                     elif d == "Unprotected (Burst)":
