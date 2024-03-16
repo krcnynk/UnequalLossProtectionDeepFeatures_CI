@@ -2326,7 +2326,7 @@ if __name__ == "__main__":
                     #     key = list(key)
                     #     key[1] = "Unprotected"
                     #     key = tuple(key)
-                    print(key, acc / count, count)
+                    # print(key, acc / count, count)
                     module.pdict[key] = {
                         "acc": acc / count,
                         "loss": loss / count,
