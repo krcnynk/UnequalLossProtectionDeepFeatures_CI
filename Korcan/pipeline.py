@@ -1121,8 +1121,9 @@ class pipeline:
                 for i in TopImportanteIndex:
                     for j in NoImportanceIndex:
                         # mse = np.mean((packetizedfmL[i] - packetizedfmL[j])**2)
-                        mse = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
-                        mse_matrix[i, j] = abs(mse)
+                        if(i%packetNum == j%packetNum):
+                            mse = np.corrcoef(packetizedfmL[i].flatten(), packetizedfmL[j].flatten())[0, 1]
+                            mse_matrix[i, j] = abs(mse)
                         
                 # max_indices = np.argmax(mse_matrix, axis=1)
                 # # sum_indices = np.sum(mse_matrix, axis=1)
@@ -1134,7 +1135,7 @@ class pipeline:
                 min_mse = np.min(mse_matrix)
                 max_mse = np.max(mse_matrix)
                 channel_sim_scores = 1 - (mse_matrix - min_mse) / (max_mse - min_mse)
-                channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
+                # channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
                 # importanceOfPacketsWeighted = channel_sim_scores
                 importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
 ################  #################  ################
