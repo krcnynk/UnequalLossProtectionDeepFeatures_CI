@@ -1113,8 +1113,8 @@ class pipeline:
                 # importanceOfPacketsWeighted[selected_indices] = maxX
 ############################################# ##########  Korcan2
 
-                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*60/100):]
-                TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*20/100)]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
+                TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*30/100)]
                 mse_matrix = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
                 
                 
