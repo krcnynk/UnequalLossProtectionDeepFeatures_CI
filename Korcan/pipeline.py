@@ -1138,6 +1138,7 @@ class pipeline:
                 # channel_sim_scores = [x for x in channel_sim_scores for _ in range(8)]
                 # importanceOfPacketsWeighted = channel_sim_scores
                 importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.5
+                importanceOfPacketsWeighted[TopImportanteIndex] = 1
 ################  #################  ################
                 # inSameChannelMatrix = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
                 # for i in range(importanceOfPackets.shape[0]):
