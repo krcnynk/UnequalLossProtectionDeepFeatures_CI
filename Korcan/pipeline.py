@@ -1672,15 +1672,16 @@ class pipeline:
             #     ]
             #     maskR = [maskR[i][0:-pad, ...] for i in range(0, len(maskR))]
 
-            # packetizedImportanceMap = [
-            #     np.ones_like(packetizedheatMap[i_p]) * np.sum(packetizedheatMap[i_p])
-            #     for i_p in range(len(packetizedheatMap))
-            # ]
-
             packetizedImportanceMap = [
-                np.ones_like(packetizedheatMap[i_p]) * importanceOfPacketsWeighted[i_p]
+                np.ones_like(packetizedheatMap[i_p]) * np.sum(packetizedheatMap[i_p])
                 for i_p in range(len(packetizedheatMap))
             ]
+
+            # packetizedImportanceMap = [
+            #     np.ones_like(packetizedheatMap[i_p]) * importanceOfPacketsWeighted[i_p]
+            #     for i_p in range(len(packetizedheatMap))
+            # ]
+            
             channelReconstructedImportance = [
                 np.vstack(packetizedImportanceMap[i : i + packetNum])
                 for i in range(0, len(packetizedImportanceMap), packetNum)
