@@ -964,7 +964,7 @@ class pipeline:
 
             importanceOfPacketsWeighted=importanceOfPackets.copy()
 
-            # if fecPerc is not None:
+            if fecPerc is not None:
                 # NoImportanceNotFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):math.ceil(len(importanceOfPackets)*60/100)]
                 # NoImportanceFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):]
                 # Start10PercentIndex = OrderedImportanceOfPacketsIndex[:math.ceil(len(importanceOfPackets)*10/100)]
@@ -1179,39 +1179,39 @@ class pipeline:
                 # for i in NoImportanceIndex:
                 #     importanceOfPacketsWeighted[i] = importanceOfPacketsWeighted[i] + NoImportanceIndexWeights[i] * 0.5
 
-#################  #################  Korcan 1
-                # importanceOfPacketsSobel = []
-                # for p in packetizedfmL:
-                #     dx = scipy.ndimage.sobel(p, 1)
-                #     dy = scipy.ndimage.sobel(p, 0)
-                #     grad_magnitude = np.sqrt(dx**2 + dy**2)
-                #     # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
-                #     avg_grad_magnitude = np.mean(grad_magnitude)
-                #     importanceOfPacketsSobel.append(avg_grad_magnitude)
+################  #################  Korcan 1
+                importanceOfPacketsSobel = []
+                for p in packetizedfmL:
+                    dx = scipy.ndimage.sobel(p, 1)
+                    dy = scipy.ndimage.sobel(p, 0)
+                    grad_magnitude = np.sqrt(dx**2 + dy**2)
+                    # grad_magnitude = np.sqrt(np.sum(np.square(gradients), axis=0))
+                    avg_grad_magnitude = np.mean(grad_magnitude)
+                    importanceOfPacketsSobel.append(avg_grad_magnitude)
 
-                # importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
-                # importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
-                # importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
+                importanceOfPacketsSobelMin = np.min(importanceOfPacketsSobel)
+                importanceOfPacketsSobelMax = np.max(importanceOfPacketsSobel)
+                importanceOfPacketsSobel = (importanceOfPacketsSobel - importanceOfPacketsSobelMin) / (importanceOfPacketsSobelMax - importanceOfPacketsSobelMin)
                 
-                # OrderedimportanceOfPacketsSobel = (
-                #     self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
-                # )
+                OrderedimportanceOfPacketsSobel = (
+                    self.__getOrderedImportantPacketIndex(importanceOfPacketsSobel)
+                )
 
-                # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
-
-
-                # # maxX = max(importanceOfPackets[NoImportanceIndex])
-                # # minX = min(importanceOfPackets[NoImportanceIndex])
-                # # NoImportancePacketValues = importanceOfPacketsSobel[NoImportanceIndex]
-                # # scaledSobelValues = self.rescale(NoImportancePacketValues,minX,maxX)
-                # # importanceOfPacketsWeighted[NoImportanceIndex] = scaledSobelValues
-
-                # ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
+                NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
 
 
-                # alpha = 1.0
-                # importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
-                # importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
+                # maxX = max(importanceOfPackets[NoImportanceIndex])
+                # minX = min(importanceOfPackets[NoImportanceIndex])
+                # NoImportancePacketValues = importanceOfPacketsSobel[NoImportanceIndex]
+                # scaledSobelValues = self.rescale(NoImportancePacketValues,minX,maxX)
+                # importanceOfPacketsWeighted[NoImportanceIndex] = scaledSobelValues
+
+                ImportantPackets = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
+
+
+                alpha = 1.0
+                importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
+                importanceOfPacketsWeighted[ImportantPackets] = importanceOfPackets[ImportantPackets] + 1
 
 ######################################
 
@@ -2028,30 +2028,30 @@ if __name__ == "__main__":
         #     saveImages=True,
         #     modelName=modelName,
         # )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (IID)",
-            saveImages=True,
-            modelName=modelName,
-        )
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
         #     saveImageLossPercent,
-        #     "Unprotected (Burst)",
+        #     "Unprotected (IID)",
         #     saveImages=True,
         #     modelName=modelName,
         # )
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "Unprotected (IID) NS",
-            saveImages=True,
-            modelName=modelName,
-        )
+        # # module.packetLossSim(
+        # #     packetCount,
+        # #     quantizationBits,
+        # #     saveImageLossPercent,
+        # #     "Unprotected (Burst)",
+        # #     saveImages=True,
+        # #     modelName=modelName,
+        # # )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "Unprotected (IID) NS",
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
         # module.packetLossSim(
         #     packetCount,
         #     quantizationBits,
@@ -2080,16 +2080,16 @@ if __name__ == "__main__":
             modelName=modelName,
         )
 
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "FEC (IID) NS",
-            30,
-            70,
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "FEC (IID) NS",
+        #     30,
+        #     70,
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
 
         module.packetLossSim(
             packetCount,
@@ -2102,16 +2102,16 @@ if __name__ == "__main__":
             modelName=modelName,
         )
 
-        module.packetLossSim(
-            packetCount,
-            quantizationBits,
-            saveImageLossPercent,
-            "FEC (IID) NS Weighted",
-            30,
-            70,
-            saveImages=True,
-            modelName=modelName,
-        )
+        # module.packetLossSim(
+        #     packetCount,
+        #     quantizationBits,
+        #     saveImageLossPercent,
+        #     "FEC (IID) NS Weighted",
+        #     30,
+        #     70,
+        #     saveImages=True,
+        #     modelName=modelName,
+        # )
 
         # module.packetLossSim(
         #     packetCount,
