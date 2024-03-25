@@ -1678,7 +1678,7 @@ class pipeline:
             # ]
 
             packetizedImportanceMap = [
-                np.ones_like(packetizedheatMap[i_p]) * OrderedImportanceOfPacketsIndexWeighted[i_p]
+                np.ones_like(packetizedheatMap[i_p]) * importanceOfPacketsWeighted[i_p]
                 for i_p in range(len(packetizedheatMap))
             ]
             channelReconstructedImportance = [
