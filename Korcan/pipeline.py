@@ -330,7 +330,7 @@ class pipeline:
                         i_cx * 56 : i_cx * 56 + 56, i_cy * 56 : i_cy * 56 + 56
                     ] = lossedTensorBatchArray[i_b, :, :, ind]
                     ind = ind + 1
-            plt.imshow(arr, cmap="gray",interpolation="none")
+            plt.matshow(arr, cmap="gray",interpolation="none")
             plt.axis("off")
             plt.savefig(
                 os.path.join(
