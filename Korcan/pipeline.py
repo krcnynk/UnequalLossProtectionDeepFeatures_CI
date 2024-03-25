@@ -315,11 +315,11 @@ class pipeline:
         fmLPacketizedFEC = np.array(fmLPacketizedFEC).astype(np.bool_)
         shape = lossedTensorBatchArray.shape
         for i_b in range(len(lossedTensorBatchArray)):  # 9
-            arrFEC = np.empty((shape[1] * 16, shape[2] * 16))
-            arr = np.empty((shape[1] * 16, shape[2] * 16))
+            arrFEC = np.empty((shape[1] * 6, shape[2] * 4))
+            arr = np.empty((shape[1] * 6, shape[2] * 4))
             ind = 0
-            for i_cx in range(16):
-                for i_cy in range(16):
+            for i_cx in range(6):
+                for i_cy in range(4):
                     # lossedTensorBatchArray[i_b, :, :, ind] = self.__normalizeToUnit(
                     #     lossedTensorBatchArray[i_b, :, :, ind]
                     # )
