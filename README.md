@@ -1,7 +1,7 @@
-# DFTS2
+# Grad-FEC
 Unequal Loss Protection of Deep Features Simulation (Grad-FEC)
 
-Implemented a modified Grad-CAM, and trained a proxy model to mimic it. This project can simulate various loss patterns and detect importance of features so that it can assign FEC packets for these features to protect them for Cloud Edge based transmission  and computing. 
+This project implements a modified Grad-CAM and trains a proxy model to mimic its behavior. The primary goal is to simulate various loss patterns and detect the importance of features. By identifying these crucial features, the project can assign Forward Error Correction (FEC) packets to protect them during Cloud Edge based transmission and computing. Additionally, various error concealment estimators are investigated to assign FEC more efficiently.
 
 ## Contents
 - [Overview](#overview)
@@ -10,14 +10,15 @@ Implemented a modified Grad-CAM, and trained a proxy model to mimic it. This pro
 ## Overview
 The following figure gives a system overview of Collaborative Intelligence strategies implemented in Grad-FEC.
 
-<img src="[https://github.com/AshivDhondea/dfts2_user_doc/blob/main/Figures/sytemoverviewclipped.png](https://github.com/krcnynk/UnequalLossProtectionDeepFeatures_CI/blob/main/overviewPipeline.jpg)" width="400" height="400">
+<img src="https://github.com/krcnynk/UnequalLossProtectionDeepFeatures_CI/blob/main/overviewPipeline.png" width="800" height="400">
 
 The following figure gives an example of proxy model output.
-<img src="[https://github.com/AshivDhondea/dfts2_user_doc/blob/main/Figures/sytemoverviewclipped.png](https://github.com/krcnynk/UnequalLossProtectionDeepFeatures_CI/blob/main/heatmap.jpg)" width="400" height="400">
+
+<img src="https://github.com/krcnynk/UnequalLossProtectionDeepFeatures_CI/blob/main/heatmap.jpg" width="400" height="400">
 
 ## Publications
 One peer reviewed conference papers were published on work done with Grad-FEC.
-* A. Dhondea, R. A. Cohen, and I. V.Bajić, [**CALTeC: Content-adaptive linear tensor completion for collaborative intelligence**](https://ieeexplore.ieee.org/document/9506372), Proc. IEEE ICIP, 2021.
+* A. Dhondea, R. A. Cohen, and I. V.Bajić, [**Grad-FEC: Unequal Loss Protection of Deep Features in Collaborative Intelligence**](https://arxiv.org/abs/2307.01846), IEEE ICIP 2023.
   
 ## References
 
