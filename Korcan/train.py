@@ -256,7 +256,7 @@ if __name__ == "__main__":
     callbacks=[tensorboard_callback,reduce_lr,checkpoint],verbose=1,workers=10,use_multiprocessing=True)
 
 
-#Unnecessary Junk
+#Unnecessary
 # gpus = tf.config.list_physical_devices('GPU')
 # tf.config.experimental.set_memory_growth(gpus[0], True)
 # print("MAX MIN",np.amax(np.array(yValidationData)),np.amin(np.array(yValidationData)))

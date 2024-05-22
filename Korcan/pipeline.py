@@ -965,6 +965,8 @@ class pipeline:
             importanceOfPacketsWeighted=importanceOfPackets.copy()
 
             if fecPerc is not None:
+
+            #Method A
                 # NoImportanceNotFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):math.ceil(len(importanceOfPackets)*60/100)]
                 # NoImportanceFECIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*40/100):]
                 # Start10PercentIndex = OrderedImportanceOfPacketsIndex[:math.ceil(len(importanceOfPackets)*10/100)]
@@ -998,7 +1000,7 @@ class pipeline:
                 #             indexHigher = j
                 #     importanceOfPacketsWeighted[indexHigher] = maximumI
 
-#####################################  Korcan 4
+                # Method B
                 # importanceOfChannels = []
                 # for i in range(0, len(importanceOfPackets), 8):
                 #     group_sum = sum(importanceOfPackets[i:i+8])
@@ -1074,12 +1076,13 @@ class pipeline:
                 # 
                 # 
                 # 
-############################################# ##########  KorcanRandom1
+
+                # Method C
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
                 # selected_ind = [i for i in random.sample(NoImportanceIndex,math.floor(len(importanceOfPackets)*30/100))]
                 # importanceOfPacketsWeighted[selected_ind] = maxX
-############################################ ##########  KorcanRandom2
+                # Method D
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
                 # bin_size = 8
@@ -1098,7 +1101,7 @@ class pipeline:
                 # combined_list = [index for indices in sorted_bins for index in indices]
                 # importanceOfPacketsWeighted[combined_list[:math.floor(len(importanceOfPackets)*30/100)]] = maxX
 
-############################################# ##########  KorcanRandom3
+                # Method E
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 # maxX = min(importanceOfPackets[NoImportanceIndex]) - 1
                 # NoImportanceIndex.sort()
@@ -1111,8 +1114,8 @@ class pipeline:
                 #     else:
                 #         break  # Break the loop if index is out of bounds
                 # importanceOfPacketsWeighted[selected_indices] = maxX
-############################################# ##########  Korcan2
 
+                # Method F
                 NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 TopImportanteIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*30/100)]
                 mse_matrix = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
@@ -1139,14 +1142,14 @@ class pipeline:
                 # importanceOfPacketsWeighted = channel_sim_scores
                 importanceOfPacketsWeighted =importanceOfPackets+np.array(channel_sim_scores)*0.6
                 importanceOfPacketsWeighted[TopImportanteIndex] = 1
-################  #################  ################
+##################################################################
                 # inSameChannelMatrix = np.zeros((len(importanceOfPackets),len(importanceOfPackets)))
                 # for i in range(importanceOfPackets.shape[0]):
                 #     # Access the i-th row of importanceOfPackets
                 #     score = 1
                 #     # Assign values to the corresponding row in inSameChannelMatrix
                 #     inSameChannelMatrix[i, :] = score
-######################  #################  ################
+##################################################################
                 #Last one i did
                 # ImportantPacketsIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*10/100)]
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
@@ -1162,7 +1165,7 @@ class pipeline:
 
                 # for i in NoImportanceIndex:
                 #     importanceOfPacketsWeighted[i] = importanceOfPackets[i] + channelGlobalMap[i% packetNum] * 0.005
-#################  #################  KorcanX
+                # Method A1
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 # ImportanceIndex = OrderedImportanceOfPacketsIndex[:math.floor(len(importanceOfPackets)*50/100)]
                 # NoImportanceIndexWeights = np.zeros_like(importanceOfPacketsWeighted)
@@ -1181,7 +1184,7 @@ class pipeline:
                 # for i in NoImportanceIndex:
                 #     importanceOfPacketsWeighted[i] = importanceOfPacketsWeighted[i] + NoImportanceIndexWeights[i] * 0.5
 
-################  #################  Korcan 1
+                # Method A2
                 # importanceOfPacketsSobel = []
                 # for p in packetizedfmL:
                 #     dx = scipy.ndimage.sobel(p, 1)
@@ -1215,8 +1218,7 @@ class pipeline:
                 # importanceOfPacketsWeighted[NoImportanceIndex] = importanceOfPackets[NoImportanceIndex] + alpha*importanceOfPacketsSobel[NoImportanceIndex]
                 # importanceOfPacketsWeighted[ImportantPackets] = 1
 
-######################################
-
+                # Method A3
                 # ImportantPackets = OrderedImportanceOfPacketsIndex[:16]
                 # NoImportanceIndex = OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100):]
                 # maxx = importanceOfPackets[OrderedImportanceOfPacketsIndex[math.floor(len(importanceOfPackets)*50/100)]]
