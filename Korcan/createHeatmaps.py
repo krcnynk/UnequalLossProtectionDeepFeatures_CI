@@ -1,6 +1,10 @@
 import numpy as np
 import tensorflow as tf
 import os
+from multiprocessing import Pool, cpu_count
+import sys
+
+tf.config.set_visible_devices([], 'GPU')
 
 def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     grad_model = tf.keras.models.Model(
@@ -8,9 +12,9 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     )
     with tf.GradientTape() as tape:
         last_conv_layer_output, preds = grad_model(img_array)
+        # print(tf.argmax(preds[0]),pred_index)
         if pred_index is None:
             pred_index = tf.argmax(preds[0])
-        print(tf.argmax(preds[0]),pred_index)
         class_channel = preds[:, pred_index]
 
     grads = tape.gradient(class_channel, last_conv_layer_output)
@@ -30,9 +34,41 @@ def __make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=No
     heatmapTensor = tf.nn.relu(heatmapTensor)
     heatmap = tf.nn.relu(heatmap)
     heatmap = tf.squeeze(heatmap)
+    # print(np.array(heatmapTensor))
     return [np.array(heatmap), np.array(heatmapTensor)]
+    # return [np.array(heatmap), 1*(np.array(heatmapTensor)-np.amin(heatmapTensor))/(np.amax(heatmapTensor)-np.amin(heatmapTensor))]
 
-def findHeatmaps(gradientRespectToLayer,modelName):
+
+def processDirectory(trainDir,name,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer):
+
+    loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
+    fileNames = [fname for fname in os.listdir(os.path.join(trainDir, name))]
+    for fname in fileNames:
+        I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
+        I = I.resize([224, 224])
+        im_array = tf.keras.preprocessing.image.img_to_array(I)
+        im_array = tf.keras.applications.resnet50.preprocess_input(im_array)
+        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        # im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
+        _ , heatmapTensor = __make_gradcam_heatmap(
+            np.expand_dims(im_array, axis=0),
+            loaded_model,
+            gradientRespectToLayer,
+            int(listOfFilenameLabel.index(name)),
+        )
+        with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
+            np.save(fil, heatmapTensor)
+    return
+
+def findHeatmaps(gradientRespectToLayer,modelName,argumentName,typeProcess):
+
+    #Changeable values
+    labelFile = "/local-scratch2/korcan/caffe.txt"
+    valDir = "/local-scratch2/korcan/ILSVRC2012_img_val"
+    trainDir = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset100"
+    # labelFile = "/home/foniks/scratch/caffe.txt"
+    # valDir = "/home/foniks/scratch/ILSVRC2012_img_val"
+    # trainDir = "/home/foniks/scratch/ILSVRC2012_img_train"
 
     modelPath = "deep_models_full/" + modelName + "_model.h5"
     mobile_model_path = (
@@ -42,83 +78,47 @@ def findHeatmaps(gradientRespectToLayer,modelName):
         "deep_models_split/" + modelName + "_" + splitLayer + "_cloud_model.h5"
     )
 
-    loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
 
+    if typeProcess == 1:
+        #Processing training dataset
+        with open(labelFile) as file:
+            listOfFilenameLabel = [line.split(" ")[0] for line in file]
+        HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
+        if not os.path.exists(HMtrainDir):
+            os.makedirs(HMtrainDir)
+        if not os.path.exists(os.path.join(HMtrainDir,argumentName)):
+            os.makedirs(os.path.join(HMtrainDir,argumentName))
+        processDirectory(trainDir,argumentName,HMtrainDir,listOfFilenameLabel,modelPath,gradientRespectToLayer)
 
-    labelFile = "/media/sf_Downloads/ILSVRCdatabase/caffe.txt"
-    with open(labelFile) as file:
-        listOfFilenameLabel = [line.split(" ")[0] for line in file]
-
-    trainDir = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_trainNew15"
-    HMtrainDir = trainDir+"_HM_"+modelName+"_"+gradientRespectToLayer
-    if not os.path.exists(HMtrainDir):
-        os.makedirs(HMtrainDir)
-    folderNames = [name for name in os.listdir(trainDir)]
-
-    for name in folderNames:
-        if not os.path.exists(os.path.join(HMtrainDir,name)):
-            os.makedirs(os.path.join(HMtrainDir,name))
-        fileNames = [fname for fname in os.listdir(os.path.join(trainDir, name))]
-        for fname in fileNames:
-            I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,name,fname))
-            I = I.resize([224, 224])
-            im_array = tf.keras.preprocessing.image.img_to_array(I)
-            _ , heatmapTensor = __make_gradcam_heatmap(
-                np.expand_dims(im_array, axis=0),
-                loaded_model,
-                gradientRespectToLayer,
-                int(listOfFilenameLabel.index(name)),
-            )
-            with open(os.path.join(HMtrainDir,name,fname[:-5])+".npy", 'wb') as fil:
-                np.save(fil, heatmapTensor)
-
-
-
-
-
-
-
-    # valDir = "/media/sf_Downloads/ILSVRCdatabase/ILSVRC2012_img_val"
-    # HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
-
-
-    # if not os.path.exists(HMvalDIR):
-    #     os.makedirs(HMvalDIR)
-
-    # fileNames = [name for name in os.listdir(valDir) if os.path.isfile(os.path.join(valDir,name))]
-
-    # for f in fileNames:
-    #     label = f[:-5]
-    #     I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,f))
-    #     I = I.resize([224, 224])
-    #     im_array = tf.keras.preprocessing.image.img_to_array(I)
-    #     _ , heatmapTensor = __make_gradcam_heatmap(
-    #         np.expand_dims(im_array, axis=0),
-    #         loaded_model,
-    #         gradientRespectToLayer,
-    #         int(label),
-    #     )
-    #     with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
-    #         np.save(fil, heatmapTensor)
-
-    # for fo in folderNames:
-    #     if not os.path.exists(os.path.join(HMtrainDIR,fo)):
-    #         os.makedirs(os.path.join(HMtrainDIR,fo))
-    #     fileNames = [name for name in os.listdir(os.path.join(trainDir,fo)) if os.path.isfile(os.path.join(trainDir,fo,name))]
-    #     for f in fileNames:
-    #         I = tf.keras.preprocessing.image.load_img(os.path.join(trainDir,fo,f))
-    #         I = I.resize([224, 224])
-    #         im_array = tf.keras.preprocessing.image.img_to_array(I)
-    #         _ , heatmapTensor = __make_gradcam_heatmap(
-    #             np.expand_dims(im_array, axis=0),
-    #             loaded_model,
-    #             gradientRespectToLayer,
-    #             int(fo),
-    #         )
-    #         with open(os.path.join(HMtrainDIR,fo,f[:-5])+".npy", 'wb') as fil:
-    #             np.save(fil, heatmapTensor)
+    if typeProcess == 2:
+        # Procesing validation dataset
+        loaded_model = tf.keras.models.load_model(os.path.join(modelPath))
+        HMvalDIR = valDir+"_HM_"+modelName+"_"+gradientRespectToLayer
+        if not os.path.exists(HMvalDIR):
+            os.makedirs(HMvalDIR)
+        label = argumentName
+        I = tf.keras.preprocessing.image.load_img(os.path.join(valDir,argumentName+ ".JPEG"))
+        I = I.resize([224, 224])
+        im_array = tf.keras.preprocessing.image.img_to_array(I)
+        im_array = tf.keras.applications.resnet50.preprocess_input(im_array)
+        # im_array = tf.keras.applications.densenet.preprocess_input(im_array)
+        # im_array = tf.keras.applications.efficientnet.preprocess_input(im_array)
+        _ , heatmapTensor = __make_gradcam_heatmap(
+            np.expand_dims(im_array, axis=0),
+            loaded_model,
+            gradientRespectToLayer,
+            int(label),
+        )
+        with open(os.path.join(HMvalDIR,label)+".npy", 'wb') as fil:
+            np.save(fil, heatmapTensor)
 
 if __name__ == "__main__":
-    modelName = "efficientnetb0"
-    splitLayer = "block2b_add"
-    findHeatmaps(splitLayer,modelName)
+    # modelName = "efficientnetb0"
+    # splitLayer = "block2b_add"
+    # modelName = "dense"
+    # splitLayer = "pool2_conv"
+    modelName = "resnet"
+    splitLayer = "conv2_block1_add"
+    argumentName = sys.argv[1]
+    typeProcess = sys.argv[2]
+    findHeatmaps(splitLayer,modelName,str(argumentName),int(typeProcess))

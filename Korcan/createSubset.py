@@ -5,8 +5,8 @@ import os
 import shutil
 import random
 
-trainDir = "/media/sf_Downloads/ILSVRC2012_img_train"
-trainDir2 = "/media/sf_Downloads/datasetILSVRC/ILSVRC2012_img_trainNew15"
+trainDir = "/local-scratch2/korcan/ILSVRC2012_img_train"
+trainDir2 = "/local-scratch2/korcan/ILSVRC2012_img_trainSubset100"
 os.mkdir(os.path.join(trainDir2))
 folderNames = [name for name in os.listdir(trainDir)]
 # print(folderNames)
@@ -16,7 +16,7 @@ for name in folderNames:
     os.mkdir(os.path.join(trainDir2, name))
     count = 0
     for fname in fileNames:
-        if(count < 15):
+        if(count < 100):
             shutil.copyfile(os.path.join(trainDir, name,fname), os.path.join(trainDir2, name,fname))
             count = count + 1
         # print(os.path.join(trainDir, name,fname))
