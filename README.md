@@ -1,7 +1,7 @@
 # Grad-FEC
 Unequal Loss Protection of Deep Features Simulation (Grad-FEC)
 
-This project implements a modified Grad-CAM and trains a proxy model to mimic its behavior. The primary goal is to simulate various loss patterns and detect the importance of features. By identifying these crucial features, the project can assign Forward Error Correction (FEC) packets to protect them during Cloud Edge based transmission and computing. Additionally, various error concealment estimators are investigated to assign FEC more efficiently.
+This project implements a modified Grad-CAM and trains a proxy model to mimic its behavior. The primary goal is to simulate various loss patterns and detect the importance of features. By identifying these crucial features, the program can assign Forward Error Correction (FEC) packets to protect them during Cloud Edge based transmission and computing. Additionally, various error concealment estimators are investigated to assign FEC more efficiently.
 
 ## Contents
 - [Overview](#overview)
