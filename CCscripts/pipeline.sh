@@ -32,15 +32,6 @@ done
 #     sbatch --export=arg1=$i pipelineRIIDEN.sh
 # done
 
-
-# Hi my name is Korcan, I joined the group during my undergrad which is since 2021. I am doing error resilience in transmission of tensor data.
-# Give score to packets based on channel similarity, played with the weight
-
-# then similar to only first half because where the importance is
-
-# then i copied first half to second half to see if that would work not much improvemnt, i am still playing with the parameters,
-# not sure if this is ok basically sending twice
-
 # sbatch pipelineNLEN.sh
 
 # for i in {1..1}
